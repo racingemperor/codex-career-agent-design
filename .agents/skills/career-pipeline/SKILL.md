@@ -16,6 +16,7 @@ Read these references as needed:
 - `references/data-catalog.md` before using any static database.
 - `references/source-policy.md` before analyzing job, company, HR, candidate, or social media information.
 - `references/runtime-collaboration-protocol.md` before dispatching or merging role prompts.
+- `references/runtime-subagent-injection-protocol.md` before creating user-side subagent prompts.
 - `references/role-output-contracts.md` before merging subagent outputs.
 
 ## Built-In Databases
@@ -66,6 +67,7 @@ Short routes:
 - Prefer user-provided materials and official/public sources over memory.
 - Treat every `.codex/agents/*.toml` file as a role framework for runtime local subagents, not as a frozen decision engine.
 - Normalize vague chats, Markdown, resumes, websites, links, and mixed materials through `InputNormalizer` before specialist agents.
+- Convert the user's first-round self-described profile, status, experience, goals, and materials into a `runtime_context_packet`, then have `CareerOrchestrator` create role-specific `secondary_prompt_injections` before any user-side specialist subagent runs.
 - Ask the user for missing user-owned facts once in a compact batch. Do not ask the user for data that local subagents can research from allowed public sources.
 - Treat concrete skill weights and external-display asset weights as runtime decisions. The repository provides schemas and examples, not universal requirements that every discipline must follow.
 - Require hard-data provenance for all weights, scores, priorities, rankings, thresholds, and confidence adjustments. Local subagents must verify them through public/official network sources or user-provided materials; if evidence is missing, return `not_available`, `needs_more_sources`, and runtime research tasks instead of guessing.

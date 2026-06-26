@@ -111,6 +111,32 @@ The first stage should expose:
 ```json
 {
   "input_type": "chat_brief|resume_text|markdown_file|pdf_docx|personal_website|github_or_portfolio|jd_text|jd_link|mixed|unknown",
+  "first_round_user_profile": {
+    "definition": "User-provided first-round self-profile, status, experience, goals, concerns, links, files, and resume materials; not system configuration.",
+    "identity_and_contact": {},
+    "education_status": {},
+    "major_and_discipline": {},
+    "internship_experience": [],
+    "project_competition_research_experience": [],
+    "skills_and_tools": [],
+    "external_assets": [],
+    "target_direction": {},
+    "preferences_constraints": [],
+    "current_concerns": [],
+    "materials_provided": []
+  },
+  "runtime_context_packet": {
+    "packet_id": "",
+    "created_from": "first_round_user_profile",
+    "first_round_user_profile_ref": "",
+    "known_user_facts": [],
+    "missing_user_owned_facts": [],
+    "public_research_needed": [],
+    "runtime_weight_questions": [],
+    "privacy_constraints": [],
+    "blocked_outputs": [],
+    "next_possible_actions": []
+  },
   "known_information_summary": "",
   "next_possible_actions": [],
   "candidate_stage": "non_graduating|graduating|graduate|unknown",
@@ -127,6 +153,39 @@ The first stage should expose:
 ```
 
 Use these fields to support vague chat introductions, complete files, websites, Markdown, links, and mixed materials without forcing the user into repeated Q&A. `next_possible_actions` should tell the user what can be done with current information before asking for missing facts.
+
+`first_round_user_profile` is the normalized form of what the user initially says or provides about themselves, such as school, major, grade, personal status, internship, projects, competitions, skills, target direction, constraints, and current concerns. Keep private contact details redacted in intermediate outputs unless the resume role explicitly needs them and the user authorized final resume contact fields.
+
+## Runtime Subagent Injection Fields
+
+Before user-side specialist subagents run, the orchestrator should expose:
+
+```json
+{
+  "runtime_context_packet_ref": "",
+  "secondary_prompt_injections": [
+    {
+      "target_agent": "",
+      "base_prompt_ref": ".codex/agents/<agent>.toml",
+      "runtime_context_packet_ref": "",
+      "role_specific_context": {},
+      "allowed_user_facts": [],
+      "research_tasks": [],
+      "hard_data_weight_tasks": [],
+      "database_files_to_read": [],
+      "source_policy_refs": [],
+      "blocked_outputs": [],
+      "required_output_fields": [],
+      "handoff_contract": [],
+      "debate_contract": []
+    }
+  ],
+  "secondary_injection_status": "ready|blocked",
+  "secondary_injection_blockers": []
+}
+```
+
+Each injected prompt must be derived from `runtime_context_packet`, the target role's static prompt, and the smallest relevant database subset. Do not dispatch a specialist with only the static role prompt. Do not pass all user data to every role; minimize private and irrelevant facts by role.
 
 ## Parameter Ownership Fields
 

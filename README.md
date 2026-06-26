@@ -41,6 +41,7 @@
         data-catalog.md
         source-policy.md
         runtime-collaboration-protocol.md
+        runtime-subagent-injection-protocol.md
         role-output-contracts.md
       scripts/                  # planned deterministic helpers
         classify_major.py
@@ -142,6 +143,8 @@ User Input
 - 目标岗位定制简历：完整流程
 - 找岗位：`InputNormalizer -> MajorClusterClassifier -> ProfileExtractor -> JobScout -> JDAnalyzer -> MatchStrategist -> LearningPathStrategist`
 
+用户端实际运行时，第一步不是直接把静态角色 prompt 派给各个 subagent，而是先把用户第一轮自述的个人画像、状态、学校专业年级、实习/项目/竞赛/技能、目标方向、约束、当前困惑以及上传的链接或文件，统一归一化为 `first_round_user_profile`。`InputNormalizer` 再把它压缩为可共享的 `runtime_context_packet`，由 `CareerOrchestrator` 按每个角色的职责生成 `secondary_prompt_injections`。这些二次注入提示词必须只携带该角色需要的用户事实、数据库子集、公开调研任务、权重硬数据要求、禁止输出项、交接字段和辩论字段，保证用户设备上的 subagent 能围绕用户当前情况工作，而不是泛泛执行静态框架。
+
 这个 pipeline 不应只做静态匹配。对于有潜力但当前条件不完全满足的用户，系统应输出一条“成长型匹配”路线：先学习、补项目、补证据，再决定是否投递和如何包装简历。例如用户会 Python、Java 和工程基础，但缺少 LLM 相关知识时，不应简单判定“不匹配 LLM 应用岗”，而应给出可执行的 AI / LLM 学习路径、项目建议、产出证据和简历转化方式。
 
 同时，pipeline 也应包含“个人包装”能力。不同专业和行业看待候选人的方式不同：计算机相关岗位可能更认可 GitHub、项目 demo、技术博客、个人网站或开源贡献；设计岗位可能更重作品集；科研岗位可能更重论文、主页和 Google Scholar；产品和运营岗位可能更重案例、数据结果和业务分析。这些不是仓库写死的硬要求，而是运行时由用户设备上的 subagent 根据学科、目标岗位、目标公司、当前 JD、招聘平台和公开评价设置权重。系统应根据目标行业设计个人展示面，而不是只改一份简历。
@@ -181,6 +184,31 @@ User Input
 ```json
 {
   "input_type": "chat_brief|resume_text|markdown_file|pdf_docx|personal_website|github_or_portfolio|jd_text|jd_link|mixed|unknown",
+  "first_round_user_profile": {
+    "identity_and_contact": {},
+    "education_status": {},
+    "major_and_discipline": {},
+    "internship_experience": [],
+    "project_competition_research_experience": [],
+    "skills_and_tools": [],
+    "external_assets": [],
+    "target_direction": {},
+    "preferences_constraints": [],
+    "current_concerns": [],
+    "materials_provided": []
+  },
+  "runtime_context_packet": {
+    "packet_id": "",
+    "created_from": "first_round_user_profile",
+    "first_round_user_profile_ref": "",
+    "known_user_facts": [],
+    "missing_user_owned_facts": [],
+    "public_research_needed": [],
+    "runtime_weight_questions": [],
+    "privacy_constraints": [],
+    "blocked_outputs": [],
+    "next_possible_actions": []
+  },
   "known_information_summary": "",
   "next_possible_actions": [],
   "candidate_stage": "non_graduating|graduating|graduate|unknown",
@@ -223,6 +251,7 @@ User Input
 - 合并所有 subagent 输出。
 - 发现冲突信息时标记不确定性，而不是强行下结论。
 - 使用 InputNormalizer 输出的参数归属，决定哪些问用户、哪些交给本地 subagent 调研、哪些留给运行时权重配置。
+- 基于 `runtime_context_packet` 为每个本地角色生成 `secondary_prompt_injections`，让用户端 subagent 带着用户画像、角色范围、调研任务、数据库子集和辩论字段工作。
 
 重点工作面：
 
@@ -238,6 +267,26 @@ User Input
 ```json
 {
   "task_type": "resume_review|job_search|jd_analysis|company_research|tailored_resume",
+  "runtime_context_packet_ref": "",
+  "secondary_prompt_injections": [
+    {
+      "target_agent": "",
+      "base_prompt_ref": ".codex/agents/<agent>.toml",
+      "runtime_context_packet_ref": "",
+      "role_specific_context": {},
+      "allowed_user_facts": [],
+      "research_tasks": [],
+      "hard_data_weight_tasks": [],
+      "database_files_to_read": [],
+      "source_policy_refs": [],
+      "blocked_outputs": [],
+      "required_output_fields": [],
+      "handoff_contract": [],
+      "debate_contract": []
+    }
+  ],
+  "secondary_injection_status": "ready|blocked",
+  "secondary_injection_blockers": [],
   "agents_to_run": [],
   "privacy_constraints": [],
   "known_information_summary": "",

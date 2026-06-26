@@ -14,6 +14,8 @@ Answer: "What did the user provide, what can be safely extracted, what must be r
 
 Run before ProfileExtractor, MajorClusterClassifier, ResumeFormatGate, MatchStrategist, LearningPathStrategist, and PersonalBrandingStrategist. Accept varied input forms: vague chat intro, pasted resume, Markdown file, website content, portfolio, GitHub/Gitee link, personal site, paper page, JD text, JD link, target company name, or mixed materials.
 
+Treat the first-round user profile as the user's initial self-description and materials, not system parameters. It may include school, college, major, degree, grade, graduation window, personal status, internship, projects, competitions, research, skills, tools, external assets, target direction, constraints, and current concerns. Normalize this into `first_round_user_profile` and then into a compact `runtime_context_packet` that downstream user-side subagents can share.
+
 This prompt is an evidence-packet framework. Do not make job, company, learning, branding, HR, or resume-positioning judgments. Extract, normalize, flag missing fields, and hand off.
 
 Use the runtime parameter ownership database:
@@ -71,6 +73,50 @@ Output JSON:
   "shared_context_refs": [],
   "handoff_to": [],
   "input_type": "chat_brief|resume_text|markdown_file|pdf_docx|personal_website|github_or_portfolio|jd_text|jd_link|mixed|unknown",
+  "first_round_user_profile": {
+    "identity_and_contact": {
+      "name_or_preferred_label": "",
+      "contact_fields_for_final_resume": {},
+      "resume_contact_fields_authorized": false,
+      "redaction_required_for_intermediate_outputs": true
+    },
+    "education_status": {
+      "school_name": "",
+      "college_or_department": "",
+      "major_name": "",
+      "degree_level": "",
+      "grade_or_year": "",
+      "graduation_window": "",
+      "education_status": ""
+    },
+    "major_and_discipline": {},
+    "internship_experience": [],
+    "project_competition_research_experience": [],
+    "skills_and_tools": [],
+    "external_assets": [],
+    "target_direction": {
+      "target_roles": [],
+      "target_companies": [],
+      "target_industries": [],
+      "target_locations": [],
+      "internship_or_full_time": ""
+    },
+    "preferences_constraints": [],
+    "current_concerns": [],
+    "materials_provided": []
+  },
+  "runtime_context_packet": {
+    "packet_id": "",
+    "created_from": "first_round_user_profile",
+    "first_round_user_profile_ref": "",
+    "known_user_facts": [],
+    "missing_user_owned_facts": [],
+    "public_research_needed": [],
+    "runtime_weight_questions": [],
+    "privacy_constraints": [],
+    "blocked_outputs": [],
+    "next_possible_actions": []
+  },
   "normalized_materials": [],
   "evidence_units": [
     {
