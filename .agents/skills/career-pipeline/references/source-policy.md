@@ -27,7 +27,9 @@ School-specific advantages require priority 1-3 evidence. Candidate or social me
 - Candidate experiences can inform preparation, interview risk, and hidden expectations, but cannot become company requirements alone.
 - Social media signals need source type, date, platform, confidence, and whether identity is verified.
 - When sources conflict, preserve the conflict and state which source is primary.
-- Skill weights and external-display asset weights should be set from current JD/company/school/discipline evidence at runtime. Repository examples are priors, not requirements.
+- Skill weights, external-display asset weights, school-signal weights, fit scores, priorities, and strategy weights must be set from hard evidence at runtime. Valid evidence includes current JD text, official company/campus pages, recruitment-platform public JDs, verified HR public posts, official school notices, public reports, multi-source candidate signals, or user-provided materials.
+- Local subagents must verify weight-setting evidence through public/official network information whenever the information is not already supplied by the user. They must not set weights from intuition, repository examples, or model-only reasoning.
+- Every weight must include `weight_provenance`: source refs, source types, dates, source count or sample size, evidence strength, and confidence. If provenance is weak or missing, the weight must be `not_available` or `needs_more_sources`.
 - If a local subagent can research a public or official source, do not ask the user to manually provide that source unless the user volunteers it.
 
 ## Privacy

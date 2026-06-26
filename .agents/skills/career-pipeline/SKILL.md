@@ -68,6 +68,7 @@ Short routes:
 - Normalize vague chats, Markdown, resumes, websites, links, and mixed materials through `InputNormalizer` before specialist agents.
 - Ask the user for missing user-owned facts once in a compact batch. Do not ask the user for data that local subagents can research from allowed public sources.
 - Treat concrete skill weights and external-display asset weights as runtime decisions. The repository provides schemas and examples, not universal requirements that every discipline must follow.
+- Require hard-data provenance for all weights, scores, priorities, rankings, thresholds, and confidence adjustments. Local subagents must verify them through public/official network sources or user-provided materials; if evidence is missing, return `not_available`, `needs_more_sources`, and runtime research tasks instead of guessing.
 - For non-graduating candidates, split current internship analysis from future full-time preparation.
 - School-company cooperation and school-specific hiring advantages require official or primary runtime evidence; never infer them from school name alone.
 - Treat company-signal data as priors, not current role-specific requirements.

@@ -57,7 +57,30 @@ Each `evidence_basis` item should identify the supported claim:
 }
 ```
 
-`repository_prior_usage` and `weight_provenance` must state whether a static database was used only as a prior. Repository priors must never be the sole basis for `fit_score`, `priority`, `asset_priority`, `skill_priority_weights`, or HR/company judgments.
+`repository_prior_usage` and `weight_provenance` must state whether a static database was used only as a prior. Repository priors must never be the sole basis for `fit_score`, `priority`, `asset_priority`, `skill_priority_weights`, `external_asset_weights`, `school_signal_weights`, or HR/company judgments.
+
+Every proposed parameter weight, score, priority, ranking, threshold, or confidence adjustment must be supported by hard data. A role must not set weights by intuition, popularity assumptions, or model-only reasoning. If runtime public/official network evidence or user-provided materials are missing, set the weight status to `not_available` or `needs_more_sources`, add `runtime_research_tasks`, and block downstream decisions that depend on that weight.
+
+Each `weight_provenance` item should use:
+
+```json
+{
+  "parameter": "",
+  "proposed_weight": null,
+  "weight_status": "verified|needs_more_sources|not_available",
+  "source_refs": [],
+  "source_types": [
+    "current_jd|official_company_page|official_campus_page|recruitment_platform_jd|verified_hr_public_post|official_school_notice|public_report|multi_source_candidate_signal|user_provided|repository_prior"
+  ],
+  "retrieved_or_published_dates": [],
+  "sample_size_or_source_count": "",
+  "evidence_strength": "strong|medium|weak|missing",
+  "confidence": "high|medium|low",
+  "cannot_decide_alone": true
+}
+```
+
+Use `cannot_decide_alone = true` for repository priors, single weak social posts, stale sources, or model inference.
 
 ## Collaboration And Debate Fields
 
@@ -125,7 +148,7 @@ Roles that ask questions, research public data, or set weights should expose:
 }
 ```
 
-Do not hard-code concrete skill or external-display requirements from repository examples alone. Let local subagents research current role, company, school, and discipline evidence, then configure weights at runtime.
+Do not hard-code concrete skill or external-display requirements from repository examples alone. Let local subagents research current role, company, school, and discipline evidence from public/official network sources or user-provided materials, then configure weights at runtime only when `weight_provenance` is sufficient.
 
 ## HR Supervision Status
 

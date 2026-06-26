@@ -10,6 +10,7 @@ Every role prompt is a framework for runtime local subagents:
 - Do not make final fit, company, market, learning, branding, HR, or resume decisions from repository priors alone.
 - If current user materials or runtime public evidence are missing, output research tasks, evidence requirements, blocked fields, and handoff targets instead of a conclusion.
 - Static databases are priors, templates, and schemas. Runtime local subagents collect current evidence and set weights.
+- Any parameter weight, priority, score, ranking, confidence adjustment, or threshold must be backed by hard evidence. Local subagents must verify it through current public/official network sources or user-provided materials; they must not invent weights from intuition or model reasoning.
 
 ## Shared Context Envelope
 
@@ -38,9 +39,31 @@ Field meanings:
 
 - User-owned facts: ask once in a compact batch.
 - Public or official facts: assign to local subagents as `runtime_research_tasks`.
-- Skill and external-display weights: configure at runtime from current JD, company, school, discipline, and source evidence.
+- Skill, external-display, school-signal, fit, priority, and strategy weights: configure at runtime from hard evidence such as current JD text, official company/campus pages, recruitment-platform public JDs, verified HR public posts, official school notices, public reports, multi-source candidate signals, or user-provided materials.
+- If a weight cannot be verified through hard evidence, set it to `not_available`, lower confidence, and add a `runtime_research_task` instead of guessing.
 - Resume truthfulness: `FactualReviewer` has final authority.
 - HR readability and first-screen coherence: `HRSupervisor` supervises presentation, not factual truth.
+
+## Hard-Data Weight Rule
+
+Every role that proposes or checks a weight must emit `weight_provenance`:
+
+```json
+{
+  "parameter": "",
+  "proposed_weight": null,
+  "weight_status": "verified|needs_more_sources|not_available",
+  "source_refs": [],
+  "source_types": [],
+  "retrieved_or_published_dates": [],
+  "sample_size_or_source_count": "",
+  "evidence_strength": "strong|medium|weak|missing",
+  "confidence": "high|medium|low",
+  "cannot_decide_alone": true
+}
+```
+
+Repository priors may seed what to research, but they cannot set a final weight. If source evidence is not current, public/official, user-provided, or multi-source enough to support the weight, keep the weight unavailable and hand off to runtime research.
 
 ## Debate And Handoff
 
