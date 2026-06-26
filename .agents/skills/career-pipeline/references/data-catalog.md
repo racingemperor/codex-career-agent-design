@@ -59,6 +59,7 @@ Usage:
 - `MarketSentimentAnalyzer` reads source evidence and collection targets.
 - `JDAnalyzer` may use major-cluster requirement templates only as broad priors.
 - `MatchStrategist`, `LearningPathStrategist`, and `ResumeArchitect` may use company x cluster priors only after marking them as priors.
+- `HRSupervisor` may read company summaries, source evidence, and collection targets to simulate big-company HR screening bias for a target company or comparable company family.
 
 Important: this is a seed database with expanded public source links, not a complete evidence corpus. Specific role analysis still requires current JD text.
 

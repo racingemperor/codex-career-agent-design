@@ -47,6 +47,9 @@ HR-supervised steps should expose:
 ```json
 {
   "hr_readability_score": 0,
+  "company_hr_signal_refs": [],
+  "target_company_screening_bias": [],
+  "big_tech_hr_screening_notes": [],
   "competitive_signal_summary": [],
   "hr_first_screen_risks": [],
   "positioning_verdict": "pass|revise|required_user_confirmation",
