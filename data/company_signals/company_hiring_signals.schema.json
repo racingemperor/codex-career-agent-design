@@ -1,0 +1,246 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Company Hiring Signal Database",
+  "type": "object",
+  "required": [
+    "metadata",
+    "company_summaries",
+    "major_cluster_requirements",
+    "source_evidence"
+  ],
+  "properties": {
+    "metadata": {
+      "type": "object"
+    },
+    "major_cluster_requirements": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "required": [
+          "cluster_name",
+          "role_families",
+          "common_requirements",
+          "assessment_directions",
+          "resume_signals"
+        ],
+        "properties": {
+          "cluster_name": {
+            "type": "string"
+          },
+          "role_families": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "common_requirements": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "assessment_directions": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "resume_signals": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "evidence_policy": {
+            "type": "object"
+          }
+        }
+      }
+    },
+    "company_summaries": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "company_type",
+          "focus_major_clusters",
+          "cluster_requirement_refs",
+          "source_evidence_status",
+          "company_level_assessment_seed"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "aliases": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "company_type": {
+            "type": "string"
+          },
+          "focus_major_clusters": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "cluster_requirement_refs": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "source_evidence_status": {
+            "type": "string"
+          },
+          "source_policy": {
+            "type": "string"
+          },
+          "company_level_assessment_seed": {
+            "type": "object",
+            "required": [
+              "scope",
+              "likely_assessment_focus",
+              "hr_talk_track_seed",
+              "candidate_signal_seed",
+              "resume_packaging_focus",
+              "evidence_refs",
+              "confidence"
+            ]
+          },
+          "live_role_analysis_policy": {
+            "type": "string"
+          },
+          "notes": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "source_evidence": {
+      "type": "array",
+      "description": "Concrete evidence items collected from public sources. Store summaries and metadata, not private data or wholesale copied posts.",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "company_id",
+          "source_type",
+          "source_priority",
+          "publisher_type",
+          "publisher_or_account",
+          "hr_verified",
+          "url",
+          "captured_on",
+          "title",
+          "evidence_summary",
+          "claim_summary",
+          "supported_signal_ids",
+          "verification_status",
+          "confidence",
+          "privacy_checked",
+          "quote_policy"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "company_id": {
+            "type": "string"
+          },
+          "source_type": {
+            "type": "string"
+          },
+          "source_priority": {
+            "enum": [
+              "primary",
+              "high",
+              "secondary",
+              "weak"
+            ]
+          },
+          "publisher_type": {
+            "type": "string"
+          },
+          "publisher_or_account": {
+            "type": "string"
+          },
+          "hr_verified": {
+            "type": "boolean"
+          },
+          "url": {
+            "type": "string"
+          },
+          "captured_on": {
+            "type": "string"
+          },
+          "publish_date": {
+            "type": "string"
+          },
+          "recruiting_season": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "evidence_summary": {
+            "type": "string"
+          },
+          "claim_summary": {
+            "type": "string"
+          },
+          "supported_signal_ids": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "major_cluster_refs": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "role_family": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "verification_status": {
+            "type": "string"
+          },
+          "confidence": {
+            "type": "string"
+          },
+          "privacy_checked": {
+            "type": "boolean"
+          },
+          "quote_policy": {
+            "type": "string"
+          },
+          "corroborating_evidence_ids": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "expires_at": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        }
+      }
+    }
+  }
+}

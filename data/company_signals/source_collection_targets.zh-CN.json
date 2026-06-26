@@ -1,0 +1,3506 @@
+{
+  "metadata": {
+    "version": "0.1.1",
+    "language": "zh-CN",
+    "created_on": "2026-06-26",
+    "purpose": "Collection targets for company hiring-signal evidence. These are search plans and source entrypoints, not claims.",
+    "collection_rule": "Collect public, source-traceable summaries only. Verify HR identity before marking a post as verified_hr_public_post."
+  },
+  "global_collection_matrix": {
+    "primary_first": [
+      "official career page",
+      "official campus page",
+      "official JD",
+      "verified HR public account"
+    ],
+    "recruitment_platforms": [
+      "BOSS直聘公开页",
+      "拉勾公开页",
+      "猎聘公开页",
+      "牛客企业招聘页",
+      "LinkedIn/Indeed public job page"
+    ],
+    "social_and_candidate_sources": [
+      "牛客面经",
+      "力扣讨论",
+      "脉脉公开讨论",
+      "小红书公开 HR/校招账号",
+      "知乎/公众号公开经验贴"
+    ],
+    "minimum_for_medium_confidence": "At least one primary/high source plus two independent secondary sources within the last 12 months, with no direct contradiction."
+  },
+  "company_targets": [
+    {
+      "company_id": "01_ai",
+      "company_name": "零一万物",
+      "focus_major_clusters": [
+        "computer_ai_software"
+      ],
+      "official_source_candidates": [],
+      "recruitment_platform_query_templates": [
+        "零一万物 校园招聘 技术 岗位 官方",
+        "零一万物 社招 研发 算法 软件 硬件 招聘",
+        "零一万物 BOSS直聘 招聘 技术 岗位",
+        "零一万物 牛客 企业招聘 校招 面经"
+      ],
+      "hr_or_referral_query_templates": [
+        "零一万物 HR 校招 技术 面试 小红书",
+        "零一万物 招聘官 内推 技术 岗位",
+        "零一万物 校招 HR 答疑 公众号",
+        "零一万物 内推 研发 算法 工程 牛客 力扣"
+      ],
+      "candidate_signal_query_templates": [
+        "零一万物 校招 面经 技术面 笔试",
+        "零一万物 offer 复盘 技术岗",
+        "零一万物 实习 转正 面试 研发",
+        "零一万物 岗位 工作内容 加班 氛围 公开讨论"
+      ],
+      "required_labels": [
+        "source_type",
+        "source_priority",
+        "publisher_or_account",
+        "hr_verified",
+        "published_at_or_captured_on",
+        "confidence",
+        "public_url",
+        "privacy_checked"
+      ]
+    },
+    {
+      "company_id": "alibaba",
+      "company_name": "阿里巴巴",
+      "focus_major_clusters": [
+        "computer_ai_software"
+      ],
+      "official_source_candidates": [
+        {
+          "url": "https://talent.alibaba.com/",
+          "source_type": "official_career_page",
+          "evidence_id": "ev_alibaba_official_career_page_2026_06_26"
+        }
+      ],
+      "recruitment_platform_query_templates": [
+        "阿里巴巴 校园招聘 技术 岗位 官方",
+        "阿里巴巴 社招 研发 算法 软件 硬件 招聘",
+        "阿里巴巴 BOSS直聘 招聘 技术 岗位",
+        "阿里巴巴 牛客 企业招聘 校招 面经"
+      ],
+      "hr_or_referral_query_templates": [
+        "阿里巴巴 HR 校招 技术 面试 小红书",
+        "阿里巴巴 招聘官 内推 技术 岗位",
+        "阿里巴巴 校招 HR 答疑 公众号",
+        "阿里巴巴 内推 研发 算法 工程 牛客 力扣"
+      ],
+      "candidate_signal_query_templates": [
+        "阿里巴巴 校招 面经 技术面 笔试",
+        "阿里巴巴 offer 复盘 技术岗",
+        "阿里巴巴 实习 转正 面试 研发",
+        "阿里巴巴 岗位 工作内容 加班 氛围 公开讨论"
+      ],
+      "required_labels": [
+        "source_type",
+        "source_priority",
+        "publisher_or_account",
+        "hr_verified",
+        "published_at_or_captured_on",
+        "confidence",
+        "public_url",
+        "privacy_checked"
+      ]
+    },
+    {
+      "company_id": "amec",
+      "company_name": "中微公司",
+      "focus_major_clusters": [
+        "mechanical_vehicle_manufacturing",
+        "electronics_communication_ic",
+        "materials_semiconductor_new_energy"
+      ],
+      "official_source_candidates": [],
+      "recruitment_platform_query_templates": [
+        "中微公司 校园招聘 技术 岗位 官方",
+        "中微公司 社招 研发 算法 软件 硬件 招聘",
+        "中微公司 BOSS直聘 招聘 技术 岗位",
+        "中微公司 牛客 企业招聘 校招 面经"
+      ],
+      "hr_or_referral_query_templates": [
+        "中微公司 HR 校招 技术 面试 小红书",
+        "中微公司 招聘官 内推 技术 岗位",
+        "中微公司 校招 HR 答疑 公众号",
+        "中微公司 内推 研发 算法 工程 牛客 力扣"
+      ],
+      "candidate_signal_query_templates": [
+        "中微公司 校招 面经 技术面 笔试",
+        "中微公司 offer 复盘 技术岗",
+        "中微公司 实习 转正 面试 研发",
+        "中微公司 岗位 工作内容 加班 氛围 公开讨论"
+      ],
+      "required_labels": [
+        "source_type",
+        "source_priority",
+        "publisher_or_account",
+        "hr_verified",
+        "published_at_or_captured_on",
+        "confidence",
+        "public_url",
+        "privacy_checked"
+      ]
+    },
+    {
+      "company_id": "ant_group",
+      "company_name": "蚂蚁集团",
+      "focus_major_clusters": [
+        "computer_ai_software"
+      ],
+      "official_source_candidates": [],
+      "recruitment_platform_query_templates": [
+        "蚂蚁集团 校园招聘 技术 岗位 官方",
+        "蚂蚁集团 社招 研发 算法 软件 硬件 招聘",
+        "蚂蚁集团 BOSS直聘 招聘 技术 岗位",
+        "蚂蚁集团 牛客 企业招聘 校招 面经"
+      ],
+      "hr_or_referral_query_templates": [
+        "蚂蚁集团 HR 校招 技术 面试 小红书",
+        "蚂蚁集团 招聘官 内推 技术 岗位",
+        "蚂蚁集团 校招 HR 答疑 公众号",
+        "蚂蚁集团 内推 研发 算法 工程 牛客 力扣"
+      ],
+      "candidate_signal_query_templates": [
+        "蚂蚁集团 校招 面经 技术面 笔试",
+        "蚂蚁集团 offer 复盘 技术岗",
+        "蚂蚁集团 实习 转正 面试 研发",
+        "蚂蚁集团 岗位 工作内容 加班 氛围 公开讨论"
+      ],
+      "required_labels": [
+        "source_type",
+        "source_priority",
+        "publisher_or_account",
+        "hr_verified",
+        "published_at_or_captured_on",
+        "confidence",
+        "public_url",
+        "privacy_checked"
+      ]
+    },
+    {
+      "company_id": "baichuan_ai",
+      "company_name": "百川智能",
+      "focus_major_clusters": [
+        "computer_ai_software"
+      ],
+      "official_source_candidates": [],
+      "recruitment_platform_query_templates": [
+        "百川智能 校园招聘 技术 岗位 官方",
+        "百川智能 社招 研发 算法 软件 硬件 招聘",
+        "百川智能 BOSS直聘 招聘 技术 岗位",
+        "百川智能 牛客 企业招聘 校招 面经"
+      ],
+      "hr_or_referral_query_templates": [
+        "百川智能 HR 校招 技术 面试 小红书",
+        "百川智能 招聘官 内推 技术 岗位",
+        "百川智能 校招 HR 答疑 公众号",
+        "百川智能 内推 研发 算法 工程 牛客 力扣"
+      ],
+      "candidate_signal_query_templates": [
+        "百川智能 校招 面经 技术面 笔试",
+        "百川智能 offer 复盘 技术岗",
+        "百川智能 实习 转正 面试 研发",
+        "百川智能 岗位 工作内容 加班 氛围 公开讨论"
+      ],
+      "required_labels": [
+        "source_type",
+        "source_priority",
+        "publisher_or_account",
+        "hr_verified",
+        "published_at_or_captured_on",
+        "confidence",
+        "public_url",
+        "privacy_checked"
+      ]
+    },
+    {
+      "company_id": "baidu",
+      "company_name": "百度",
+      "focus_major_clusters": [
+        "computer_ai_software",
+        "automation_control_robotics"
+      ],
+      "official_source_candidates": [
+        {
+          "url": "https://talent.baidu.com/jobs/list",
+          "source_type": "official_job_search_page",
+          "evidence_id": "ev_baidu_official_job_search_page_2026_06_26"
+        }
+      ],
+      "recruitment_platform_query_templates": [
+        "百度 校园招聘 技术 岗位 官方",
+        "百度 社招 研发 算法 软件 硬件 招聘",
+        "百度 BOSS直聘 招聘 技术 岗位",
+        "百度 牛客 企业招聘 校招 面经"
+      ],
+      "hr_or_referral_query_templates": [
+        "百度 HR 校招 技术 面试 小红书",
+        "百度 招聘官 内推 技术 岗位",
+        "百度 校招 HR 答疑 公众号",
+        "百度 内推 研发 算法 工程 牛客 力扣"
+      ],
+      "candidate_signal_query_templates": [
+        "百度 校招 面经 技术面 笔试",
+        "百度 offer 复盘 技术岗",
+        "百度 实习 转正 面试 研发",
+        "百度 岗位 工作内容 加班 氛围 公开讨论"
+      ],
+      "required_labels": [
+        "source_type",
+        "source_priority",
+        "publisher_or_account",
+        "hr_verified",
+        "published_at_or_captured_on",
+        "confidence",
+        "public_url",
+        "privacy_checked"
+      ]
+    },
+    {
+      "company_id": "bambu_lab",
+      "company_name": "拓竹科技",
+      "focus_major_clusters": [
+        "mechanical_vehicle_manufacturing",
+        "automation_control_robotics",
+        "electronics_communication_ic",
+        "computer_ai_software"
+      ],
+      "official_source_candidates": [],
+      "recruitment_platform_query_templates": [
+        "拓竹科技 校园招聘 技术 岗位 官方",
+        "拓竹科技 社招 研发 算法 软件 硬件 招聘",
+        "拓竹科技 BOSS直聘 招聘 技术 岗位",
+        "拓竹科技 牛客 企业招聘 校招 面经"
+      ],
+      "hr_or_referral_query_templates": [
+        "拓竹科技 HR 校招 技术 面试 小红书",
+        "拓竹科技 招聘官 内推 技术 岗位",
+        "拓竹科技 校招 HR 答疑 公众号",
+        "拓竹科技 内推 研发 算法 工程 牛客 力扣"
+      ],
+      "candidate_signal_query_templates": [
+        "拓竹科技 校招 面经 技术面 笔试",
+        "拓竹科技 offer 复盘 技术岗",
+        "拓竹科技 实习 转正 面试 研发",
+        "拓竹科技 岗位 工作内容 加班 氛围 公开讨论"
+      ],
+      "required_labels": [
+        "source_type",
+        "source_priority",
+        "publisher_or_account",
+        "hr_verified",
+        "published_at_or_captured_on",
+        "confidence",
+        "public_url",
+        "privacy_checked"
+      ]
+    },
+    {
+      "company_id": "bilibili",
+      "company_name": "哔哩哔哩",
+      "focus_major_clusters": [
+        "computer_ai_software"
+      ],
+      "official_source_candidates": [
+        {
+          "url": "https://jobs.bilibili.com/",
+          "source_type": "official_career_page",
+          "evidence_id": "ev_bilibili_official_career_page_2026_06_26"
+        }
+      ],
+      "recruitment_platform_query_templates": [
+        "哔哩哔哩 校园招聘 技术 岗位 官方",
+        "哔哩哔哩 社招 研发 算法 软件 硬件 招聘",
+        "哔哩哔哩 BOSS直聘 招聘 技术 岗位",
+        "哔哩哔哩 牛客 企业招聘 校招 面经"
+      ],
+      "hr_or_referral_query_templates": [
+        "哔哩哔哩 HR 校招 技术 面试 小红书",
+        "哔哩哔哩 招聘官 内推 技术 岗位",
+        "哔哩哔哩 校招 HR 答疑 公众号",
+        "哔哩哔哩 内推 研发 算法 工程 牛客 力扣"
+      ],
+      "candidate_signal_query_templates": [
+        "哔哩哔哩 校招 面经 技术面 笔试",
+        "哔哩哔哩 offer 复盘 技术岗",
+        "哔哩哔哩 实习 转正 面试 研发",
+        "哔哩哔哩 岗位 工作内容 加班 氛围 公开讨论"
+      ],
+      "required_labels": [
+        "source_type",
+        "source_priority",
+        "publisher_or_account",
+        "hr_verified",
+        "published_at_or_captured_on",
+        "confidence",
+        "public_url",
+        "privacy_checked"
+      ]
+    },
+    {
+      "company_id": "byd",
+      "company_name": "比亚迪",
+      "focus_major_clusters": [
+        "energy_power_electrical",
+        "mechanical_vehicle_manufacturing",
+        "materials_semiconductor_new_energy",
+        "computer_ai_software"
+      ],
+      "official_source_candidates": [
+        {
+          "url": "https://ess-cdn.byd.com/%E6%8B%9B%E8%81%98%2F%E9%97%A8%E6%88%B7%2F%E6%8B%9B%E8%81%98%E7%AE%80%E7%AB%A0%2F%E6%AF%94%E4%BA%9A%E8%BF%AA%E5%AE%9E%E4%B9%A0%E7%94%9F%E4%B8%93%E9%A1%B9%E6%8B%9B%E8%81%98%E7%AE%80%E7%AB%A0.pdf",
+          "source_type": "official_recruiting_pdf",
+          "evidence_id": "ev_byd_pdf_process_2026_06_26"
+        }
+      ],
+      "recruitment_platform_query_templates": [
+        "比亚迪 校园招聘 技术 岗位 官方",
+        "比亚迪 社招 研发 算法 软件 硬件 招聘",
+        "比亚迪 BOSS直聘 招聘 技术 岗位",
+        "比亚迪 牛客 企业招聘 校招 面经"
+      ],
+      "hr_or_referral_query_templates": [
+        "比亚迪 HR 校招 技术 面试 小红书",
+        "比亚迪 招聘官 内推 技术 岗位",
+        "比亚迪 校招 HR 答疑 公众号",
+        "比亚迪 内推 研发 算法 工程 牛客 力扣"
+      ],
+      "candidate_signal_query_templates": [
+        "比亚迪 校招 面经 技术面 笔试",
+        "比亚迪 offer 复盘 技术岗",
+        "比亚迪 实习 转正 面试 研发",
+        "比亚迪 岗位 工作内容 加班 氛围 公开讨论"
+      ],
+      "required_labels": [
+        "source_type",
+        "source_priority",
+        "publisher_or_account",
+        "hr_verified",
+        "published_at_or_captured_on",
+        "confidence",
+        "public_url",
+        "privacy_checked"
+      ]
+    },
+    {
+      "company_id": "bytedance",
+      "company_name": "字节跳动",
+      "focus_major_clusters": [
+        "computer_ai_software"
+      ],
+      "official_source_candidates": [
+        {
+          "url": "https://jobs.bytedance.com/campus",
+          "source_type": "official_campus_recruiting_page",
+          "evidence_id": "ev_bytedance_campus_official_2026_06_26"
+        },
+        {
+          "url": "https://seed.bytedance.com/zh/career",
+          "source_type": "official_career_page",
+          "evidence_id": "ev_bytedance_seed_official_2026_06_26"
+        }
+      ],
+      "recruitment_platform_query_templates": [
+        "字节跳动 校园招聘 技术 岗位 官方",
+        "字节跳动 社招 研发 算法 软件 硬件 招聘",
+        "字节跳动 BOSS直聘 招聘 技术 岗位",
+        "字节跳动 牛客 企业招聘 校招 面经"
+      ],
+      "hr_or_referral_query_templates": [
+        "字节跳动 HR 校招 技术 面试 小红书",
+        "字节跳动 招聘官 内推 技术 岗位",
+        "字节跳动 校招 HR 答疑 公众号",
+        "字节跳动 内推 研发 算法 工程 牛客 力扣"
+      ],
+      "candidate_signal_query_templates": [
+        "字节跳动 校招 面经 技术面 笔试",
+        "字节跳动 offer 复盘 技术岗",
+        "字节跳动 实习 转正 面试 研发",
+        "字节跳动 岗位 工作内容 加班 氛围 公开讨论"
+      ],
+      "required_labels": [
+        "source_type",
+        "source_priority",
+        "publisher_or_account",
+        "hr_verified",
+        "published_at_or_captured_on",
+        "confidence",
+        "public_url",
+        "privacy_checked"
+      ]
+    },
+    {
+      "company_id": "cambricon",
+      "company_name": "寒武纪",
+      "focus_major_clusters": [
+        "electronics_communication_ic",
+        "computer_ai_software"
+      ],
+      "official_source_candidates": [
+        {
+          "url": "https://www.cambricon.com/",
+          "source_type": "official_career_page",
+          "evidence_id": "ev_cambricon_official_career_page_2026_06_26"
+        }
+      ],
+      "recruitment_platform_query_templates": [
+        "寒武纪 校园招聘 技术 岗位 官方",
+        "寒武纪 社招 研发 算法 软件 硬件 招聘",
+        "寒武纪 BOSS直聘 招聘 技术 岗位",
+        "寒武纪 牛客 企业招聘 校招 面经"
+      ],
+      "hr_or_referral_query_templates": [
+        "寒武纪 HR 校招 技术 面试 小红书",
+        "寒武纪 招聘官 内推 技术 岗位",
+        "寒武纪 校招 HR 答疑 公众号",
+        "寒武纪 内推 研发 算法 工程 牛客 力扣"
+      ],
+      "candidate_signal_query_templates": [
+        "寒武纪 校招 面经 技术面 笔试",
+        "寒武纪 offer 复盘 技术岗",
+        "寒武纪 实习 转正 面试 研发",
+        "寒武纪 岗位 工作内容 加班 氛围 公开讨论"
+      ],
+      "required_labels": [
+        "source_type",
+        "source_priority",
+        "publisher_or_account",
+        "hr_verified",
+        "published_at_or_captured_on",
+        "confidence",
+        "public_url",
+        "privacy_checked"
+      ]
+    },
+    {
+      "company_id": "casc",
+      "company_name": "中国航天科技集团",
+      "focus_major_clusters": [
+        "aerospace_marine_defense_nuclear",
+        "electronics_communication_ic",
+        "computer_ai_software",
+        "mechanical_vehicle_manufacturing"
+      ],
+      "official_source_candidates": [
+        {
+          "url": "https://www.spacechina.com/n25/n2014789/",
+          "source_type": "official_career_page",
+          "evidence_id": "ev_casc_official_career_page_2026_06_26"
+        }
+      ],
+      "recruitment_platform_query_templates": [
+        "中国航天科技集团 校园招聘 技术 岗位 官方",
+        "中国航天科技集团 社招 研发 算法 软件 硬件 招聘",
+        "中国航天科技集团 BOSS直聘 招聘 技术 岗位",
+        "中国航天科技集团 牛客 企业招聘 校招 面经"
+      ],
+      "hr_or_referral_query_templates": [
+        "中国航天科技集团 HR 校招 技术 面试 小红书",
+        "中国航天科技集团 招聘官 内推 技术 岗位",
+        "中国航天科技集团 校招 HR 答疑 公众号",
+        "中国航天科技集团 内推 研发 算法 工程 牛客 力扣"
+      ],
+      "candidate_signal_query_templates": [
+        "中国航天科技集团 校招 面经 技术面 笔试",
+        "中国航天科技集团 offer 复盘 技术岗",
+        "中国航天科技集团 实习 转正 面试 研发",
+        "中国航天科技集团 岗位 工作内容 加班 氛围 公开讨论"
+      ],
+      "required_labels": [
+        "source_type",
+        "source_priority",
+        "publisher_or_account",
+        "hr_verified",
+        "published_at_or_captured_on",
+        "confidence",
+        "public_url",
+        "privacy_checked"
+      ]
+    },
+    {
+      "company_id": "casic",
+      "company_name": "中国航天科工集团",
+      "focus_major_clusters": [
+        "aerospace_marine_defense_nuclear",
+        "electronics_communication_ic",
+        "computer_ai_software"
+      ],
+      "official_source_candidates": [],
+      "recruitment_platform_query_templates": [
+        "中国航天科工集团 校园招聘 技术 岗位 官方",
+        "中国航天科工集团 社招 研发 算法 软件 硬件 招聘",
+        "中国航天科工集团 BOSS直聘 招聘 技术 岗位",
+        "中国航天科工集团 牛客 企业招聘 校招 面经"
+      ],
+      "hr_or_referral_query_templates": [
+        "中国航天科工集团 HR 校招 技术 面试 小红书",
+        "中国航天科工集团 招聘官 内推 技术 岗位",
+        "中国航天科工集团 校招 HR 答疑 公众号",
+        "中国航天科工集团 内推 研发 算法 工程 牛客 力扣"
+      ],
+      "candidate_signal_query_templates": [
+        "中国航天科工集团 校招 面经 技术面 笔试",
+        "中国航天科工集团 offer 复盘 技术岗",
+        "中国航天科工集团 实习 转正 面试 研发",
+        "中国航天科工集团 岗位 工作内容 加班 氛围 公开讨论"
+      ],
+      "required_labels": [
+        "source_type",
+        "source_priority",
+        "publisher_or_account",
+        "hr_verified",
+        "published_at_or_captured_on",
+        "confidence",
+        "public_url",
+        "privacy_checked"
+      ]
+    },
+    {
+      "company_id": "catl",
+      "company_name": "宁德时代",
+      "focus_major_clusters": [
+        "materials_semiconductor_new_energy",
+        "energy_power_electrical",
+        "mechanical_vehicle_manufacturing",
+        "chemical_pharma_process"
+      ],
+      "official_source_candidates": [
+        {
+          "url": "https://talent.catl.com/",
+          "source_type": "official_campus_page",
+          "evidence_id": "ev_catl_official_campus_page_2026_06_26"
+        },
+        {
+          "url": "https://www.catl-career.com/",
+          "source_type": "official_career_page",
+          "evidence_id": "ev_catl_official_career_page_2026_06_26"
+        }
+      ],
+      "recruitment_platform_query_templates": [
+        "宁德时代 校园招聘 技术 岗位 官方",
+        "宁德时代 社招 研发 算法 软件 硬件 招聘",
+        "宁德时代 BOSS直聘 招聘 技术 岗位",
+        "宁德时代 牛客 企业招聘 校招 面经"
+      ],
+      "hr_or_referral_query_templates": [
+        "宁德时代 HR 校招 技术 面试 小红书",
+        "宁德时代 招聘官 内推 技术 岗位",
+        "宁德时代 校招 HR 答疑 公众号",
+        "宁德时代 内推 研发 算法 工程 牛客 力扣"
+      ],
+      "candidate_signal_query_templates": [
+        "宁德时代 校招 面经 技术面 笔试",
+        "宁德时代 offer 复盘 技术岗",
+        "宁德时代 实习 转正 面试 研发",
+        "宁德时代 岗位 工作内容 加班 氛围 公开讨论"
+      ],
+      "required_labels": [
+        "source_type",
+        "source_priority",
+        "publisher_or_account",
+        "hr_verified",
+        "published_at_or_captured_on",
+        "confidence",
+        "public_url",
+        "privacy_checked"
+      ]
+    },
+    {
+      "company_id": "cccc",
+      "company_name": "中国交建",
+      "focus_major_clusters": [
+        "civil_architecture_spatial_infrastructure",
+        "transportation_mobility",
+        "aerospace_marine_defense_nuclear"
+      ],
+      "official_source_candidates": [
+        {
+          "url": "https://zhaopin.ccccltd.cn/",
+          "source_type": "official_career_page",
+          "evidence_id": "ev_cccc_official_career_page_2026_06_26"
+        }
+      ],
+      "recruitment_platform_query_templates": [
+        "中国交建 校园招聘 技术 岗位 官方",
+        "中国交建 社招 研发 算法 软件 硬件 招聘",
+        "中国交建 BOSS直聘 招聘 技术 岗位",
+        "中国交建 牛客 企业招聘 校招 面经"
+      ],
+      "hr_or_referral_query_templates": [
+        "中国交建 HR 校招 技术 面试 小红书",
+        "中国交建 招聘官 内推 技术 岗位",
+        "中国交建 校招 HR 答疑 公众号",
+        "中国交建 内推 研发 算法 工程 牛客 力扣"
+      ],
+      "candidate_signal_query_templates": [
+        "中国交建 校招 面经 技术面 笔试",
+        "中国交建 offer 复盘 技术岗",
+        "中国交建 实习 转正 面试 研发",
+        "中国交建 岗位 工作内容 加班 氛围 公开讨论"
+      ],
+      "required_labels": [
+        "source_type",
+        "source_priority",
+        "publisher_or_account",
+        "hr_verified",
+        "published_at_or_captured_on",
+        "confidence",
+        "public_url",
+        "privacy_checked"
+      ]
+    },
+    {
+      "company_id": "chery",
+      "company_name": "奇瑞汽车",
+      "focus_major_clusters": [
+        "mechanical_vehicle_manufacturing",
+        "energy_power_electrical",
+        "computer_ai_software"
+      ],
+      "official_source_candidates": [],
+      "recruitment_platform_query_templates": [
+        "奇瑞汽车 校园招聘 技术 岗位 官方",
+        "奇瑞汽车 社招 研发 算法 软件 硬件 招聘",
+        "奇瑞汽车 BOSS直聘 招聘 技术 岗位",
+        "奇瑞汽车 牛客 企业招聘 校招 面经"
+      ],
+      "hr_or_referral_query_templates": [
+        "奇瑞汽车 HR 校招 技术 面试 小红书",
+        "奇瑞汽车 招聘官 内推 技术 岗位",
+        "奇瑞汽车 校招 HR 答疑 公众号",
+        "奇瑞汽车 内推 研发 算法 工程 牛客 力扣"
+      ],
+      "candidate_signal_query_templates": [
+        "奇瑞汽车 校招 面经 技术面 笔试",
+        "奇瑞汽车 offer 复盘 技术岗",
+        "奇瑞汽车 实习 转正 面试 研发",
+        "奇瑞汽车 岗位 工作内容 加班 氛围 公开讨论"
+      ],
+      "required_labels": [
+        "source_type",
+        "source_priority",
+        "publisher_or_account",
+        "hr_verified",
+        "published_at_or_captured_on",
+        "confidence",
+        "public_url",
+        "privacy_checked"
+      ]
+    },
+    {
+      "company_id": "china_mobile",
+      "company_name": "中国移动",
+      "focus_major_clusters": [
+        "computer_ai_software",
+        "electronics_communication_ic"
+      ],
+      "official_source_candidates": [],
+      "recruitment_platform_query_templates": [
+        "中国移动 校园招聘 技术 岗位 官方",
+        "中国移动 社招 研发 算法 软件 硬件 招聘",
+        "中国移动 BOSS直聘 招聘 技术 岗位",
+        "中国移动 牛客 企业招聘 校招 面经"
+      ],
+      "hr_or_referral_query_templates": [
+        "中国移动 HR 校招 技术 面试 小红书",
+        "中国移动 招聘官 内推 技术 岗位",
+        "中国移动 校招 HR 答疑 公众号",
+        "中国移动 内推 研发 算法 工程 牛客 力扣"
+      ],
+      "candidate_signal_query_templates": [
+        "中国移动 校招 面经 技术面 笔试",
+        "中国移动 offer 复盘 技术岗",
+        "中国移动 实习 转正 面试 研发",
+        "中国移动 岗位 工作内容 加班 氛围 公开讨论"
+      ],
+      "required_labels": [
+        "source_type",
+        "source_priority",
+        "publisher_or_account",
+        "hr_verified",
+        "published_at_or_captured_on",
+        "confidence",
+        "public_url",
+        "privacy_checked"
+      ]
+    },
+    {
+      "company_id": "china_railway",
+      "company_name": "中国中铁",
+      "focus_major_clusters": [
+        "civil_architecture_spatial_infrastructure",
+        "transportation_mobility",
+        "energy_power_electrical"
+      ],
+      "official_source_candidates": [],
+      "recruitment_platform_query_templates": [
+        "中国中铁 校园招聘 技术 岗位 官方",
+        "中国中铁 社招 研发 算法 软件 硬件 招聘",
+        "中国中铁 BOSS直聘 招聘 技术 岗位",
+        "中国中铁 牛客 企业招聘 校招 面经"
+      ],
+      "hr_or_referral_query_templates": [
+        "中国中铁 HR 校招 技术 面试 小红书",
+        "中国中铁 招聘官 内推 技术 岗位",
+        "中国中铁 校招 HR 答疑 公众号",
+        "中国中铁 内推 研发 算法 工程 牛客 力扣"
+      ],
+      "candidate_signal_query_templates": [
+        "中国中铁 校招 面经 技术面 笔试",
+        "中国中铁 offer 复盘 技术岗",
+        "中国中铁 实习 转正 面试 研发",
+        "中国中铁 岗位 工作内容 加班 氛围 公开讨论"
+      ],
+      "required_labels": [
+        "source_type",
+        "source_priority",
+        "publisher_or_account",
+        "hr_verified",
+        "published_at_or_captured_on",
+        "confidence",
+        "public_url",
+        "privacy_checked"
+      ]
+    },
+    {
+      "company_id": "china_southern_power_grid",
+      "company_name": "南方电网",
+      "focus_major_clusters": [
+        "energy_power_electrical",
+        "computer_ai_software",
+        "electronics_communication_ic"
+      ],
+      "official_source_candidates": [
+        {
+          "url": "https://zhaopin.csg.cn/",
+          "source_type": "official_career_page",
+          "evidence_id": "ev_china_southern_power_grid_official_career_page_2026_06_26"
+        }
+      ],
+      "recruitment_platform_query_templates": [
+        "南方电网 校园招聘 技术 岗位 官方",
+        "南方电网 社招 研发 算法 软件 硬件 招聘",
+        "南方电网 BOSS直聘 招聘 技术 岗位",
+        "南方电网 牛客 企业招聘 校招 面经"
+      ],
+      "hr_or_referral_query_templates": [
+        "南方电网 HR 校招 技术 面试 小红书",
+        "南方电网 招聘官 内推 技术 岗位",
+        "南方电网 校招 HR 答疑 公众号",
+        "南方电网 内推 研发 算法 工程 牛客 力扣"
+      ],
+      "candidate_signal_query_templates": [
+        "南方电网 校招 面经 技术面 笔试",
+        "南方电网 offer 复盘 技术岗",
+        "南方电网 实习 转正 面试 研发",
+        "南方电网 岗位 工作内容 加班 氛围 公开讨论"
+      ],
+      "required_labels": [
+        "source_type",
+        "source_priority",
+        "publisher_or_account",
+        "hr_verified",
+        "published_at_or_captured_on",
+        "confidence",
+        "public_url",
+        "privacy_checked"
+      ]
+    },
+    {
+      "company_id": "china_telecom",
+      "company_name": "中国电信",
+      "focus_major_clusters": [
+        "computer_ai_software",
+        "electronics_communication_ic"
+      ],
+      "official_source_candidates": [],
+      "recruitment_platform_query_templates": [
+        "中国电信 校园招聘 技术 岗位 官方",
+        "中国电信 社招 研发 算法 软件 硬件 招聘",
+        "中国电信 BOSS直聘 招聘 技术 岗位",
+        "中国电信 牛客 企业招聘 校招 面经"
+      ],
+      "hr_or_referral_query_templates": [
+        "中国电信 HR 校招 技术 面试 小红书",
+        "中国电信 招聘官 内推 技术 岗位",
+        "中国电信 校招 HR 答疑 公众号",
+        "中国电信 内推 研发 算法 工程 牛客 力扣"
+      ],
+      "candidate_signal_query_templates": [
+        "中国电信 校招 面经 技术面 笔试",
+        "中国电信 offer 复盘 技术岗",
+        "中国电信 实习 转正 面试 研发",
+        "中国电信 岗位 工作内容 加班 氛围 公开讨论"
+      ],
+      "required_labels": [
+        "source_type",
+        "source_priority",
+        "publisher_or_account",
+        "hr_verified",
+        "published_at_or_captured_on",
+        "confidence",
+        "public_url",
+        "privacy_checked"
+      ]
+    },
+    {
+      "company_id": "china_unicom",
+      "company_name": "中国联通",
+      "focus_major_clusters": [
+        "computer_ai_software",
+        "electronics_communication_ic"
+      ],
+      "official_source_candidates": [],
+      "recruitment_platform_query_templates": [
+        "中国联通 校园招聘 技术 岗位 官方",
+        "中国联通 社招 研发 算法 软件 硬件 招聘",
+        "中国联通 BOSS直聘 招聘 技术 岗位",
+        "中国联通 牛客 企业招聘 校招 面经"
+      ],
+      "hr_or_referral_query_templates": [
+        "中国联通 HR 校招 技术 面试 小红书",
+        "中国联通 招聘官 内推 技术 岗位",
+        "中国联通 校招 HR 答疑 公众号",
+        "中国联通 内推 研发 算法 工程 牛客 力扣"
+      ],
+      "candidate_signal_query_templates": [
+        "中国联通 校招 面经 技术面 笔试",
+        "中国联通 offer 复盘 技术岗",
+        "中国联通 实习 转正 面试 研发",
+        "中国联通 岗位 工作内容 加班 氛围 公开讨论"
+      ],
+      "required_labels": [
+        "source_type",
+        "source_priority",
+        "publisher_or_account",
+        "hr_verified",
+        "published_at_or_captured_on",
+        "confidence",
+        "public_url",
+        "privacy_checked"
+      ]
+    },
+    {
+      "company_id": "cnnc",
+      "company_name": "中核集团",
+      "focus_major_clusters": [
+        "aerospace_marine_defense_nuclear",
+        "energy_power_electrical",
+        "materials_semiconductor_new_energy"
+      ],
+      "official_source_candidates": [],
+      "recruitment_platform_query_templates": [
+        "中核集团 校园招聘 技术 岗位 官方",
+        "中核集团 社招 研发 算法 软件 硬件 招聘",
+        "中核集团 BOSS直聘 招聘 技术 岗位",
+        "中核集团 牛客 企业招聘 校招 面经"
+      ],
+      "hr_or_referral_query_templates": [
+        "中核集团 HR 校招 技术 面试 小红书",
+        "中核集团 招聘官 内推 技术 岗位",
+        "中核集团 校招 HR 答疑 公众号",
+        "中核集团 内推 研发 算法 工程 牛客 力扣"
+      ],
+      "candidate_signal_query_templates": [
+        "中核集团 校招 面经 技术面 笔试",
+        "中核集团 offer 复盘 技术岗",
+        "中核集团 实习 转正 面试 研发",
+        "中核集团 岗位 工作内容 加班 氛围 公开讨论"
+      ],
+      "required_labels": [
+        "source_type",
+        "source_priority",
+        "publisher_or_account",
+        "hr_verified",
+        "published_at_or_captured_on",
+        "confidence",
+        "public_url",
+        "privacy_checked"
+      ]
+    },
+    {
+      "company_id": "cnooc",
+      "company_name": "中国海油",
+      "focus_major_clusters": [
+        "resources_environment_safety",
+        "chemical_pharma_process",
+        "aerospace_marine_defense_nuclear"
+      ],
+      "official_source_candidates": [],
+      "recruitment_platform_query_templates": [
+        "中国海油 校园招聘 技术 岗位 官方",
+        "中国海油 社招 研发 算法 软件 硬件 招聘",
+        "中国海油 BOSS直聘 招聘 技术 岗位",
+        "中国海油 牛客 企业招聘 校招 面经"
+      ],
+      "hr_or_referral_query_templates": [
+        "中国海油 HR 校招 技术 面试 小红书",
+        "中国海油 招聘官 内推 技术 岗位",
+        "中国海油 校招 HR 答疑 公众号",
+        "中国海油 内推 研发 算法 工程 牛客 力扣"
+      ],
+      "candidate_signal_query_templates": [
+        "中国海油 校招 面经 技术面 笔试",
+        "中国海油 offer 复盘 技术岗",
+        "中国海油 实习 转正 面试 研发",
+        "中国海油 岗位 工作内容 加班 氛围 公开讨论"
+      ],
+      "required_labels": [
+        "source_type",
+        "source_priority",
+        "publisher_or_account",
+        "hr_verified",
+        "published_at_or_captured_on",
+        "confidence",
+        "public_url",
+        "privacy_checked"
+      ]
+    },
+    {
+      "company_id": "comac",
+      "company_name": "中国商飞",
+      "focus_major_clusters": [
+        "aerospace_marine_defense_nuclear",
+        "mechanical_vehicle_manufacturing",
+        "electronics_communication_ic"
+      ],
+      "official_source_candidates": [],
+      "recruitment_platform_query_templates": [
+        "中国商飞 校园招聘 技术 岗位 官方",
+        "中国商飞 社招 研发 算法 软件 硬件 招聘",
+        "中国商飞 BOSS直聘 招聘 技术 岗位",
+        "中国商飞 牛客 企业招聘 校招 面经"
+      ],
+      "hr_or_referral_query_templates": [
+        "中国商飞 HR 校招 技术 面试 小红书",
+        "中国商飞 招聘官 内推 技术 岗位",
+        "中国商飞 校招 HR 答疑 公众号",
+        "中国商飞 内推 研发 算法 工程 牛客 力扣"
+      ],
+      "candidate_signal_query_templates": [
+        "中国商飞 校招 面经 技术面 笔试",
+        "中国商飞 offer 复盘 技术岗",
+        "中国商飞 实习 转正 面试 研发",
+        "中国商飞 岗位 工作内容 加班 氛围 公开讨论"
+      ],
+      "required_labels": [
+        "source_type",
+        "source_priority",
+        "publisher_or_account",
+        "hr_verified",
+        "published_at_or_captured_on",
+        "confidence",
+        "public_url",
+        "privacy_checked"
+      ]
+    },
+    {
+      "company_id": "crrc",
+      "company_name": "中国中车",
+      "focus_major_clusters": [
+        "transportation_mobility",
+        "mechanical_vehicle_manufacturing",
+        "energy_power_electrical",
+        "automation_control_robotics"
+      ],
+      "official_source_candidates": [],
+      "recruitment_platform_query_templates": [
+        "中国中车 校园招聘 技术 岗位 官方",
+        "中国中车 社招 研发 算法 软件 硬件 招聘",
+        "中国中车 BOSS直聘 招聘 技术 岗位",
+        "中国中车 牛客 企业招聘 校招 面经"
+      ],
+      "hr_or_referral_query_templates": [
+        "中国中车 HR 校招 技术 面试 小红书",
+        "中国中车 招聘官 内推 技术 岗位",
+        "中国中车 校招 HR 答疑 公众号",
+        "中国中车 内推 研发 算法 工程 牛客 力扣"
+      ],
+      "candidate_signal_query_templates": [
+        "中国中车 校招 面经 技术面 笔试",
+        "中国中车 offer 复盘 技术岗",
+        "中国中车 实习 转正 面试 研发",
+        "中国中车 岗位 工作内容 加班 氛围 公开讨论"
+      ],
+      "required_labels": [
+        "source_type",
+        "source_priority",
+        "publisher_or_account",
+        "hr_verified",
+        "published_at_or_captured_on",
+        "confidence",
+        "public_url",
+        "privacy_checked"
+      ]
+    },
+    {
+      "company_id": "cscec",
+      "company_name": "中国建筑",
+      "focus_major_clusters": [
+        "civil_architecture_spatial_infrastructure",
+        "energy_power_electrical",
+        "computer_ai_software"
+      ],
+      "official_source_candidates": [],
+      "recruitment_platform_query_templates": [
+        "中国建筑 校园招聘 技术 岗位 官方",
+        "中国建筑 社招 研发 算法 软件 硬件 招聘",
+        "中国建筑 BOSS直聘 招聘 技术 岗位",
+        "中国建筑 牛客 企业招聘 校招 面经"
+      ],
+      "hr_or_referral_query_templates": [
+        "中国建筑 HR 校招 技术 面试 小红书",
+        "中国建筑 招聘官 内推 技术 岗位",
+        "中国建筑 校招 HR 答疑 公众号",
+        "中国建筑 内推 研发 算法 工程 牛客 力扣"
+      ],
+      "candidate_signal_query_templates": [
+        "中国建筑 校招 面经 技术面 笔试",
+        "中国建筑 offer 复盘 技术岗",
+        "中国建筑 实习 转正 面试 研发",
+        "中国建筑 岗位 工作内容 加班 氛围 公开讨论"
+      ],
+      "required_labels": [
+        "source_type",
+        "source_priority",
+        "publisher_or_account",
+        "hr_verified",
+        "published_at_or_captured_on",
+        "confidence",
+        "public_url",
+        "privacy_checked"
+      ]
+    },
+    {
+      "company_id": "cssc",
+      "company_name": "中国船舶集团",
+      "focus_major_clusters": [
+        "aerospace_marine_defense_nuclear",
+        "mechanical_vehicle_manufacturing",
+        "energy_power_electrical"
+      ],
+      "official_source_candidates": [],
+      "recruitment_platform_query_templates": [
+        "中国船舶集团 校园招聘 技术 岗位 官方",
+        "中国船舶集团 社招 研发 算法 软件 硬件 招聘",
+        "中国船舶集团 BOSS直聘 招聘 技术 岗位",
+        "中国船舶集团 牛客 企业招聘 校招 面经"
+      ],
+      "hr_or_referral_query_templates": [
+        "中国船舶集团 HR 校招 技术 面试 小红书",
+        "中国船舶集团 招聘官 内推 技术 岗位",
+        "中国船舶集团 校招 HR 答疑 公众号",
+        "中国船舶集团 内推 研发 算法 工程 牛客 力扣"
+      ],
+      "candidate_signal_query_templates": [
+        "中国船舶集团 校招 面经 技术面 笔试",
+        "中国船舶集团 offer 复盘 技术岗",
+        "中国船舶集团 实习 转正 面试 研发",
+        "中国船舶集团 岗位 工作内容 加班 氛围 公开讨论"
+      ],
+      "required_labels": [
+        "source_type",
+        "source_priority",
+        "publisher_or_account",
+        "hr_verified",
+        "published_at_or_captured_on",
+        "confidence",
+        "public_url",
+        "privacy_checked"
+      ]
+    },
+    {
+      "company_id": "cxmt",
+      "company_name": "长鑫存储",
+      "focus_major_clusters": [
+        "electronics_communication_ic",
+        "materials_semiconductor_new_energy"
+      ],
+      "official_source_candidates": [],
+      "recruitment_platform_query_templates": [
+        "长鑫存储 校园招聘 技术 岗位 官方",
+        "长鑫存储 社招 研发 算法 软件 硬件 招聘",
+        "长鑫存储 BOSS直聘 招聘 技术 岗位",
+        "长鑫存储 牛客 企业招聘 校招 面经"
+      ],
+      "hr_or_referral_query_templates": [
+        "长鑫存储 HR 校招 技术 面试 小红书",
+        "长鑫存储 招聘官 内推 技术 岗位",
+        "长鑫存储 校招 HR 答疑 公众号",
+        "长鑫存储 内推 研发 算法 工程 牛客 力扣"
+      ],
+      "candidate_signal_query_templates": [
+        "长鑫存储 校招 面经 技术面 笔试",
+        "长鑫存储 offer 复盘 技术岗",
+        "长鑫存储 实习 转正 面试 研发",
+        "长鑫存储 岗位 工作内容 加班 氛围 公开讨论"
+      ],
+      "required_labels": [
+        "source_type",
+        "source_priority",
+        "publisher_or_account",
+        "hr_verified",
+        "published_at_or_captured_on",
+        "confidence",
+        "public_url",
+        "privacy_checked"
+      ]
+    },
+    {
+      "company_id": "dahua",
+      "company_name": "大华股份",
+      "focus_major_clusters": [
+        "computer_ai_software",
+        "electronics_communication_ic",
+        "automation_control_robotics"
+      ],
+      "official_source_candidates": [
+        {
+          "url": "https://job.dahuatech.com/",
+          "source_type": "official_career_page",
+          "evidence_id": "ev_dahua_official_career_page_2026_06_26"
+        }
+      ],
+      "recruitment_platform_query_templates": [
+        "大华股份 校园招聘 技术 岗位 官方",
+        "大华股份 社招 研发 算法 软件 硬件 招聘",
+        "大华股份 BOSS直聘 招聘 技术 岗位",
+        "大华股份 牛客 企业招聘 校招 面经"
+      ],
+      "hr_or_referral_query_templates": [
+        "大华股份 HR 校招 技术 面试 小红书",
+        "大华股份 招聘官 内推 技术 岗位",
+        "大华股份 校招 HR 答疑 公众号",
+        "大华股份 内推 研发 算法 工程 牛客 力扣"
+      ],
+      "candidate_signal_query_templates": [
+        "大华股份 校招 面经 技术面 笔试",
+        "大华股份 offer 复盘 技术岗",
+        "大华股份 实习 转正 面试 研发",
+        "大华股份 岗位 工作内容 加班 氛围 公开讨论"
+      ],
+      "required_labels": [
+        "source_type",
+        "source_priority",
+        "publisher_or_account",
+        "hr_verified",
+        "published_at_or_captured_on",
+        "confidence",
+        "public_url",
+        "privacy_checked"
+      ]
+    },
+    {
+      "company_id": "deeproute_ai",
+      "company_name": "元戎启行",
+      "focus_major_clusters": [
+        "computer_ai_software",
+        "automation_control_robotics",
+        "electronics_communication_ic"
+      ],
+      "official_source_candidates": [],
+      "recruitment_platform_query_templates": [
+        "元戎启行 校园招聘 技术 岗位 官方",
+        "元戎启行 社招 研发 算法 软件 硬件 招聘",
+        "元戎启行 BOSS直聘 招聘 技术 岗位",
+        "元戎启行 牛客 企业招聘 校招 面经"
+      ],
+      "hr_or_referral_query_templates": [
+        "元戎启行 HR 校招 技术 面试 小红书",
+        "元戎启行 招聘官 内推 技术 岗位",
+        "元戎启行 校招 HR 答疑 公众号",
+        "元戎启行 内推 研发 算法 工程 牛客 力扣"
+      ],
+      "candidate_signal_query_templates": [
+        "元戎启行 校招 面经 技术面 笔试",
+        "元戎启行 offer 复盘 技术岗",
+        "元戎启行 实习 转正 面试 研发",
+        "元戎启行 岗位 工作内容 加班 氛围 公开讨论"
+      ],
+      "required_labels": [
+        "source_type",
+        "source_priority",
+        "publisher_or_account",
+        "hr_verified",
+        "published_at_or_captured_on",
+        "confidence",
+        "public_url",
+        "privacy_checked"
+      ]
+    },
+    {
+      "company_id": "deepseek",
+      "company_name": "深度求索",
+      "focus_major_clusters": [
+        "computer_ai_software"
+      ],
+      "official_source_candidates": [
+        {
+          "url": "https://www.deepseek.com/",
+          "source_type": "official_career_page",
+          "evidence_id": "ev_deepseek_official_career_page_2026_06_26"
+        }
+      ],
+      "recruitment_platform_query_templates": [
+        "深度求索 校园招聘 技术 岗位 官方",
+        "深度求索 社招 研发 算法 软件 硬件 招聘",
+        "深度求索 BOSS直聘 招聘 技术 岗位",
+        "深度求索 牛客 企业招聘 校招 面经"
+      ],
+      "hr_or_referral_query_templates": [
+        "深度求索 HR 校招 技术 面试 小红书",
+        "深度求索 招聘官 内推 技术 岗位",
+        "深度求索 校招 HR 答疑 公众号",
+        "深度求索 内推 研发 算法 工程 牛客 力扣"
+      ],
+      "candidate_signal_query_templates": [
+        "深度求索 校招 面经 技术面 笔试",
+        "深度求索 offer 复盘 技术岗",
+        "深度求索 实习 转正 面试 研发",
+        "深度求索 岗位 工作内容 加班 氛围 公开讨论"
+      ],
+      "required_labels": [
+        "source_type",
+        "source_priority",
+        "publisher_or_account",
+        "hr_verified",
+        "published_at_or_captured_on",
+        "confidence",
+        "public_url",
+        "privacy_checked"
+      ]
+    },
+    {
+      "company_id": "didi",
+      "company_name": "滴滴",
+      "focus_major_clusters": [
+        "computer_ai_software",
+        "transportation_mobility",
+        "automation_control_robotics"
+      ],
+      "official_source_candidates": [
+        {
+          "url": "https://talent.didiglobal.com/",
+          "source_type": "official_career_page",
+          "evidence_id": "ev_didi_official_career_page_2026_06_26"
+        }
+      ],
+      "recruitment_platform_query_templates": [
+        "滴滴 校园招聘 技术 岗位 官方",
+        "滴滴 社招 研发 算法 软件 硬件 招聘",
+        "滴滴 BOSS直聘 招聘 技术 岗位",
+        "滴滴 牛客 企业招聘 校招 面经"
+      ],
+      "hr_or_referral_query_templates": [
+        "滴滴 HR 校招 技术 面试 小红书",
+        "滴滴 招聘官 内推 技术 岗位",
+        "滴滴 校招 HR 答疑 公众号",
+        "滴滴 内推 研发 算法 工程 牛客 力扣"
+      ],
+      "candidate_signal_query_templates": [
+        "滴滴 校招 面经 技术面 笔试",
+        "滴滴 offer 复盘 技术岗",
+        "滴滴 实习 转正 面试 研发",
+        "滴滴 岗位 工作内容 加班 氛围 公开讨论"
+      ],
+      "required_labels": [
+        "source_type",
+        "source_priority",
+        "publisher_or_account",
+        "hr_verified",
+        "published_at_or_captured_on",
+        "confidence",
+        "public_url",
+        "privacy_checked"
+      ]
+    },
+    {
+      "company_id": "dji",
+      "company_name": "大疆",
+      "focus_major_clusters": [
+        "automation_control_robotics",
+        "electronics_communication_ic",
+        "mechanical_vehicle_manufacturing",
+        "computer_ai_software"
+      ],
+      "official_source_candidates": [
+        {
+          "url": "https://careers.dji.com/zh-CN/campus",
+          "source_type": "official_campus_recruiting_page",
+          "evidence_id": "ev_dji_campus_official_2026_06_26"
+        },
+        {
+          "url": "https://we.dji.com/zh-CN/campus/opticsMatch/promotion",
+          "source_type": "official_competition_page",
+          "evidence_id": "ev_dji_optics_competition_official_2026_06_26"
+        }
+      ],
+      "recruitment_platform_query_templates": [
+        "大疆 校园招聘 技术 岗位 官方",
+        "大疆 社招 研发 算法 软件 硬件 招聘",
+        "大疆 BOSS直聘 招聘 技术 岗位",
+        "大疆 牛客 企业招聘 校招 面经"
+      ],
+      "hr_or_referral_query_templates": [
+        "大疆 HR 校招 技术 面试 小红书",
+        "大疆 招聘官 内推 技术 岗位",
+        "大疆 校招 HR 答疑 公众号",
+        "大疆 内推 研发 算法 工程 牛客 力扣"
+      ],
+      "candidate_signal_query_templates": [
+        "大疆 校招 面经 技术面 笔试",
+        "大疆 offer 复盘 技术岗",
+        "大疆 实习 转正 面试 研发",
+        "大疆 岗位 工作内容 加班 氛围 公开讨论"
+      ],
+      "required_labels": [
+        "source_type",
+        "source_priority",
+        "publisher_or_account",
+        "hr_verified",
+        "published_at_or_captured_on",
+        "confidence",
+        "public_url",
+        "privacy_checked"
+      ]
+    },
+    {
+      "company_id": "envision",
+      "company_name": "远景科技集团",
+      "focus_major_clusters": [
+        "energy_power_electrical",
+        "computer_ai_software",
+        "mechanical_vehicle_manufacturing"
+      ],
+      "official_source_candidates": [
+        {
+          "url": "https://www.envision-group.com/careers",
+          "source_type": "official_career_page",
+          "evidence_id": "ev_envision_official_career_page_2026_06_26"
+        }
+      ],
+      "recruitment_platform_query_templates": [
+        "远景科技集团 校园招聘 技术 岗位 官方",
+        "远景科技集团 社招 研发 算法 软件 硬件 招聘",
+        "远景科技集团 BOSS直聘 招聘 技术 岗位",
+        "远景科技集团 牛客 企业招聘 校招 面经"
+      ],
+      "hr_or_referral_query_templates": [
+        "远景科技集团 HR 校招 技术 面试 小红书",
+        "远景科技集团 招聘官 内推 技术 岗位",
+        "远景科技集团 校招 HR 答疑 公众号",
+        "远景科技集团 内推 研发 算法 工程 牛客 力扣"
+      ],
+      "candidate_signal_query_templates": [
+        "远景科技集团 校招 面经 技术面 笔试",
+        "远景科技集团 offer 复盘 技术岗",
+        "远景科技集团 实习 转正 面试 研发",
+        "远景科技集团 岗位 工作内容 加班 氛围 公开讨论"
+      ],
+      "required_labels": [
+        "source_type",
+        "source_priority",
+        "publisher_or_account",
+        "hr_verified",
+        "published_at_or_captured_on",
+        "confidence",
+        "public_url",
+        "privacy_checked"
+      ]
+    },
+    {
+      "company_id": "eve_energy",
+      "company_name": "亿纬锂能",
+      "focus_major_clusters": [
+        "materials_semiconductor_new_energy",
+        "energy_power_electrical",
+        "chemical_pharma_process"
+      ],
+      "official_source_candidates": [],
+      "recruitment_platform_query_templates": [
+        "亿纬锂能 校园招聘 技术 岗位 官方",
+        "亿纬锂能 社招 研发 算法 软件 硬件 招聘",
+        "亿纬锂能 BOSS直聘 招聘 技术 岗位",
+        "亿纬锂能 牛客 企业招聘 校招 面经"
+      ],
+      "hr_or_referral_query_templates": [
+        "亿纬锂能 HR 校招 技术 面试 小红书",
+        "亿纬锂能 招聘官 内推 技术 岗位",
+        "亿纬锂能 校招 HR 答疑 公众号",
+        "亿纬锂能 内推 研发 算法 工程 牛客 力扣"
+      ],
+      "candidate_signal_query_templates": [
+        "亿纬锂能 校招 面经 技术面 笔试",
+        "亿纬锂能 offer 复盘 技术岗",
+        "亿纬锂能 实习 转正 面试 研发",
+        "亿纬锂能 岗位 工作内容 加班 氛围 公开讨论"
+      ],
+      "required_labels": [
+        "source_type",
+        "source_priority",
+        "publisher_or_account",
+        "hr_verified",
+        "published_at_or_captured_on",
+        "confidence",
+        "public_url",
+        "privacy_checked"
+      ]
+    },
+    {
+      "company_id": "geely",
+      "company_name": "吉利控股",
+      "focus_major_clusters": [
+        "mechanical_vehicle_manufacturing",
+        "energy_power_electrical",
+        "computer_ai_software",
+        "automation_control_robotics"
+      ],
+      "official_source_candidates": [],
+      "recruitment_platform_query_templates": [
+        "吉利控股 校园招聘 技术 岗位 官方",
+        "吉利控股 社招 研发 算法 软件 硬件 招聘",
+        "吉利控股 BOSS直聘 招聘 技术 岗位",
+        "吉利控股 牛客 企业招聘 校招 面经"
+      ],
+      "hr_or_referral_query_templates": [
+        "吉利控股 HR 校招 技术 面试 小红书",
+        "吉利控股 招聘官 内推 技术 岗位",
+        "吉利控股 校招 HR 答疑 公众号",
+        "吉利控股 内推 研发 算法 工程 牛客 力扣"
+      ],
+      "candidate_signal_query_templates": [
+        "吉利控股 校招 面经 技术面 笔试",
+        "吉利控股 offer 复盘 技术岗",
+        "吉利控股 实习 转正 面试 研发",
+        "吉利控股 岗位 工作内容 加班 氛围 公开讨论"
+      ],
+      "required_labels": [
+        "source_type",
+        "source_priority",
+        "publisher_or_account",
+        "hr_verified",
+        "published_at_or_captured_on",
+        "confidence",
+        "public_url",
+        "privacy_checked"
+      ]
+    },
+    {
+      "company_id": "goldwind",
+      "company_name": "金风科技",
+      "focus_major_clusters": [
+        "energy_power_electrical",
+        "mechanical_vehicle_manufacturing",
+        "automation_control_robotics"
+      ],
+      "official_source_candidates": [],
+      "recruitment_platform_query_templates": [
+        "金风科技 校园招聘 技术 岗位 官方",
+        "金风科技 社招 研发 算法 软件 硬件 招聘",
+        "金风科技 BOSS直聘 招聘 技术 岗位",
+        "金风科技 牛客 企业招聘 校招 面经"
+      ],
+      "hr_or_referral_query_templates": [
+        "金风科技 HR 校招 技术 面试 小红书",
+        "金风科技 招聘官 内推 技术 岗位",
+        "金风科技 校招 HR 答疑 公众号",
+        "金风科技 内推 研发 算法 工程 牛客 力扣"
+      ],
+      "candidate_signal_query_templates": [
+        "金风科技 校招 面经 技术面 笔试",
+        "金风科技 offer 复盘 技术岗",
+        "金风科技 实习 转正 面试 研发",
+        "金风科技 岗位 工作内容 加班 氛围 公开讨论"
+      ],
+      "required_labels": [
+        "source_type",
+        "source_priority",
+        "publisher_or_account",
+        "hr_verified",
+        "published_at_or_captured_on",
+        "confidence",
+        "public_url",
+        "privacy_checked"
+      ]
+    },
+    {
+      "company_id": "great_wall_motor",
+      "company_name": "长城汽车",
+      "focus_major_clusters": [
+        "mechanical_vehicle_manufacturing",
+        "energy_power_electrical",
+        "computer_ai_software"
+      ],
+      "official_source_candidates": [],
+      "recruitment_platform_query_templates": [
+        "长城汽车 校园招聘 技术 岗位 官方",
+        "长城汽车 社招 研发 算法 软件 硬件 招聘",
+        "长城汽车 BOSS直聘 招聘 技术 岗位",
+        "长城汽车 牛客 企业招聘 校招 面经"
+      ],
+      "hr_or_referral_query_templates": [
+        "长城汽车 HR 校招 技术 面试 小红书",
+        "长城汽车 招聘官 内推 技术 岗位",
+        "长城汽车 校招 HR 答疑 公众号",
+        "长城汽车 内推 研发 算法 工程 牛客 力扣"
+      ],
+      "candidate_signal_query_templates": [
+        "长城汽车 校招 面经 技术面 笔试",
+        "长城汽车 offer 复盘 技术岗",
+        "长城汽车 实习 转正 面试 研发",
+        "长城汽车 岗位 工作内容 加班 氛围 公开讨论"
+      ],
+      "required_labels": [
+        "source_type",
+        "source_priority",
+        "publisher_or_account",
+        "hr_verified",
+        "published_at_or_captured_on",
+        "confidence",
+        "public_url",
+        "privacy_checked"
+      ]
+    },
+    {
+      "company_id": "haier",
+      "company_name": "海尔",
+      "focus_major_clusters": [
+        "mechanical_vehicle_manufacturing",
+        "electronics_communication_ic",
+        "computer_ai_software"
+      ],
+      "official_source_candidates": [
+        {
+          "url": "https://maker.haier.net/client/campus/activityindex.html",
+          "source_type": "official_campus_recruiting_page",
+          "evidence_id": "ev_haier_campus_hr_social_official_2026_06_26"
+        },
+        {
+          "url": "https://www.haier.com/careers/",
+          "source_type": "official_career_page",
+          "evidence_id": "ev_haier_official_career_page_2026_06_26"
+        }
+      ],
+      "recruitment_platform_query_templates": [
+        "海尔 校园招聘 技术 岗位 官方",
+        "海尔 社招 研发 算法 软件 硬件 招聘",
+        "海尔 BOSS直聘 招聘 技术 岗位",
+        "海尔 牛客 企业招聘 校招 面经"
+      ],
+      "hr_or_referral_query_templates": [
+        "海尔 HR 校招 技术 面试 小红书",
+        "海尔 招聘官 内推 技术 岗位",
+        "海尔 校招 HR 答疑 公众号",
+        "海尔 内推 研发 算法 工程 牛客 力扣"
+      ],
+      "candidate_signal_query_templates": [
+        "海尔 校招 面经 技术面 笔试",
+        "海尔 offer 复盘 技术岗",
+        "海尔 实习 转正 面试 研发",
+        "海尔 岗位 工作内容 加班 氛围 公开讨论"
+      ],
+      "required_labels": [
+        "source_type",
+        "source_priority",
+        "publisher_or_account",
+        "hr_verified",
+        "published_at_or_captured_on",
+        "confidence",
+        "public_url",
+        "privacy_checked"
+      ]
+    },
+    {
+      "company_id": "hikvision",
+      "company_name": "海康威视",
+      "focus_major_clusters": [
+        "computer_ai_software",
+        "electronics_communication_ic",
+        "automation_control_robotics"
+      ],
+      "official_source_candidates": [],
+      "recruitment_platform_query_templates": [
+        "海康威视 校园招聘 技术 岗位 官方",
+        "海康威视 社招 研发 算法 软件 硬件 招聘",
+        "海康威视 BOSS直聘 招聘 技术 岗位",
+        "海康威视 牛客 企业招聘 校招 面经"
+      ],
+      "hr_or_referral_query_templates": [
+        "海康威视 HR 校招 技术 面试 小红书",
+        "海康威视 招聘官 内推 技术 岗位",
+        "海康威视 校招 HR 答疑 公众号",
+        "海康威视 内推 研发 算法 工程 牛客 力扣"
+      ],
+      "candidate_signal_query_templates": [
+        "海康威视 校招 面经 技术面 笔试",
+        "海康威视 offer 复盘 技术岗",
+        "海康威视 实习 转正 面试 研发",
+        "海康威视 岗位 工作内容 加班 氛围 公开讨论"
+      ],
+      "required_labels": [
+        "source_type",
+        "source_priority",
+        "publisher_or_account",
+        "hr_verified",
+        "published_at_or_captured_on",
+        "confidence",
+        "public_url",
+        "privacy_checked"
+      ]
+    },
+    {
+      "company_id": "horizon_robotics",
+      "company_name": "地平线",
+      "focus_major_clusters": [
+        "computer_ai_software",
+        "electronics_communication_ic",
+        "automation_control_robotics"
+      ],
+      "official_source_candidates": [],
+      "recruitment_platform_query_templates": [
+        "地平线 校园招聘 技术 岗位 官方",
+        "地平线 社招 研发 算法 软件 硬件 招聘",
+        "地平线 BOSS直聘 招聘 技术 岗位",
+        "地平线 牛客 企业招聘 校招 面经"
+      ],
+      "hr_or_referral_query_templates": [
+        "地平线 HR 校招 技术 面试 小红书",
+        "地平线 招聘官 内推 技术 岗位",
+        "地平线 校招 HR 答疑 公众号",
+        "地平线 内推 研发 算法 工程 牛客 力扣"
+      ],
+      "candidate_signal_query_templates": [
+        "地平线 校招 面经 技术面 笔试",
+        "地平线 offer 复盘 技术岗",
+        "地平线 实习 转正 面试 研发",
+        "地平线 岗位 工作内容 加班 氛围 公开讨论"
+      ],
+      "required_labels": [
+        "source_type",
+        "source_priority",
+        "publisher_or_account",
+        "hr_verified",
+        "published_at_or_captured_on",
+        "confidence",
+        "public_url",
+        "privacy_checked"
+      ]
+    },
+    {
+      "company_id": "huahong",
+      "company_name": "华虹集团",
+      "focus_major_clusters": [
+        "electronics_communication_ic",
+        "materials_semiconductor_new_energy",
+        "chemical_pharma_process"
+      ],
+      "official_source_candidates": [],
+      "recruitment_platform_query_templates": [
+        "华虹集团 校园招聘 技术 岗位 官方",
+        "华虹集团 社招 研发 算法 软件 硬件 招聘",
+        "华虹集团 BOSS直聘 招聘 技术 岗位",
+        "华虹集团 牛客 企业招聘 校招 面经"
+      ],
+      "hr_or_referral_query_templates": [
+        "华虹集团 HR 校招 技术 面试 小红书",
+        "华虹集团 招聘官 内推 技术 岗位",
+        "华虹集团 校招 HR 答疑 公众号",
+        "华虹集团 内推 研发 算法 工程 牛客 力扣"
+      ],
+      "candidate_signal_query_templates": [
+        "华虹集团 校招 面经 技术面 笔试",
+        "华虹集团 offer 复盘 技术岗",
+        "华虹集团 实习 转正 面试 研发",
+        "华虹集团 岗位 工作内容 加班 氛围 公开讨论"
+      ],
+      "required_labels": [
+        "source_type",
+        "source_priority",
+        "publisher_or_account",
+        "hr_verified",
+        "published_at_or_captured_on",
+        "confidence",
+        "public_url",
+        "privacy_checked"
+      ]
+    },
+    {
+      "company_id": "huawei",
+      "company_name": "华为",
+      "focus_major_clusters": [
+        "computer_ai_software",
+        "electronics_communication_ic",
+        "energy_power_electrical"
+      ],
+      "official_source_candidates": [
+        {
+          "url": "https://career.huawei.com/reccampportal/portal5/faq.html?tag=social",
+          "source_type": "official_faq",
+          "evidence_id": "ev_huawei_career_faq_official_2026_06_26"
+        }
+      ],
+      "recruitment_platform_query_templates": [
+        "华为 校园招聘 技术 岗位 官方",
+        "华为 社招 研发 算法 软件 硬件 招聘",
+        "华为 BOSS直聘 招聘 技术 岗位",
+        "华为 牛客 企业招聘 校招 面经"
+      ],
+      "hr_or_referral_query_templates": [
+        "华为 HR 校招 技术 面试 小红书",
+        "华为 招聘官 内推 技术 岗位",
+        "华为 校招 HR 答疑 公众号",
+        "华为 内推 研发 算法 工程 牛客 力扣"
+      ],
+      "candidate_signal_query_templates": [
+        "华为 校招 面经 技术面 笔试",
+        "华为 offer 复盘 技术岗",
+        "华为 实习 转正 面试 研发",
+        "华为 岗位 工作内容 加班 氛围 公开讨论"
+      ],
+      "required_labels": [
+        "source_type",
+        "source_priority",
+        "publisher_or_account",
+        "hr_verified",
+        "published_at_or_captured_on",
+        "confidence",
+        "public_url",
+        "privacy_checked"
+      ]
+    },
+    {
+      "company_id": "iflytek",
+      "company_name": "科大讯飞",
+      "focus_major_clusters": [
+        "computer_ai_software",
+        "electronics_communication_ic"
+      ],
+      "official_source_candidates": [
+        {
+          "url": "https://iflytek.zhiye.com/",
+          "source_type": "official_campus_page",
+          "evidence_id": "ev_iflytek_official_campus_page_2026_06_26"
+        }
+      ],
+      "recruitment_platform_query_templates": [
+        "科大讯飞 校园招聘 技术 岗位 官方",
+        "科大讯飞 社招 研发 算法 软件 硬件 招聘",
+        "科大讯飞 BOSS直聘 招聘 技术 岗位",
+        "科大讯飞 牛客 企业招聘 校招 面经"
+      ],
+      "hr_or_referral_query_templates": [
+        "科大讯飞 HR 校招 技术 面试 小红书",
+        "科大讯飞 招聘官 内推 技术 岗位",
+        "科大讯飞 校招 HR 答疑 公众号",
+        "科大讯飞 内推 研发 算法 工程 牛客 力扣"
+      ],
+      "candidate_signal_query_templates": [
+        "科大讯飞 校招 面经 技术面 笔试",
+        "科大讯飞 offer 复盘 技术岗",
+        "科大讯飞 实习 转正 面试 研发",
+        "科大讯飞 岗位 工作内容 加班 氛围 公开讨论"
+      ],
+      "required_labels": [
+        "source_type",
+        "source_priority",
+        "publisher_or_account",
+        "hr_verified",
+        "published_at_or_captured_on",
+        "confidence",
+        "public_url",
+        "privacy_checked"
+      ]
+    },
+    {
+      "company_id": "inovance",
+      "company_name": "汇川技术",
+      "focus_major_clusters": [
+        "automation_control_robotics",
+        "electronics_communication_ic",
+        "energy_power_electrical",
+        "mechanical_vehicle_manufacturing"
+      ],
+      "official_source_candidates": [
+        {
+          "url": "https://inovance.zhiye.com/",
+          "source_type": "official_career_page",
+          "evidence_id": "ev_inovance_official_career_page_2026_06_26"
+        }
+      ],
+      "recruitment_platform_query_templates": [
+        "汇川技术 校园招聘 技术 岗位 官方",
+        "汇川技术 社招 研发 算法 软件 硬件 招聘",
+        "汇川技术 BOSS直聘 招聘 技术 岗位",
+        "汇川技术 牛客 企业招聘 校招 面经"
+      ],
+      "hr_or_referral_query_templates": [
+        "汇川技术 HR 校招 技术 面试 小红书",
+        "汇川技术 招聘官 内推 技术 岗位",
+        "汇川技术 校招 HR 答疑 公众号",
+        "汇川技术 内推 研发 算法 工程 牛客 力扣"
+      ],
+      "candidate_signal_query_templates": [
+        "汇川技术 校招 面经 技术面 笔试",
+        "汇川技术 offer 复盘 技术岗",
+        "汇川技术 实习 转正 面试 研发",
+        "汇川技术 岗位 工作内容 加班 氛围 公开讨论"
+      ],
+      "required_labels": [
+        "source_type",
+        "source_priority",
+        "publisher_or_account",
+        "hr_verified",
+        "published_at_or_captured_on",
+        "confidence",
+        "public_url",
+        "privacy_checked"
+      ]
+    },
+    {
+      "company_id": "insta360",
+      "company_name": "影石 Insta360",
+      "focus_major_clusters": [
+        "electronics_communication_ic",
+        "computer_ai_software",
+        "mechanical_vehicle_manufacturing"
+      ],
+      "official_source_candidates": [
+        {
+          "url": "https://www.insta360.com/cn/jobs",
+          "source_type": "official_career_page",
+          "evidence_id": "ev_insta360_official_career_page_2026_06_26"
+        }
+      ],
+      "recruitment_platform_query_templates": [
+        "影石 Insta360 校园招聘 技术 岗位 官方",
+        "影石 Insta360 社招 研发 算法 软件 硬件 招聘",
+        "影石 Insta360 BOSS直聘 招聘 技术 岗位",
+        "影石 Insta360 牛客 企业招聘 校招 面经"
+      ],
+      "hr_or_referral_query_templates": [
+        "影石 Insta360 HR 校招 技术 面试 小红书",
+        "影石 Insta360 招聘官 内推 技术 岗位",
+        "影石 Insta360 校招 HR 答疑 公众号",
+        "影石 Insta360 内推 研发 算法 工程 牛客 力扣"
+      ],
+      "candidate_signal_query_templates": [
+        "影石 Insta360 校招 面经 技术面 笔试",
+        "影石 Insta360 offer 复盘 技术岗",
+        "影石 Insta360 实习 转正 面试 研发",
+        "影石 Insta360 岗位 工作内容 加班 氛围 公开讨论"
+      ],
+      "required_labels": [
+        "source_type",
+        "source_priority",
+        "publisher_or_account",
+        "hr_verified",
+        "published_at_or_captured_on",
+        "confidence",
+        "public_url",
+        "privacy_checked"
+      ]
+    },
+    {
+      "company_id": "jd",
+      "company_name": "京东",
+      "focus_major_clusters": [
+        "computer_ai_software",
+        "transportation_mobility"
+      ],
+      "official_source_candidates": [
+        {
+          "url": "https://campus.jd.com/",
+          "source_type": "official_campus_recruiting_page",
+          "evidence_id": "ev_jd_official_campus_recruiting_page_2026_06_26"
+        }
+      ],
+      "recruitment_platform_query_templates": [
+        "京东 校园招聘 技术 岗位 官方",
+        "京东 社招 研发 算法 软件 硬件 招聘",
+        "京东 BOSS直聘 招聘 技术 岗位",
+        "京东 牛客 企业招聘 校招 面经"
+      ],
+      "hr_or_referral_query_templates": [
+        "京东 HR 校招 技术 面试 小红书",
+        "京东 招聘官 内推 技术 岗位",
+        "京东 校招 HR 答疑 公众号",
+        "京东 内推 研发 算法 工程 牛客 力扣"
+      ],
+      "candidate_signal_query_templates": [
+        "京东 校招 面经 技术面 笔试",
+        "京东 offer 复盘 技术岗",
+        "京东 实习 转正 面试 研发",
+        "京东 岗位 工作内容 加班 氛围 公开讨论"
+      ],
+      "required_labels": [
+        "source_type",
+        "source_priority",
+        "publisher_or_account",
+        "hr_verified",
+        "published_at_or_captured_on",
+        "confidence",
+        "public_url",
+        "privacy_checked"
+      ]
+    },
+    {
+      "company_id": "kuaishou",
+      "company_name": "快手",
+      "focus_major_clusters": [
+        "computer_ai_software"
+      ],
+      "official_source_candidates": [
+        {
+          "url": "https://campus.kuaishou.cn/",
+          "source_type": "official_campus_recruiting_page",
+          "evidence_id": "ev_kuaishou_official_campus_recruiting_page_2026_06_26"
+        }
+      ],
+      "recruitment_platform_query_templates": [
+        "快手 校园招聘 技术 岗位 官方",
+        "快手 社招 研发 算法 软件 硬件 招聘",
+        "快手 BOSS直聘 招聘 技术 岗位",
+        "快手 牛客 企业招聘 校招 面经"
+      ],
+      "hr_or_referral_query_templates": [
+        "快手 HR 校招 技术 面试 小红书",
+        "快手 招聘官 内推 技术 岗位",
+        "快手 校招 HR 答疑 公众号",
+        "快手 内推 研发 算法 工程 牛客 力扣"
+      ],
+      "candidate_signal_query_templates": [
+        "快手 校招 面经 技术面 笔试",
+        "快手 offer 复盘 技术岗",
+        "快手 实习 转正 面试 研发",
+        "快手 岗位 工作内容 加班 氛围 公开讨论"
+      ],
+      "required_labels": [
+        "source_type",
+        "source_priority",
+        "publisher_or_account",
+        "hr_verified",
+        "published_at_or_captured_on",
+        "confidence",
+        "public_url",
+        "privacy_checked"
+      ]
+    },
+    {
+      "company_id": "lenovo",
+      "company_name": "联想",
+      "focus_major_clusters": [
+        "computer_ai_software",
+        "electronics_communication_ic",
+        "mechanical_vehicle_manufacturing"
+      ],
+      "official_source_candidates": [],
+      "recruitment_platform_query_templates": [
+        "联想 校园招聘 技术 岗位 官方",
+        "联想 社招 研发 算法 软件 硬件 招聘",
+        "联想 BOSS直聘 招聘 技术 岗位",
+        "联想 牛客 企业招聘 校招 面经"
+      ],
+      "hr_or_referral_query_templates": [
+        "联想 HR 校招 技术 面试 小红书",
+        "联想 招聘官 内推 技术 岗位",
+        "联想 校招 HR 答疑 公众号",
+        "联想 内推 研发 算法 工程 牛客 力扣"
+      ],
+      "candidate_signal_query_templates": [
+        "联想 校招 面经 技术面 笔试",
+        "联想 offer 复盘 技术岗",
+        "联想 实习 转正 面试 研发",
+        "联想 岗位 工作内容 加班 氛围 公开讨论"
+      ],
+      "required_labels": [
+        "source_type",
+        "source_priority",
+        "publisher_or_account",
+        "hr_verified",
+        "published_at_or_captured_on",
+        "confidence",
+        "public_url",
+        "privacy_checked"
+      ]
+    },
+    {
+      "company_id": "li_auto",
+      "company_name": "理想汽车",
+      "focus_major_clusters": [
+        "computer_ai_software",
+        "automation_control_robotics",
+        "mechanical_vehicle_manufacturing",
+        "electronics_communication_ic"
+      ],
+      "official_source_candidates": [
+        {
+          "url": "https://www.lixiang.com/employ/campus.html",
+          "source_type": "official_campus_recruiting_page",
+          "evidence_id": "ev_li_auto_official_campus_recruiting_page_2026_06_26"
+        }
+      ],
+      "recruitment_platform_query_templates": [
+        "理想汽车 校园招聘 技术 岗位 官方",
+        "理想汽车 社招 研发 算法 软件 硬件 招聘",
+        "理想汽车 BOSS直聘 招聘 技术 岗位",
+        "理想汽车 牛客 企业招聘 校招 面经"
+      ],
+      "hr_or_referral_query_templates": [
+        "理想汽车 HR 校招 技术 面试 小红书",
+        "理想汽车 招聘官 内推 技术 岗位",
+        "理想汽车 校招 HR 答疑 公众号",
+        "理想汽车 内推 研发 算法 工程 牛客 力扣"
+      ],
+      "candidate_signal_query_templates": [
+        "理想汽车 校招 面经 技术面 笔试",
+        "理想汽车 offer 复盘 技术岗",
+        "理想汽车 实习 转正 面试 研发",
+        "理想汽车 岗位 工作内容 加班 氛围 公开讨论"
+      ],
+      "required_labels": [
+        "source_type",
+        "source_priority",
+        "publisher_or_account",
+        "hr_verified",
+        "published_at_or_captured_on",
+        "confidence",
+        "public_url",
+        "privacy_checked"
+      ]
+    },
+    {
+      "company_id": "longi",
+      "company_name": "隆基绿能",
+      "focus_major_clusters": [
+        "materials_semiconductor_new_energy",
+        "energy_power_electrical",
+        "chemical_pharma_process"
+      ],
+      "official_source_candidates": [
+        {
+          "url": "https://www.longi.com/cn/career/",
+          "source_type": "official_career_page",
+          "evidence_id": "ev_longi_official_career_page_2026_06_26"
+        }
+      ],
+      "recruitment_platform_query_templates": [
+        "隆基绿能 校园招聘 技术 岗位 官方",
+        "隆基绿能 社招 研发 算法 软件 硬件 招聘",
+        "隆基绿能 BOSS直聘 招聘 技术 岗位",
+        "隆基绿能 牛客 企业招聘 校招 面经"
+      ],
+      "hr_or_referral_query_templates": [
+        "隆基绿能 HR 校招 技术 面试 小红书",
+        "隆基绿能 招聘官 内推 技术 岗位",
+        "隆基绿能 校招 HR 答疑 公众号",
+        "隆基绿能 内推 研发 算法 工程 牛客 力扣"
+      ],
+      "candidate_signal_query_templates": [
+        "隆基绿能 校招 面经 技术面 笔试",
+        "隆基绿能 offer 复盘 技术岗",
+        "隆基绿能 实习 转正 面试 研发",
+        "隆基绿能 岗位 工作内容 加班 氛围 公开讨论"
+      ],
+      "required_labels": [
+        "source_type",
+        "source_priority",
+        "publisher_or_account",
+        "hr_verified",
+        "published_at_or_captured_on",
+        "confidence",
+        "public_url",
+        "privacy_checked"
+      ]
+    },
+    {
+      "company_id": "megvii",
+      "company_name": "旷视科技",
+      "focus_major_clusters": [
+        "computer_ai_software",
+        "electronics_communication_ic"
+      ],
+      "official_source_candidates": [],
+      "recruitment_platform_query_templates": [
+        "旷视科技 校园招聘 技术 岗位 官方",
+        "旷视科技 社招 研发 算法 软件 硬件 招聘",
+        "旷视科技 BOSS直聘 招聘 技术 岗位",
+        "旷视科技 牛客 企业招聘 校招 面经"
+      ],
+      "hr_or_referral_query_templates": [
+        "旷视科技 HR 校招 技术 面试 小红书",
+        "旷视科技 招聘官 内推 技术 岗位",
+        "旷视科技 校招 HR 答疑 公众号",
+        "旷视科技 内推 研发 算法 工程 牛客 力扣"
+      ],
+      "candidate_signal_query_templates": [
+        "旷视科技 校招 面经 技术面 笔试",
+        "旷视科技 offer 复盘 技术岗",
+        "旷视科技 实习 转正 面试 研发",
+        "旷视科技 岗位 工作内容 加班 氛围 公开讨论"
+      ],
+      "required_labels": [
+        "source_type",
+        "source_priority",
+        "publisher_or_account",
+        "hr_verified",
+        "published_at_or_captured_on",
+        "confidence",
+        "public_url",
+        "privacy_checked"
+      ]
+    },
+    {
+      "company_id": "meituan",
+      "company_name": "美团",
+      "focus_major_clusters": [
+        "computer_ai_software",
+        "transportation_mobility"
+      ],
+      "official_source_candidates": [
+        {
+          "url": "https://zhaopin.meituan.com/web/campus",
+          "source_type": "official_campus_page",
+          "evidence_id": "ev_meituan_official_campus_page_2026_06_26"
+        },
+        {
+          "url": "https://zhaopin.meituan.com/web/position",
+          "source_type": "official_job_search_page",
+          "evidence_id": "ev_meituan_official_job_search_page_2026_06_26"
+        }
+      ],
+      "recruitment_platform_query_templates": [
+        "美团 校园招聘 技术 岗位 官方",
+        "美团 社招 研发 算法 软件 硬件 招聘",
+        "美团 BOSS直聘 招聘 技术 岗位",
+        "美团 牛客 企业招聘 校招 面经"
+      ],
+      "hr_or_referral_query_templates": [
+        "美团 HR 校招 技术 面试 小红书",
+        "美团 招聘官 内推 技术 岗位",
+        "美团 校招 HR 答疑 公众号",
+        "美团 内推 研发 算法 工程 牛客 力扣"
+      ],
+      "candidate_signal_query_templates": [
+        "美团 校招 面经 技术面 笔试",
+        "美团 offer 复盘 技术岗",
+        "美团 实习 转正 面试 研发",
+        "美团 岗位 工作内容 加班 氛围 公开讨论"
+      ],
+      "required_labels": [
+        "source_type",
+        "source_priority",
+        "publisher_or_account",
+        "hr_verified",
+        "published_at_or_captured_on",
+        "confidence",
+        "public_url",
+        "privacy_checked"
+      ]
+    },
+    {
+      "company_id": "midea",
+      "company_name": "美的",
+      "focus_major_clusters": [
+        "mechanical_vehicle_manufacturing",
+        "automation_control_robotics",
+        "electronics_communication_ic",
+        "computer_ai_software"
+      ],
+      "official_source_candidates": [
+        {
+          "url": "https://careers.midea.com/recruit-school-wechat/job?mvp_code=M2K164",
+          "source_type": "official_job_search_page",
+          "evidence_id": "ev_midea_official_job_search_page_2026_06_26"
+        }
+      ],
+      "recruitment_platform_query_templates": [
+        "美的 校园招聘 技术 岗位 官方",
+        "美的 社招 研发 算法 软件 硬件 招聘",
+        "美的 BOSS直聘 招聘 技术 岗位",
+        "美的 牛客 企业招聘 校招 面经"
+      ],
+      "hr_or_referral_query_templates": [
+        "美的 HR 校招 技术 面试 小红书",
+        "美的 招聘官 内推 技术 岗位",
+        "美的 校招 HR 答疑 公众号",
+        "美的 内推 研发 算法 工程 牛客 力扣"
+      ],
+      "candidate_signal_query_templates": [
+        "美的 校招 面经 技术面 笔试",
+        "美的 offer 复盘 技术岗",
+        "美的 实习 转正 面试 研发",
+        "美的 岗位 工作内容 加班 氛围 公开讨论"
+      ],
+      "required_labels": [
+        "source_type",
+        "source_priority",
+        "publisher_or_account",
+        "hr_verified",
+        "published_at_or_captured_on",
+        "confidence",
+        "public_url",
+        "privacy_checked"
+      ]
+    },
+    {
+      "company_id": "mihoyo",
+      "company_name": "米哈游",
+      "focus_major_clusters": [
+        "computer_ai_software",
+        "electronics_communication_ic"
+      ],
+      "official_source_candidates": [
+        {
+          "url": "https://jobs.mihoyo.com/",
+          "source_type": "official_career_page",
+          "evidence_id": "ev_mihoyo_official_career_page_2026_06_26"
+        }
+      ],
+      "recruitment_platform_query_templates": [
+        "米哈游 校园招聘 技术 岗位 官方",
+        "米哈游 社招 研发 算法 软件 硬件 招聘",
+        "米哈游 BOSS直聘 招聘 技术 岗位",
+        "米哈游 牛客 企业招聘 校招 面经"
+      ],
+      "hr_or_referral_query_templates": [
+        "米哈游 HR 校招 技术 面试 小红书",
+        "米哈游 招聘官 内推 技术 岗位",
+        "米哈游 校招 HR 答疑 公众号",
+        "米哈游 内推 研发 算法 工程 牛客 力扣"
+      ],
+      "candidate_signal_query_templates": [
+        "米哈游 校招 面经 技术面 笔试",
+        "米哈游 offer 复盘 技术岗",
+        "米哈游 实习 转正 面试 研发",
+        "米哈游 岗位 工作内容 加班 氛围 公开讨论"
+      ],
+      "required_labels": [
+        "source_type",
+        "source_priority",
+        "publisher_or_account",
+        "hr_verified",
+        "published_at_or_captured_on",
+        "confidence",
+        "public_url",
+        "privacy_checked"
+      ]
+    },
+    {
+      "company_id": "mindray",
+      "company_name": "迈瑞医疗",
+      "focus_major_clusters": [
+        "biomedical_bioengineering_health",
+        "electronics_communication_ic",
+        "computer_ai_software",
+        "mechanical_vehicle_manufacturing"
+      ],
+      "official_source_candidates": [],
+      "recruitment_platform_query_templates": [
+        "迈瑞医疗 校园招聘 技术 岗位 官方",
+        "迈瑞医疗 社招 研发 算法 软件 硬件 招聘",
+        "迈瑞医疗 BOSS直聘 招聘 技术 岗位",
+        "迈瑞医疗 牛客 企业招聘 校招 面经"
+      ],
+      "hr_or_referral_query_templates": [
+        "迈瑞医疗 HR 校招 技术 面试 小红书",
+        "迈瑞医疗 招聘官 内推 技术 岗位",
+        "迈瑞医疗 校招 HR 答疑 公众号",
+        "迈瑞医疗 内推 研发 算法 工程 牛客 力扣"
+      ],
+      "candidate_signal_query_templates": [
+        "迈瑞医疗 校招 面经 技术面 笔试",
+        "迈瑞医疗 offer 复盘 技术岗",
+        "迈瑞医疗 实习 转正 面试 研发",
+        "迈瑞医疗 岗位 工作内容 加班 氛围 公开讨论"
+      ],
+      "required_labels": [
+        "source_type",
+        "source_priority",
+        "publisher_or_account",
+        "hr_verified",
+        "published_at_or_captured_on",
+        "confidence",
+        "public_url",
+        "privacy_checked"
+      ]
+    },
+    {
+      "company_id": "minimax",
+      "company_name": "MiniMax",
+      "focus_major_clusters": [
+        "computer_ai_software"
+      ],
+      "official_source_candidates": [
+        {
+          "url": "https://www.minimax.io/careers",
+          "source_type": "official_career_page",
+          "evidence_id": "ev_minimax_official_career_page_2026_06_26"
+        }
+      ],
+      "recruitment_platform_query_templates": [
+        "MiniMax 校园招聘 技术 岗位 官方",
+        "MiniMax 社招 研发 算法 软件 硬件 招聘",
+        "MiniMax BOSS直聘 招聘 技术 岗位",
+        "MiniMax 牛客 企业招聘 校招 面经"
+      ],
+      "hr_or_referral_query_templates": [
+        "MiniMax HR 校招 技术 面试 小红书",
+        "MiniMax 招聘官 内推 技术 岗位",
+        "MiniMax 校招 HR 答疑 公众号",
+        "MiniMax 内推 研发 算法 工程 牛客 力扣"
+      ],
+      "candidate_signal_query_templates": [
+        "MiniMax 校招 面经 技术面 笔试",
+        "MiniMax offer 复盘 技术岗",
+        "MiniMax 实习 转正 面试 研发",
+        "MiniMax 岗位 工作内容 加班 氛围 公开讨论"
+      ],
+      "required_labels": [
+        "source_type",
+        "source_priority",
+        "publisher_or_account",
+        "hr_verified",
+        "published_at_or_captured_on",
+        "confidence",
+        "public_url",
+        "privacy_checked"
+      ]
+    },
+    {
+      "company_id": "momenta",
+      "company_name": "Momenta",
+      "focus_major_clusters": [
+        "computer_ai_software",
+        "automation_control_robotics"
+      ],
+      "official_source_candidates": [],
+      "recruitment_platform_query_templates": [
+        "Momenta 校园招聘 技术 岗位 官方",
+        "Momenta 社招 研发 算法 软件 硬件 招聘",
+        "Momenta BOSS直聘 招聘 技术 岗位",
+        "Momenta 牛客 企业招聘 校招 面经"
+      ],
+      "hr_or_referral_query_templates": [
+        "Momenta HR 校招 技术 面试 小红书",
+        "Momenta 招聘官 内推 技术 岗位",
+        "Momenta 校招 HR 答疑 公众号",
+        "Momenta 内推 研发 算法 工程 牛客 力扣"
+      ],
+      "candidate_signal_query_templates": [
+        "Momenta 校招 面经 技术面 笔试",
+        "Momenta offer 复盘 技术岗",
+        "Momenta 实习 转正 面试 研发",
+        "Momenta 岗位 工作内容 加班 氛围 公开讨论"
+      ],
+      "required_labels": [
+        "source_type",
+        "source_priority",
+        "publisher_or_account",
+        "hr_verified",
+        "published_at_or_captured_on",
+        "confidence",
+        "public_url",
+        "privacy_checked"
+      ]
+    },
+    {
+      "company_id": "moonshot_ai",
+      "company_name": "月之暗面",
+      "focus_major_clusters": [
+        "computer_ai_software"
+      ],
+      "official_source_candidates": [
+        {
+          "url": "https://careers.kimi.com/",
+          "source_type": "official_career_page",
+          "evidence_id": "ev_moonshot_ai_official_career_page_2026_06_26"
+        }
+      ],
+      "recruitment_platform_query_templates": [
+        "月之暗面 校园招聘 技术 岗位 官方",
+        "月之暗面 社招 研发 算法 软件 硬件 招聘",
+        "月之暗面 BOSS直聘 招聘 技术 岗位",
+        "月之暗面 牛客 企业招聘 校招 面经"
+      ],
+      "hr_or_referral_query_templates": [
+        "月之暗面 HR 校招 技术 面试 小红书",
+        "月之暗面 招聘官 内推 技术 岗位",
+        "月之暗面 校招 HR 答疑 公众号",
+        "月之暗面 内推 研发 算法 工程 牛客 力扣"
+      ],
+      "candidate_signal_query_templates": [
+        "月之暗面 校招 面经 技术面 笔试",
+        "月之暗面 offer 复盘 技术岗",
+        "月之暗面 实习 转正 面试 研发",
+        "月之暗面 岗位 工作内容 加班 氛围 公开讨论"
+      ],
+      "required_labels": [
+        "source_type",
+        "source_priority",
+        "publisher_or_account",
+        "hr_verified",
+        "published_at_or_captured_on",
+        "confidence",
+        "public_url",
+        "privacy_checked"
+      ]
+    },
+    {
+      "company_id": "naura",
+      "company_name": "北方华创",
+      "focus_major_clusters": [
+        "mechanical_vehicle_manufacturing",
+        "electronics_communication_ic",
+        "materials_semiconductor_new_energy"
+      ],
+      "official_source_candidates": [
+        {
+          "url": "https://www.naura.com/join/",
+          "source_type": "official_career_page",
+          "evidence_id": "ev_naura_official_career_page_2026_06_26"
+        }
+      ],
+      "recruitment_platform_query_templates": [
+        "北方华创 校园招聘 技术 岗位 官方",
+        "北方华创 社招 研发 算法 软件 硬件 招聘",
+        "北方华创 BOSS直聘 招聘 技术 岗位",
+        "北方华创 牛客 企业招聘 校招 面经"
+      ],
+      "hr_or_referral_query_templates": [
+        "北方华创 HR 校招 技术 面试 小红书",
+        "北方华创 招聘官 内推 技术 岗位",
+        "北方华创 校招 HR 答疑 公众号",
+        "北方华创 内推 研发 算法 工程 牛客 力扣"
+      ],
+      "candidate_signal_query_templates": [
+        "北方华创 校招 面经 技术面 笔试",
+        "北方华创 offer 复盘 技术岗",
+        "北方华创 实习 转正 面试 研发",
+        "北方华创 岗位 工作内容 加班 氛围 公开讨论"
+      ],
+      "required_labels": [
+        "source_type",
+        "source_priority",
+        "publisher_or_account",
+        "hr_verified",
+        "published_at_or_captured_on",
+        "confidence",
+        "public_url",
+        "privacy_checked"
+      ]
+    },
+    {
+      "company_id": "netease",
+      "company_name": "网易",
+      "focus_major_clusters": [
+        "computer_ai_software"
+      ],
+      "official_source_candidates": [],
+      "recruitment_platform_query_templates": [
+        "网易 校园招聘 技术 岗位 官方",
+        "网易 社招 研发 算法 软件 硬件 招聘",
+        "网易 BOSS直聘 招聘 技术 岗位",
+        "网易 牛客 企业招聘 校招 面经"
+      ],
+      "hr_or_referral_query_templates": [
+        "网易 HR 校招 技术 面试 小红书",
+        "网易 招聘官 内推 技术 岗位",
+        "网易 校招 HR 答疑 公众号",
+        "网易 内推 研发 算法 工程 牛客 力扣"
+      ],
+      "candidate_signal_query_templates": [
+        "网易 校招 面经 技术面 笔试",
+        "网易 offer 复盘 技术岗",
+        "网易 实习 转正 面试 研发",
+        "网易 岗位 工作内容 加班 氛围 公开讨论"
+      ],
+      "required_labels": [
+        "source_type",
+        "source_priority",
+        "publisher_or_account",
+        "hr_verified",
+        "published_at_or_captured_on",
+        "confidence",
+        "public_url",
+        "privacy_checked"
+      ]
+    },
+    {
+      "company_id": "nio",
+      "company_name": "蔚来",
+      "focus_major_clusters": [
+        "computer_ai_software",
+        "automation_control_robotics",
+        "mechanical_vehicle_manufacturing",
+        "energy_power_electrical"
+      ],
+      "official_source_candidates": [],
+      "recruitment_platform_query_templates": [
+        "蔚来 校园招聘 技术 岗位 官方",
+        "蔚来 社招 研发 算法 软件 硬件 招聘",
+        "蔚来 BOSS直聘 招聘 技术 岗位",
+        "蔚来 牛客 企业招聘 校招 面经"
+      ],
+      "hr_or_referral_query_templates": [
+        "蔚来 HR 校招 技术 面试 小红书",
+        "蔚来 招聘官 内推 技术 岗位",
+        "蔚来 校招 HR 答疑 公众号",
+        "蔚来 内推 研发 算法 工程 牛客 力扣"
+      ],
+      "candidate_signal_query_templates": [
+        "蔚来 校招 面经 技术面 笔试",
+        "蔚来 offer 复盘 技术岗",
+        "蔚来 实习 转正 面试 研发",
+        "蔚来 岗位 工作内容 加班 氛围 公开讨论"
+      ],
+      "required_labels": [
+        "source_type",
+        "source_priority",
+        "publisher_or_account",
+        "hr_verified",
+        "published_at_or_captured_on",
+        "confidence",
+        "public_url",
+        "privacy_checked"
+      ]
+    },
+    {
+      "company_id": "oppo",
+      "company_name": "OPPO",
+      "focus_major_clusters": [
+        "electronics_communication_ic",
+        "computer_ai_software"
+      ],
+      "official_source_candidates": [
+        {
+          "url": "https://careers.oppo.com/campus",
+          "source_type": "official_campus_recruiting_page",
+          "evidence_id": "ev_oppo_official_campus_recruiting_page_2026_06_26"
+        }
+      ],
+      "recruitment_platform_query_templates": [
+        "OPPO 校园招聘 技术 岗位 官方",
+        "OPPO 社招 研发 算法 软件 硬件 招聘",
+        "OPPO BOSS直聘 招聘 技术 岗位",
+        "OPPO 牛客 企业招聘 校招 面经"
+      ],
+      "hr_or_referral_query_templates": [
+        "OPPO HR 校招 技术 面试 小红书",
+        "OPPO 招聘官 内推 技术 岗位",
+        "OPPO 校招 HR 答疑 公众号",
+        "OPPO 内推 研发 算法 工程 牛客 力扣"
+      ],
+      "candidate_signal_query_templates": [
+        "OPPO 校招 面经 技术面 笔试",
+        "OPPO offer 复盘 技术岗",
+        "OPPO 实习 转正 面试 研发",
+        "OPPO 岗位 工作内容 加班 氛围 公开讨论"
+      ],
+      "required_labels": [
+        "source_type",
+        "source_priority",
+        "publisher_or_account",
+        "hr_verified",
+        "published_at_or_captured_on",
+        "confidence",
+        "public_url",
+        "privacy_checked"
+      ]
+    },
+    {
+      "company_id": "petrochina",
+      "company_name": "中国石油",
+      "focus_major_clusters": [
+        "resources_environment_safety",
+        "chemical_pharma_process",
+        "energy_power_electrical"
+      ],
+      "official_source_candidates": [],
+      "recruitment_platform_query_templates": [
+        "中国石油 校园招聘 技术 岗位 官方",
+        "中国石油 社招 研发 算法 软件 硬件 招聘",
+        "中国石油 BOSS直聘 招聘 技术 岗位",
+        "中国石油 牛客 企业招聘 校招 面经"
+      ],
+      "hr_or_referral_query_templates": [
+        "中国石油 HR 校招 技术 面试 小红书",
+        "中国石油 招聘官 内推 技术 岗位",
+        "中国石油 校招 HR 答疑 公众号",
+        "中国石油 内推 研发 算法 工程 牛客 力扣"
+      ],
+      "candidate_signal_query_templates": [
+        "中国石油 校招 面经 技术面 笔试",
+        "中国石油 offer 复盘 技术岗",
+        "中国石油 实习 转正 面试 研发",
+        "中国石油 岗位 工作内容 加班 氛围 公开讨论"
+      ],
+      "required_labels": [
+        "source_type",
+        "source_priority",
+        "publisher_or_account",
+        "hr_verified",
+        "published_at_or_captured_on",
+        "confidence",
+        "public_url",
+        "privacy_checked"
+      ]
+    },
+    {
+      "company_id": "pinduoduo",
+      "company_name": "拼多多",
+      "focus_major_clusters": [
+        "computer_ai_software"
+      ],
+      "official_source_candidates": [],
+      "recruitment_platform_query_templates": [
+        "拼多多 校园招聘 技术 岗位 官方",
+        "拼多多 社招 研发 算法 软件 硬件 招聘",
+        "拼多多 BOSS直聘 招聘 技术 岗位",
+        "拼多多 牛客 企业招聘 校招 面经"
+      ],
+      "hr_or_referral_query_templates": [
+        "拼多多 HR 校招 技术 面试 小红书",
+        "拼多多 招聘官 内推 技术 岗位",
+        "拼多多 校招 HR 答疑 公众号",
+        "拼多多 内推 研发 算法 工程 牛客 力扣"
+      ],
+      "candidate_signal_query_templates": [
+        "拼多多 校招 面经 技术面 笔试",
+        "拼多多 offer 复盘 技术岗",
+        "拼多多 实习 转正 面试 研发",
+        "拼多多 岗位 工作内容 加班 氛围 公开讨论"
+      ],
+      "required_labels": [
+        "source_type",
+        "source_priority",
+        "publisher_or_account",
+        "hr_verified",
+        "published_at_or_captured_on",
+        "confidence",
+        "public_url",
+        "privacy_checked"
+      ]
+    },
+    {
+      "company_id": "pony_ai",
+      "company_name": "小马智行",
+      "focus_major_clusters": [
+        "computer_ai_software",
+        "automation_control_robotics",
+        "electronics_communication_ic"
+      ],
+      "official_source_candidates": [
+        {
+          "url": "https://careers.pony.ai/",
+          "source_type": "official_career_page",
+          "evidence_id": "ev_pony_ai_official_career_page_2026_06_26"
+        }
+      ],
+      "recruitment_platform_query_templates": [
+        "小马智行 校园招聘 技术 岗位 官方",
+        "小马智行 社招 研发 算法 软件 硬件 招聘",
+        "小马智行 BOSS直聘 招聘 技术 岗位",
+        "小马智行 牛客 企业招聘 校招 面经"
+      ],
+      "hr_or_referral_query_templates": [
+        "小马智行 HR 校招 技术 面试 小红书",
+        "小马智行 招聘官 内推 技术 岗位",
+        "小马智行 校招 HR 答疑 公众号",
+        "小马智行 内推 研发 算法 工程 牛客 力扣"
+      ],
+      "candidate_signal_query_templates": [
+        "小马智行 校招 面经 技术面 笔试",
+        "小马智行 offer 复盘 技术岗",
+        "小马智行 实习 转正 面试 研发",
+        "小马智行 岗位 工作内容 加班 氛围 公开讨论"
+      ],
+      "required_labels": [
+        "source_type",
+        "source_priority",
+        "publisher_or_account",
+        "hr_verified",
+        "published_at_or_captured_on",
+        "confidence",
+        "public_url",
+        "privacy_checked"
+      ]
+    },
+    {
+      "company_id": "saic",
+      "company_name": "上汽集团",
+      "focus_major_clusters": [
+        "mechanical_vehicle_manufacturing",
+        "energy_power_electrical",
+        "computer_ai_software"
+      ],
+      "official_source_candidates": [],
+      "recruitment_platform_query_templates": [
+        "上汽集团 校园招聘 技术 岗位 官方",
+        "上汽集团 社招 研发 算法 软件 硬件 招聘",
+        "上汽集团 BOSS直聘 招聘 技术 岗位",
+        "上汽集团 牛客 企业招聘 校招 面经"
+      ],
+      "hr_or_referral_query_templates": [
+        "上汽集团 HR 校招 技术 面试 小红书",
+        "上汽集团 招聘官 内推 技术 岗位",
+        "上汽集团 校招 HR 答疑 公众号",
+        "上汽集团 内推 研发 算法 工程 牛客 力扣"
+      ],
+      "candidate_signal_query_templates": [
+        "上汽集团 校招 面经 技术面 笔试",
+        "上汽集团 offer 复盘 技术岗",
+        "上汽集团 实习 转正 面试 研发",
+        "上汽集团 岗位 工作内容 加班 氛围 公开讨论"
+      ],
+      "required_labels": [
+        "source_type",
+        "source_priority",
+        "publisher_or_account",
+        "hr_verified",
+        "published_at_or_captured_on",
+        "confidence",
+        "public_url",
+        "privacy_checked"
+      ]
+    },
+    {
+      "company_id": "sany",
+      "company_name": "三一重工",
+      "focus_major_clusters": [
+        "mechanical_vehicle_manufacturing",
+        "automation_control_robotics",
+        "energy_power_electrical"
+      ],
+      "official_source_candidates": [
+        {
+          "url": "https://m.sanygroup.com/join/",
+          "source_type": "official_career_page",
+          "evidence_id": "ev_sany_official_career_page_2026_06_26"
+        }
+      ],
+      "recruitment_platform_query_templates": [
+        "三一重工 校园招聘 技术 岗位 官方",
+        "三一重工 社招 研发 算法 软件 硬件 招聘",
+        "三一重工 BOSS直聘 招聘 技术 岗位",
+        "三一重工 牛客 企业招聘 校招 面经"
+      ],
+      "hr_or_referral_query_templates": [
+        "三一重工 HR 校招 技术 面试 小红书",
+        "三一重工 招聘官 内推 技术 岗位",
+        "三一重工 校招 HR 答疑 公众号",
+        "三一重工 内推 研发 算法 工程 牛客 力扣"
+      ],
+      "candidate_signal_query_templates": [
+        "三一重工 校招 面经 技术面 笔试",
+        "三一重工 offer 复盘 技术岗",
+        "三一重工 实习 转正 面试 研发",
+        "三一重工 岗位 工作内容 加班 氛围 公开讨论"
+      ],
+      "required_labels": [
+        "source_type",
+        "source_priority",
+        "publisher_or_account",
+        "hr_verified",
+        "published_at_or_captured_on",
+        "confidence",
+        "public_url",
+        "privacy_checked"
+      ]
+    },
+    {
+      "company_id": "sensetime",
+      "company_name": "商汤科技",
+      "focus_major_clusters": [
+        "computer_ai_software"
+      ],
+      "official_source_candidates": [],
+      "recruitment_platform_query_templates": [
+        "商汤科技 校园招聘 技术 岗位 官方",
+        "商汤科技 社招 研发 算法 软件 硬件 招聘",
+        "商汤科技 BOSS直聘 招聘 技术 岗位",
+        "商汤科技 牛客 企业招聘 校招 面经"
+      ],
+      "hr_or_referral_query_templates": [
+        "商汤科技 HR 校招 技术 面试 小红书",
+        "商汤科技 招聘官 内推 技术 岗位",
+        "商汤科技 校招 HR 答疑 公众号",
+        "商汤科技 内推 研发 算法 工程 牛客 力扣"
+      ],
+      "candidate_signal_query_templates": [
+        "商汤科技 校招 面经 技术面 笔试",
+        "商汤科技 offer 复盘 技术岗",
+        "商汤科技 实习 转正 面试 研发",
+        "商汤科技 岗位 工作内容 加班 氛围 公开讨论"
+      ],
+      "required_labels": [
+        "source_type",
+        "source_priority",
+        "publisher_or_account",
+        "hr_verified",
+        "published_at_or_captured_on",
+        "confidence",
+        "public_url",
+        "privacy_checked"
+      ]
+    },
+    {
+      "company_id": "sinopec",
+      "company_name": "中国石化",
+      "focus_major_clusters": [
+        "chemical_pharma_process",
+        "energy_power_electrical",
+        "resources_environment_safety"
+      ],
+      "official_source_candidates": [
+        {
+          "url": "https://job.sinopec.com/",
+          "source_type": "official_career_page",
+          "evidence_id": "ev_sinopec_official_career_page_2026_06_26"
+        }
+      ],
+      "recruitment_platform_query_templates": [
+        "中国石化 校园招聘 技术 岗位 官方",
+        "中国石化 社招 研发 算法 软件 硬件 招聘",
+        "中国石化 BOSS直聘 招聘 技术 岗位",
+        "中国石化 牛客 企业招聘 校招 面经"
+      ],
+      "hr_or_referral_query_templates": [
+        "中国石化 HR 校招 技术 面试 小红书",
+        "中国石化 招聘官 内推 技术 岗位",
+        "中国石化 校招 HR 答疑 公众号",
+        "中国石化 内推 研发 算法 工程 牛客 力扣"
+      ],
+      "candidate_signal_query_templates": [
+        "中国石化 校招 面经 技术面 笔试",
+        "中国石化 offer 复盘 技术岗",
+        "中国石化 实习 转正 面试 研发",
+        "中国石化 岗位 工作内容 加班 氛围 公开讨论"
+      ],
+      "required_labels": [
+        "source_type",
+        "source_priority",
+        "publisher_or_account",
+        "hr_verified",
+        "published_at_or_captured_on",
+        "confidence",
+        "public_url",
+        "privacy_checked"
+      ]
+    },
+    {
+      "company_id": "smic",
+      "company_name": "中芯国际",
+      "focus_major_clusters": [
+        "electronics_communication_ic",
+        "materials_semiconductor_new_energy",
+        "chemical_pharma_process"
+      ],
+      "official_source_candidates": [],
+      "recruitment_platform_query_templates": [
+        "中芯国际 校园招聘 技术 岗位 官方",
+        "中芯国际 社招 研发 算法 软件 硬件 招聘",
+        "中芯国际 BOSS直聘 招聘 技术 岗位",
+        "中芯国际 牛客 企业招聘 校招 面经"
+      ],
+      "hr_or_referral_query_templates": [
+        "中芯国际 HR 校招 技术 面试 小红书",
+        "中芯国际 招聘官 内推 技术 岗位",
+        "中芯国际 校招 HR 答疑 公众号",
+        "中芯国际 内推 研发 算法 工程 牛客 力扣"
+      ],
+      "candidate_signal_query_templates": [
+        "中芯国际 校招 面经 技术面 笔试",
+        "中芯国际 offer 复盘 技术岗",
+        "中芯国际 实习 转正 面试 研发",
+        "中芯国际 岗位 工作内容 加班 氛围 公开讨论"
+      ],
+      "required_labels": [
+        "source_type",
+        "source_priority",
+        "publisher_or_account",
+        "hr_verified",
+        "published_at_or_captured_on",
+        "confidence",
+        "public_url",
+        "privacy_checked"
+      ]
+    },
+    {
+      "company_id": "state_grid",
+      "company_name": "国家电网",
+      "focus_major_clusters": [
+        "energy_power_electrical",
+        "computer_ai_software",
+        "electronics_communication_ic"
+      ],
+      "official_source_candidates": [],
+      "recruitment_platform_query_templates": [
+        "国家电网 校园招聘 技术 岗位 官方",
+        "国家电网 社招 研发 算法 软件 硬件 招聘",
+        "国家电网 BOSS直聘 招聘 技术 岗位",
+        "国家电网 牛客 企业招聘 校招 面经"
+      ],
+      "hr_or_referral_query_templates": [
+        "国家电网 HR 校招 技术 面试 小红书",
+        "国家电网 招聘官 内推 技术 岗位",
+        "国家电网 校招 HR 答疑 公众号",
+        "国家电网 内推 研发 算法 工程 牛客 力扣"
+      ],
+      "candidate_signal_query_templates": [
+        "国家电网 校招 面经 技术面 笔试",
+        "国家电网 offer 复盘 技术岗",
+        "国家电网 实习 转正 面试 研发",
+        "国家电网 岗位 工作内容 加班 氛围 公开讨论"
+      ],
+      "required_labels": [
+        "source_type",
+        "source_priority",
+        "publisher_or_account",
+        "hr_verified",
+        "published_at_or_captured_on",
+        "confidence",
+        "public_url",
+        "privacy_checked"
+      ]
+    },
+    {
+      "company_id": "stepfun",
+      "company_name": "阶跃星辰",
+      "focus_major_clusters": [
+        "computer_ai_software"
+      ],
+      "official_source_candidates": [],
+      "recruitment_platform_query_templates": [
+        "阶跃星辰 校园招聘 技术 岗位 官方",
+        "阶跃星辰 社招 研发 算法 软件 硬件 招聘",
+        "阶跃星辰 BOSS直聘 招聘 技术 岗位",
+        "阶跃星辰 牛客 企业招聘 校招 面经"
+      ],
+      "hr_or_referral_query_templates": [
+        "阶跃星辰 HR 校招 技术 面试 小红书",
+        "阶跃星辰 招聘官 内推 技术 岗位",
+        "阶跃星辰 校招 HR 答疑 公众号",
+        "阶跃星辰 内推 研发 算法 工程 牛客 力扣"
+      ],
+      "candidate_signal_query_templates": [
+        "阶跃星辰 校招 面经 技术面 笔试",
+        "阶跃星辰 offer 复盘 技术岗",
+        "阶跃星辰 实习 转正 面试 研发",
+        "阶跃星辰 岗位 工作内容 加班 氛围 公开讨论"
+      ],
+      "required_labels": [
+        "source_type",
+        "source_priority",
+        "publisher_or_account",
+        "hr_verified",
+        "published_at_or_captured_on",
+        "confidence",
+        "public_url",
+        "privacy_checked"
+      ]
+    },
+    {
+      "company_id": "sungrow",
+      "company_name": "阳光电源",
+      "focus_major_clusters": [
+        "energy_power_electrical",
+        "electronics_communication_ic",
+        "computer_ai_software"
+      ],
+      "official_source_candidates": [],
+      "recruitment_platform_query_templates": [
+        "阳光电源 校园招聘 技术 岗位 官方",
+        "阳光电源 社招 研发 算法 软件 硬件 招聘",
+        "阳光电源 BOSS直聘 招聘 技术 岗位",
+        "阳光电源 牛客 企业招聘 校招 面经"
+      ],
+      "hr_or_referral_query_templates": [
+        "阳光电源 HR 校招 技术 面试 小红书",
+        "阳光电源 招聘官 内推 技术 岗位",
+        "阳光电源 校招 HR 答疑 公众号",
+        "阳光电源 内推 研发 算法 工程 牛客 力扣"
+      ],
+      "candidate_signal_query_templates": [
+        "阳光电源 校招 面经 技术面 笔试",
+        "阳光电源 offer 复盘 技术岗",
+        "阳光电源 实习 转正 面试 研发",
+        "阳光电源 岗位 工作内容 加班 氛围 公开讨论"
+      ],
+      "required_labels": [
+        "source_type",
+        "source_priority",
+        "publisher_or_account",
+        "hr_verified",
+        "published_at_or_captured_on",
+        "confidence",
+        "public_url",
+        "privacy_checked"
+      ]
+    },
+    {
+      "company_id": "tencent",
+      "company_name": "腾讯",
+      "focus_major_clusters": [
+        "computer_ai_software"
+      ],
+      "official_source_candidates": [
+        {
+          "url": "https://join.qq.com/",
+          "source_type": "official_campus_recruiting_page",
+          "evidence_id": "ev_tencent_join_official_2026_06_26"
+        }
+      ],
+      "recruitment_platform_query_templates": [
+        "腾讯 校园招聘 技术 岗位 官方",
+        "腾讯 社招 研发 算法 软件 硬件 招聘",
+        "腾讯 BOSS直聘 招聘 技术 岗位",
+        "腾讯 牛客 企业招聘 校招 面经"
+      ],
+      "hr_or_referral_query_templates": [
+        "腾讯 HR 校招 技术 面试 小红书",
+        "腾讯 招聘官 内推 技术 岗位",
+        "腾讯 校招 HR 答疑 公众号",
+        "腾讯 内推 研发 算法 工程 牛客 力扣"
+      ],
+      "candidate_signal_query_templates": [
+        "腾讯 校招 面经 技术面 笔试",
+        "腾讯 offer 复盘 技术岗",
+        "腾讯 实习 转正 面试 研发",
+        "腾讯 岗位 工作内容 加班 氛围 公开讨论"
+      ],
+      "required_labels": [
+        "source_type",
+        "source_priority",
+        "publisher_or_account",
+        "hr_verified",
+        "published_at_or_captured_on",
+        "confidence",
+        "public_url",
+        "privacy_checked"
+      ]
+    },
+    {
+      "company_id": "unisoc",
+      "company_name": "紫光展锐",
+      "focus_major_clusters": [
+        "electronics_communication_ic",
+        "computer_ai_software"
+      ],
+      "official_source_candidates": [],
+      "recruitment_platform_query_templates": [
+        "紫光展锐 校园招聘 技术 岗位 官方",
+        "紫光展锐 社招 研发 算法 软件 硬件 招聘",
+        "紫光展锐 BOSS直聘 招聘 技术 岗位",
+        "紫光展锐 牛客 企业招聘 校招 面经"
+      ],
+      "hr_or_referral_query_templates": [
+        "紫光展锐 HR 校招 技术 面试 小红书",
+        "紫光展锐 招聘官 内推 技术 岗位",
+        "紫光展锐 校招 HR 答疑 公众号",
+        "紫光展锐 内推 研发 算法 工程 牛客 力扣"
+      ],
+      "candidate_signal_query_templates": [
+        "紫光展锐 校招 面经 技术面 笔试",
+        "紫光展锐 offer 复盘 技术岗",
+        "紫光展锐 实习 转正 面试 研发",
+        "紫光展锐 岗位 工作内容 加班 氛围 公开讨论"
+      ],
+      "required_labels": [
+        "source_type",
+        "source_priority",
+        "publisher_or_account",
+        "hr_verified",
+        "published_at_or_captured_on",
+        "confidence",
+        "public_url",
+        "privacy_checked"
+      ]
+    },
+    {
+      "company_id": "united_imaging",
+      "company_name": "联影医疗",
+      "focus_major_clusters": [
+        "biomedical_bioengineering_health",
+        "electronics_communication_ic",
+        "computer_ai_software",
+        "mechanical_vehicle_manufacturing"
+      ],
+      "official_source_candidates": [],
+      "recruitment_platform_query_templates": [
+        "联影医疗 校园招聘 技术 岗位 官方",
+        "联影医疗 社招 研发 算法 软件 硬件 招聘",
+        "联影医疗 BOSS直聘 招聘 技术 岗位",
+        "联影医疗 牛客 企业招聘 校招 面经"
+      ],
+      "hr_or_referral_query_templates": [
+        "联影医疗 HR 校招 技术 面试 小红书",
+        "联影医疗 招聘官 内推 技术 岗位",
+        "联影医疗 校招 HR 答疑 公众号",
+        "联影医疗 内推 研发 算法 工程 牛客 力扣"
+      ],
+      "candidate_signal_query_templates": [
+        "联影医疗 校招 面经 技术面 笔试",
+        "联影医疗 offer 复盘 技术岗",
+        "联影医疗 实习 转正 面试 研发",
+        "联影医疗 岗位 工作内容 加班 氛围 公开讨论"
+      ],
+      "required_labels": [
+        "source_type",
+        "source_priority",
+        "publisher_or_account",
+        "hr_verified",
+        "published_at_or_captured_on",
+        "confidence",
+        "public_url",
+        "privacy_checked"
+      ]
+    },
+    {
+      "company_id": "vivo",
+      "company_name": "vivo",
+      "focus_major_clusters": [
+        "electronics_communication_ic",
+        "computer_ai_software"
+      ],
+      "official_source_candidates": [
+        {
+          "url": "https://hr.vivo.com/wt/vivo/web/index/campus",
+          "source_type": "official_campus_recruiting_page",
+          "evidence_id": "ev_vivo_official_campus_recruiting_page_2026_06_26"
+        }
+      ],
+      "recruitment_platform_query_templates": [
+        "vivo 校园招聘 技术 岗位 官方",
+        "vivo 社招 研发 算法 软件 硬件 招聘",
+        "vivo BOSS直聘 招聘 技术 岗位",
+        "vivo 牛客 企业招聘 校招 面经"
+      ],
+      "hr_or_referral_query_templates": [
+        "vivo HR 校招 技术 面试 小红书",
+        "vivo 招聘官 内推 技术 岗位",
+        "vivo 校招 HR 答疑 公众号",
+        "vivo 内推 研发 算法 工程 牛客 力扣"
+      ],
+      "candidate_signal_query_templates": [
+        "vivo 校招 面经 技术面 笔试",
+        "vivo offer 复盘 技术岗",
+        "vivo 实习 转正 面试 研发",
+        "vivo 岗位 工作内容 加班 氛围 公开讨论"
+      ],
+      "required_labels": [
+        "source_type",
+        "source_priority",
+        "publisher_or_account",
+        "hr_verified",
+        "published_at_or_captured_on",
+        "confidence",
+        "public_url",
+        "privacy_checked"
+      ]
+    },
+    {
+      "company_id": "xiaohongshu",
+      "company_name": "小红书",
+      "focus_major_clusters": [
+        "computer_ai_software"
+      ],
+      "official_source_candidates": [
+        {
+          "url": "https://job.xiaohongshu.com/campus",
+          "source_type": "official_campus_page",
+          "evidence_id": "ev_xiaohongshu_official_campus_page_2026_06_26"
+        }
+      ],
+      "recruitment_platform_query_templates": [
+        "小红书 校园招聘 技术 岗位 官方",
+        "小红书 社招 研发 算法 软件 硬件 招聘",
+        "小红书 BOSS直聘 招聘 技术 岗位",
+        "小红书 牛客 企业招聘 校招 面经"
+      ],
+      "hr_or_referral_query_templates": [
+        "小红书 HR 校招 技术 面试 小红书",
+        "小红书 招聘官 内推 技术 岗位",
+        "小红书 校招 HR 答疑 公众号",
+        "小红书 内推 研发 算法 工程 牛客 力扣"
+      ],
+      "candidate_signal_query_templates": [
+        "小红书 校招 面经 技术面 笔试",
+        "小红书 offer 复盘 技术岗",
+        "小红书 实习 转正 面试 研发",
+        "小红书 岗位 工作内容 加班 氛围 公开讨论"
+      ],
+      "required_labels": [
+        "source_type",
+        "source_priority",
+        "publisher_or_account",
+        "hr_verified",
+        "published_at_or_captured_on",
+        "confidence",
+        "public_url",
+        "privacy_checked"
+      ]
+    },
+    {
+      "company_id": "xiaomi",
+      "company_name": "小米",
+      "focus_major_clusters": [
+        "computer_ai_software",
+        "electronics_communication_ic",
+        "mechanical_vehicle_manufacturing",
+        "automation_control_robotics"
+      ],
+      "official_source_candidates": [
+        {
+          "url": "https://hr.xiaomi.com/campus/",
+          "source_type": "official_campus_recruiting_page",
+          "evidence_id": "ev_xiaomi_official_campus_recruiting_page_2026_06_26"
+        }
+      ],
+      "recruitment_platform_query_templates": [
+        "小米 校园招聘 技术 岗位 官方",
+        "小米 社招 研发 算法 软件 硬件 招聘",
+        "小米 BOSS直聘 招聘 技术 岗位",
+        "小米 牛客 企业招聘 校招 面经"
+      ],
+      "hr_or_referral_query_templates": [
+        "小米 HR 校招 技术 面试 小红书",
+        "小米 招聘官 内推 技术 岗位",
+        "小米 校招 HR 答疑 公众号",
+        "小米 内推 研发 算法 工程 牛客 力扣"
+      ],
+      "candidate_signal_query_templates": [
+        "小米 校招 面经 技术面 笔试",
+        "小米 offer 复盘 技术岗",
+        "小米 实习 转正 面试 研发",
+        "小米 岗位 工作内容 加班 氛围 公开讨论"
+      ],
+      "required_labels": [
+        "source_type",
+        "source_priority",
+        "publisher_or_account",
+        "hr_verified",
+        "published_at_or_captured_on",
+        "confidence",
+        "public_url",
+        "privacy_checked"
+      ]
+    },
+    {
+      "company_id": "xpeng",
+      "company_name": "小鹏汽车",
+      "focus_major_clusters": [
+        "computer_ai_software",
+        "automation_control_robotics",
+        "electronics_communication_ic",
+        "mechanical_vehicle_manufacturing"
+      ],
+      "official_source_candidates": [
+        {
+          "url": "https://www.xiaopeng.com/join.html",
+          "source_type": "official_career_page",
+          "evidence_id": "ev_xpeng_official_career_page_2026_06_26"
+        }
+      ],
+      "recruitment_platform_query_templates": [
+        "小鹏汽车 校园招聘 技术 岗位 官方",
+        "小鹏汽车 社招 研发 算法 软件 硬件 招聘",
+        "小鹏汽车 BOSS直聘 招聘 技术 岗位",
+        "小鹏汽车 牛客 企业招聘 校招 面经"
+      ],
+      "hr_or_referral_query_templates": [
+        "小鹏汽车 HR 校招 技术 面试 小红书",
+        "小鹏汽车 招聘官 内推 技术 岗位",
+        "小鹏汽车 校招 HR 答疑 公众号",
+        "小鹏汽车 内推 研发 算法 工程 牛客 力扣"
+      ],
+      "candidate_signal_query_templates": [
+        "小鹏汽车 校招 面经 技术面 笔试",
+        "小鹏汽车 offer 复盘 技术岗",
+        "小鹏汽车 实习 转正 面试 研发",
+        "小鹏汽车 岗位 工作内容 加班 氛围 公开讨论"
+      ],
+      "required_labels": [
+        "source_type",
+        "source_priority",
+        "publisher_or_account",
+        "hr_verified",
+        "published_at_or_captured_on",
+        "confidence",
+        "public_url",
+        "privacy_checked"
+      ]
+    },
+    {
+      "company_id": "ymtc",
+      "company_name": "长江存储",
+      "focus_major_clusters": [
+        "electronics_communication_ic",
+        "materials_semiconductor_new_energy"
+      ],
+      "official_source_candidates": [],
+      "recruitment_platform_query_templates": [
+        "长江存储 校园招聘 技术 岗位 官方",
+        "长江存储 社招 研发 算法 软件 硬件 招聘",
+        "长江存储 BOSS直聘 招聘 技术 岗位",
+        "长江存储 牛客 企业招聘 校招 面经"
+      ],
+      "hr_or_referral_query_templates": [
+        "长江存储 HR 校招 技术 面试 小红书",
+        "长江存储 招聘官 内推 技术 岗位",
+        "长江存储 校招 HR 答疑 公众号",
+        "长江存储 内推 研发 算法 工程 牛客 力扣"
+      ],
+      "candidate_signal_query_templates": [
+        "长江存储 校招 面经 技术面 笔试",
+        "长江存储 offer 复盘 技术岗",
+        "长江存储 实习 转正 面试 研发",
+        "长江存储 岗位 工作内容 加班 氛围 公开讨论"
+      ],
+      "required_labels": [
+        "source_type",
+        "source_priority",
+        "publisher_or_account",
+        "hr_verified",
+        "published_at_or_captured_on",
+        "confidence",
+        "public_url",
+        "privacy_checked"
+      ]
+    },
+    {
+      "company_id": "zeekr",
+      "company_name": "极氪",
+      "focus_major_clusters": [
+        "mechanical_vehicle_manufacturing",
+        "energy_power_electrical",
+        "computer_ai_software"
+      ],
+      "official_source_candidates": [
+        {
+          "url": "https://www.zeekrgroup.com/join-us",
+          "source_type": "official_career_page",
+          "evidence_id": "ev_zeekr_official_career_page_2026_06_26"
+        }
+      ],
+      "recruitment_platform_query_templates": [
+        "极氪 校园招聘 技术 岗位 官方",
+        "极氪 社招 研发 算法 软件 硬件 招聘",
+        "极氪 BOSS直聘 招聘 技术 岗位",
+        "极氪 牛客 企业招聘 校招 面经"
+      ],
+      "hr_or_referral_query_templates": [
+        "极氪 HR 校招 技术 面试 小红书",
+        "极氪 招聘官 内推 技术 岗位",
+        "极氪 校招 HR 答疑 公众号",
+        "极氪 内推 研发 算法 工程 牛客 力扣"
+      ],
+      "candidate_signal_query_templates": [
+        "极氪 校招 面经 技术面 笔试",
+        "极氪 offer 复盘 技术岗",
+        "极氪 实习 转正 面试 研发",
+        "极氪 岗位 工作内容 加班 氛围 公开讨论"
+      ],
+      "required_labels": [
+        "source_type",
+        "source_priority",
+        "publisher_or_account",
+        "hr_verified",
+        "published_at_or_captured_on",
+        "confidence",
+        "public_url",
+        "privacy_checked"
+      ]
+    },
+    {
+      "company_id": "zhipu_ai",
+      "company_name": "智谱AI",
+      "focus_major_clusters": [
+        "computer_ai_software"
+      ],
+      "official_source_candidates": [
+        {
+          "url": "https://www.zhipuai.cn/zh/joinus",
+          "source_type": "official_career_page",
+          "evidence_id": "ev_zhipu_ai_official_career_page_2026_06_26"
+        }
+      ],
+      "recruitment_platform_query_templates": [
+        "智谱AI 校园招聘 技术 岗位 官方",
+        "智谱AI 社招 研发 算法 软件 硬件 招聘",
+        "智谱AI BOSS直聘 招聘 技术 岗位",
+        "智谱AI 牛客 企业招聘 校招 面经"
+      ],
+      "hr_or_referral_query_templates": [
+        "智谱AI HR 校招 技术 面试 小红书",
+        "智谱AI 招聘官 内推 技术 岗位",
+        "智谱AI 校招 HR 答疑 公众号",
+        "智谱AI 内推 研发 算法 工程 牛客 力扣"
+      ],
+      "candidate_signal_query_templates": [
+        "智谱AI 校招 面经 技术面 笔试",
+        "智谱AI offer 复盘 技术岗",
+        "智谱AI 实习 转正 面试 研发",
+        "智谱AI 岗位 工作内容 加班 氛围 公开讨论"
+      ],
+      "required_labels": [
+        "source_type",
+        "source_priority",
+        "publisher_or_account",
+        "hr_verified",
+        "published_at_or_captured_on",
+        "confidence",
+        "public_url",
+        "privacy_checked"
+      ]
+    },
+    {
+      "company_id": "zte",
+      "company_name": "中兴通讯",
+      "focus_major_clusters": [
+        "electronics_communication_ic",
+        "computer_ai_software",
+        "energy_power_electrical"
+      ],
+      "official_source_candidates": [
+        {
+          "url": "https://job.zte.com.cn/cn/",
+          "source_type": "official_career_page",
+          "evidence_id": "ev_zte_official_career_page_2026_06_26"
+        }
+      ],
+      "recruitment_platform_query_templates": [
+        "中兴通讯 校园招聘 技术 岗位 官方",
+        "中兴通讯 社招 研发 算法 软件 硬件 招聘",
+        "中兴通讯 BOSS直聘 招聘 技术 岗位",
+        "中兴通讯 牛客 企业招聘 校招 面经"
+      ],
+      "hr_or_referral_query_templates": [
+        "中兴通讯 HR 校招 技术 面试 小红书",
+        "中兴通讯 招聘官 内推 技术 岗位",
+        "中兴通讯 校招 HR 答疑 公众号",
+        "中兴通讯 内推 研发 算法 工程 牛客 力扣"
+      ],
+      "candidate_signal_query_templates": [
+        "中兴通讯 校招 面经 技术面 笔试",
+        "中兴通讯 offer 复盘 技术岗",
+        "中兴通讯 实习 转正 面试 研发",
+        "中兴通讯 岗位 工作内容 加班 氛围 公开讨论"
+      ],
+      "required_labels": [
+        "source_type",
+        "source_priority",
+        "publisher_or_account",
+        "hr_verified",
+        "published_at_or_captured_on",
+        "confidence",
+        "public_url",
+        "privacy_checked"
+      ]
+    }
+  ]
+}

@@ -72,6 +72,12 @@ data/
     engineering_related_interdisciplinary_majors_2026.zh-CN.json
     engineering_related_interdisciplinary_majors_2026.zh-CN.csv
     summary.json
+  company_signals/
+    company_hiring_signal_seed.zh-CN.json
+    covered_companies.zh-CN.json
+    source_collection_targets.zh-CN.json
+    company_hiring_signals.schema.json
+    summary.json
 ```
 
 其中：
@@ -80,7 +86,7 @@ data/
 - `.codex/agents/*.toml` 定义具体角色，每个角色只负责一个清晰切面。
 - `scripts/` 处理确定性任务，例如简历解析、JD 标准化、schema 校验、匹配分计算、文档渲染。
 - `references/` 存放规则、rubric、数据来源政策和写作准则，避免把大量知识塞进主 prompt。
-- `data/` 提供项目自带的静态数据库。第一批数据库是中国本科工科专业目录与就业导向大类映射，后续可扩展岗位族、技能图谱、学习路径模板和个人展示模板。
+- `data/` 提供项目自带的静态数据库。第一批数据库是中国本科工科专业目录与就业导向大类映射；第二批数据库是大厂招聘信号库，用于按公司和工科就业大类整理官方 JD、官方招聘页、已验证 HR 公开信息、招聘软件公开 JD、候选人面经和社媒共识的采信规则。
 
 ## 4. 总体 Pipeline
 
@@ -806,6 +812,43 @@ User Input
 - 机械专业想转机器人软件：补 Python/C++、ROS、控制基础、传感器、仿真项目，再投机器人应用/测试/系统集成岗位。
 - 电子信息专业想转后端：补 Web 后端、数据库、分布式基础、项目部署，同时保留嵌入式/IoT 作为差异化标签。
 - 材料专业想去新能源企业：强化电池材料、工艺、实验数据分析、质量体系，而不是泛泛转互联网。
+
+### 6.5 大厂招聘信号数据库
+
+仓库还提供第二个静态数据库：
+
+- `data/company_signals/company_hiring_signal_seed.zh-CN.json`
+- `data/company_signals/covered_companies.zh-CN.json`
+- `data/company_signals/source_collection_targets.zh-CN.json`
+- `data/company_signals/company_hiring_signals.schema.json`
+- `data/company_signals/summary.json`
+
+它的目的不是存储每个岗位的详细 JD，而是按“公司 + 工科就业大类”保存招聘信号先验。比如计算机与 AI 软件类在字节、腾讯、智谱、月之暗面等公司常见的准备方向；自动化、电子信息和机械制造类在大疆、比亚迪、宁德时代、汇川、海康等公司的准备方向；材料、电气、化工类在新能源、半导体、能源央企中的准备方向。
+
+当前版本覆盖互联网、AI 大模型、通信 ICT、消费电子、机器人、汽车、新能源、半导体、智能制造、医疗器械、基础设施、运营商和央国企等 85 家工程热门就业公司。每家公司记录：
+
+- 适配的工科就业大类。
+- 适用的岗位族要求模板。
+- 公司级考察方向 seed。
+- HR 话术应采集主题。
+- 候选人面经和社媒信号应采集主题。
+- 简历和个人展示包装重点。
+- 已有公开来源 evidence。
+- 是否仍处于 `seed_unverified_requires_collection`。
+
+来源优先级必须固定为：
+
+1. 公司官网、官方招聘页、校招官网、官方 JD。
+2. 已验证身份的 HR 公开账号或官方列出的 HR 社媒账号。
+3. 招聘软件公开 JD，例如 BOSS 直聘、拉勾、猎聘、牛客企业招聘页、LinkedIn、Indeed。
+4. 候选人面经、offer 复盘、公开内推贴、多平台社媒共识。
+5. 单条匿名帖子、截图、评论区传闻。
+
+第 4-5 类来源只能作为辅助信号，用于解释实际工作内容、面试体验、团队氛围、隐性要求、风险提示和 JD 模糊处。它们不能覆盖官方 JD，也不能被写成“公司确定要求”。如果招聘软件 JD 与社媒反馈冲突，输出应保留冲突，并以 JD 或官方来源为主证据、社媒为风险提示。
+
+这个库也不保存个人简历、私聊记录、录用截图、手机号、私人邮箱、微信号或可反向识别个人的完整经历。成功候选人条件只能做去标识化、聚合化总结，例如“多个候选人面经都提到项目深挖、算法题和实习产出”，不能保存某个人的完整履历。
+
+具体岗位分析仍然放在用户设备上实时运行。用户确定岗位后，pipeline 必须重新读取或让用户粘贴当前 JD，再由 JDAnalyzer 做岗位级 `must-have / nice-to-have / hidden_requirements / ats_keywords` 分析；大厂招聘信号库只提供先验和准备方向。
 
 ## 7. 数据来源设计
 

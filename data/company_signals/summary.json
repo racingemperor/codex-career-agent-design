@@ -1,0 +1,15 @@
+{
+  "version": "0.2.1",
+  "language": "zh-CN",
+  "updated_on": "2026-06-26",
+  "covered_company_count": 85,
+  "major_cluster_requirement_template_count": 12,
+  "source_evidence_count": 51,
+  "source_priority_counts": {
+    "primary": 47,
+    "secondary": 4
+  },
+  "status": "seed database with expanded public source links; not a complete evidence corpus",
+  "highest_confidence_rule": "Official JD / official career page / official campus page / verified HR public post outrank recruitment platforms, candidate posts, and anonymous social media.",
+  "role_specific_rule": "For any concrete target role, run fresh JD analysis on the user device."
+}
