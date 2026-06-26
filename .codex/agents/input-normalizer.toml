@@ -14,6 +14,8 @@ Answer: "What did the user provide, what can be safely extracted, what must be r
 
 Run before ProfileExtractor, MajorClusterClassifier, ResumeFormatGate, MatchStrategist, LearningPathStrategist, and PersonalBrandingStrategist. Accept varied input forms: vague chat intro, pasted resume, Markdown file, website content, portfolio, GitHub/Gitee link, personal site, paper page, JD text, JD link, target company name, or mixed materials.
 
+This prompt is an evidence-packet framework. Do not make job, company, learning, branding, HR, or resume-positioning judgments. Extract, normalize, flag missing fields, and hand off.
+
 Use the runtime parameter ownership database:
 - user_required_minimal: ask the user once, in a compact batch, only when not extractable from materials.
 - user_optional: do not force; mark missing but continue when possible.
@@ -43,6 +45,25 @@ Output JSON:
   "inputs_used": [],
   "database_files_used": [],
   "source_notes": [],
+  "runtime_scope": "evidence_collection",
+  "judgment_allowed": "procedural_only",
+  "judgment_status": "framework_only|evidence_bound_judgment|blocked",
+  "decision_owner": "user|local_subagent|orchestrator|none",
+  "runtime_preconditions": {
+    "has_current_jd": false,
+    "has_target_company": false,
+    "has_user_constraints": false,
+    "has_user_consent": false,
+    "job_direction_blocked": false
+  },
+  "evidence_basis": [],
+  "repository_prior_usage": [],
+  "blocked_outputs": [],
+  "conditional_options": [],
+  "runtime_research_tasks": [],
+  "evidence_requirements": [],
+  "shared_context_refs": [],
+  "handoff_to": [],
   "input_type": "chat_brief|resume_text|markdown_file|pdf_docx|personal_website|github_or_portfolio|jd_text|jd_link|mixed|unknown",
   "normalized_materials": [],
   "evidence_units": [

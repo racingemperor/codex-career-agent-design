@@ -15,6 +15,7 @@ Read these references as needed:
 
 - `references/data-catalog.md` before using any static database.
 - `references/source-policy.md` before analyzing job, company, HR, candidate, or social media information.
+- `references/runtime-collaboration-protocol.md` before dispatching or merging role prompts.
 - `references/role-output-contracts.md` before merging subagent outputs.
 
 ## Built-In Databases
@@ -63,6 +64,7 @@ Short routes:
 ## Operating Rules
 
 - Prefer user-provided materials and official/public sources over memory.
+- Treat every `.codex/agents/*.toml` file as a role framework for runtime local subagents, not as a frozen decision engine.
 - Normalize vague chats, Markdown, resumes, websites, links, and mixed materials through `InputNormalizer` before specialist agents.
 - Ask the user for missing user-owned facts once in a compact batch. Do not ask the user for data that local subagents can research from allowed public sources.
 - Treat concrete skill weights and external-display asset weights as runtime decisions. The repository provides schemas and examples, not universal requirements that every discipline must follow.
@@ -71,6 +73,7 @@ Short routes:
 - Treat company-signal data as priors, not current role-specific requirements.
 - For a concrete job, require fresh JD text or current public JD retrieval before final resume tailoring.
 - Use candidate/social media information only as auxiliary preparation or risk signals unless it is verified by official sources.
+- If runtime evidence is missing, return research tasks, evidence requirements, blocked outputs, conditional options, and handoff targets instead of a final judgment.
 - Do not store or expose private resumes, private chats, IDs, addresses, or non-public HR/candidate information. Intermediate reports and logs should redact phone numbers and personal emails by default; final resume drafts may include user-authorized contact fields when the user explicitly provides them for the resume.
 - Resume writing may improve structure, evidence, and wording, but must not create false experience, fake metrics, fake ownership, fake education, or fake awards.
 - Complete resume drafts must pass `ResumeFormatGate` before drafting and `FactualReviewer` before being presented as final.

@@ -1,6 +1,6 @@
 id = "jd-analyzer"
 display_name = "JD Analyzer"
-description = "Analyzes a concrete job description into hard requirements, hidden requirements, keywords, and risks."
+description = "Extracts a concrete job description into evidence-bound requirements, keywords, risks, and runtime handoff fields."
 database_dependencies = [
   "data/company_signals/company_hiring_signal_seed.zh-CN.json"
 ]
@@ -8,11 +8,13 @@ database_dependencies = [
 prompt = """
 You are JDAnalyzer.
 
-Answer: "What does this job actually screen for?"
+Answer: "What does the provided or current public JD explicitly support, and what needs runtime evidence before interpretation?"
 
-Use the current JD text or current public JD as primary evidence. You may read company_signals only as broad prior context. Do not use social media or candidate experiences to override the JD.
+This role may make evidence-bound judgments only from the current JD text or current public JD. You may read company_signals only as broad prior context. Do not use repository priors, social media, or candidate experiences to override the JD.
 
-Analyze:
+If no current JD text or public JD evidence is available, return runtime_research_tasks and evidence_requirements instead of extracting requirements.
+
+Extract or prepare:
 - hard gates: education, years, location, language, internship period, visa, must-have stack.
 - core responsibilities.
 - explicit skills and tools.
@@ -29,6 +31,25 @@ Output JSON:
   "inputs_used": [],
   "database_files_used": [],
   "source_notes": [],
+  "runtime_scope": "evidence_collection|conditional_runtime_judgment",
+  "judgment_allowed": "evidence_bound_only|conditional_with_runtime_evidence",
+  "judgment_status": "runtime_evidence_required|ready_for_runtime_judgment|evidence_bound_judgment|blocked",
+  "decision_owner": "local_subagent|orchestrator|none",
+  "runtime_preconditions": {
+    "has_current_jd": false,
+    "has_target_company": false,
+    "has_user_constraints": false,
+    "has_user_consent": false,
+    "job_direction_blocked": false
+  },
+  "evidence_basis": [],
+  "repository_prior_usage": [],
+  "blocked_outputs": [],
+  "conditional_options": [],
+  "runtime_research_tasks": [],
+  "evidence_requirements": [],
+  "shared_context_refs": [],
+  "handoff_to": [],
   "job_profile": {},
   "must_have": [],
   "nice_to_have": [],

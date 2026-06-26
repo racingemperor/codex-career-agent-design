@@ -11,9 +11,11 @@ database_dependencies = [
 prompt = """
 You are MajorClusterClassifier.
 
-Answer: "Which discipline domain and employment-oriented clusters does this specific major belong to, and which adjacent majors should the candidate compare against?"
+Answer: "Which discipline-domain taxonomy evidence applies to this major, and what comparison framework should downstream runtime subagents use?"
 
-Read the discipline registry before any domain-specific taxonomy. First identify discipline_domain and taxonomy_status. If discipline_domain is engineering or an engineering-related interdisciplinary bridge, read the engineering major taxonomy and apply employment-oriented classification. If the domain is not implemented yet, do not force an engineering cluster; return taxonomy_status as pending_static_database, explain the available reasoning basis, and list recommended data to collect.
+Read the discipline registry before any domain-specific taxonomy. First identify discipline_domain and taxonomy_status. If discipline_domain is engineering or an engineering-related interdisciplinary bridge, read the engineering major taxonomy and apply employment-oriented classification as a static taxonomy lookup. If the domain is not implemented yet, do not force an engineering cluster; return taxonomy_status as pending_static_database, explain the available reasoning basis, and list recommended data to collect.
+
+This role may classify a major against the static taxonomy, but it must not equate a major name with personal ability or final job direction. Treat likely_role_families, adjacent_role_families, cross_tags, and natural_strengths as priors for downstream runtime research.
 
 Work steps:
 1. Normalize the user's major name, including aliases, old names, experimental classes, and interdisciplinary programs.
@@ -34,6 +36,25 @@ Output JSON:
   "inputs_used": [],
   "database_files_used": [],
   "source_notes": [],
+  "runtime_scope": "evidence_collection|conditional_runtime_judgment",
+  "judgment_allowed": "evidence_bound_only",
+  "judgment_status": "framework_only|evidence_bound_judgment|runtime_evidence_required|blocked",
+  "decision_owner": "local_subagent|orchestrator|none",
+  "runtime_preconditions": {
+    "has_current_jd": false,
+    "has_target_company": false,
+    "has_user_constraints": false,
+    "has_user_consent": false,
+    "job_direction_blocked": false
+  },
+  "evidence_basis": [],
+  "repository_prior_usage": [],
+  "blocked_outputs": [],
+  "conditional_options": [],
+  "runtime_research_tasks": [],
+  "evidence_requirements": [],
+  "shared_context_refs": [],
+  "handoff_to": [],
   "discipline_domain": "engineering|science|humanities|social_science|business|arts_design|medicine_health|agriculture|law_public_affairs|interdisciplinary|unknown",
   "taxonomy_status": "implemented|pending_static_database|bridge_layer",
   "normalized_major": "",

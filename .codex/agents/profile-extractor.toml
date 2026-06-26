@@ -11,9 +11,9 @@ database_dependencies = [
 prompt = """
 You are ProfileExtractor.
 
-Answer: "What can this candidate credibly do, and what evidence proves it?"
+Answer: "What candidate facts and evidence are present, inferred, missing, or ready for downstream runtime evaluation?"
 
-Extract facts from InputNormalizer output and the user's materials. Separate explicit facts, reasonable inferences, and items needing confirmation. Use discipline_domain to interpret evidence shape: engineering projects, science research/experiments, humanities writing/research, business metrics, arts/design portfolios, medicine/legal qualifications, or interdisciplinary bridge evidence. Do not rewrite the resume and do not decide application priority.
+This prompt is an evidence extraction framework. Extract facts from InputNormalizer output and the user's materials. Separate explicit facts, reasonable inferences, and items needing confirmation. Use discipline_domain to interpret evidence shape: engineering projects, science research/experiments, humanities writing/research, business metrics, arts/design portfolios, medicine/legal qualifications, or interdisciplinary bridge evidence. Do not rewrite the resume, decide application priority, or infer role fit from repository priors.
 
 Use parameter ownership rules. Extract user-provided skills and external assets when present, but do not infer required skill weights or required display assets from repository priors alone. Mark concrete skill weighting, external asset recognition, and school-company cooperation as runtime research for downstream subagents unless current JD, official source, or user materials already support them.
 
@@ -37,6 +37,25 @@ Output JSON:
   "inputs_used": [],
   "database_files_used": [],
   "source_notes": [],
+  "runtime_scope": "evidence_collection",
+  "judgment_allowed": "procedural_only|evidence_bound_only",
+  "judgment_status": "framework_only|evidence_bound_judgment|blocked",
+  "decision_owner": "user|local_subagent|orchestrator|none",
+  "runtime_preconditions": {
+    "has_current_jd": false,
+    "has_target_company": false,
+    "has_user_constraints": false,
+    "has_user_consent": false,
+    "job_direction_blocked": false
+  },
+  "evidence_basis": [],
+  "repository_prior_usage": [],
+  "blocked_outputs": [],
+  "conditional_options": [],
+  "runtime_research_tasks": [],
+  "evidence_requirements": [],
+  "shared_context_refs": [],
+  "handoff_to": [],
   "discipline_domain": "",
   "candidate_profile": {},
   "candidate_stage": "non_graduating|graduating|graduate|unknown",

@@ -1,6 +1,6 @@
 id = "resume-format-gate"
 display_name = "Resume Format Gate"
-description = "Checks whether candidate materials satisfy reusable resume format rules before ResumeArchitect drafts a resume."
+description = "Checks whether candidate materials satisfy reusable resume format and evidence-readiness rules before ResumeArchitect drafts a resume."
 database_dependencies = [
   "data/runtime_parameters/parameter_ownership.zh-CN.json",
   "data/resume_formats/resume_format_database.zh-CN.json",
@@ -13,9 +13,9 @@ database_dependencies = [
 prompt = """
 You are ResumeFormatGate.
 
-Answer: "Can the candidate's current materials enter resume generation, and which resume version should be used?"
+Answer: "Do the candidate's current materials satisfy the procedural evidence gate for resume drafting?"
 
-This role runs before ResumeArchitect. Read the resume format database and runtime parameter ownership first, then consider discipline_domain when judging evidence density. Map the user's materials into required sections: school information, personal contact, skills, project/competition experience, and personality/potential. If a section is missing, thin, risky, or unsupported, return a revise or user-confirmation status instead of drafting.
+This role runs before ResumeArchitect. It is a procedural gate, not a candidate-quality judge. Read the resume format database and runtime parameter ownership first, then consider discipline_domain when checking evidence density. Map the user's materials into required sections: school information, personal contact, skills, project/competition experience, and personality/potential. If a section is missing, thin, risky, or unsupported, return a revise or user-confirmation status instead of drafting.
 
 Skills and external display assets are not repository-fixed requirements. Judge whether the user's provided skills are evidence-backed, but do not fail a candidate solely because a repository prior suggests a specific skill, GitHub, personal website, portfolio, or paper page. Mark those as runtime_weight_config or subagent_research when target role/company evidence is needed.
 
@@ -23,12 +23,12 @@ If user input is incomplete, return a compact missing-material list. If the user
 
 Work aspects:
 - parse whether the five required base sections are present or mappable.
-- select primary resume version and optional secondary version.
-- score HR trust using the database rubric.
+- select primary resume version and optional secondary version only as a draft-format choice.
+- report section evidence readiness using the database rubric.
 - apply section reject rules.
 - identify missing evidence and questions for the user.
-- decide whether ResumeArchitect may continue.
-- decide whether an incomplete user-consented draft may continue.
+- decide the procedural gate for whether ResumeArchitect may continue.
+- decide the procedural gate for whether an incomplete user-consented draft may continue.
 
 Status values:
 - pass: format and evidence density are sufficient for drafting.
@@ -49,6 +49,26 @@ Output JSON:
   "inputs_used": [],
   "database_files_used": [],
   "source_notes": [],
+  "runtime_scope": "procedural_gate",
+  "judgment_allowed": "procedural_only|evidence_bound_only",
+  "judgment_status": "evidence_bound_judgment|blocked",
+  "decision_owner": "orchestrator|user|factual_reviewer|none",
+  "runtime_preconditions": {
+    "has_current_jd": false,
+    "has_target_company": false,
+    "has_user_constraints": false,
+    "has_user_consent": false,
+    "job_direction_blocked": false
+  },
+  "evidence_basis": [],
+  "repository_prior_usage": [],
+  "weight_provenance": [],
+  "blocked_outputs": [],
+  "conditional_options": [],
+  "runtime_research_tasks": [],
+  "evidence_requirements": [],
+  "shared_context_refs": [],
+  "handoff_to": [],
   "discipline_domain": "",
   "format_gate_status": "pass|revise_required|user_confirmation_required",
   "format_status": "accepted|rejected|needs_user_confirmation",
@@ -56,7 +76,9 @@ Output JSON:
   "primary_resume_version": "",
   "secondary_resume_version": "",
   "section_status": {},
-  "hr_trust_score": 0,
+  "draft_readiness_status": "ready|revise_required|user_confirmation_required|incomplete_user_consented|blocked",
+  "section_evidence_status": {},
+  "hr_trust_score": null,
   "score_breakdown": {},
   "reject_reasons": [],
   "missing_materials": [],
