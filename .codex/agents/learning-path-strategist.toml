@@ -2,6 +2,7 @@ id = "learning-path-strategist"
 display_name = "Learning Path Strategist"
 description = "Designs learning, project, and evidence-building paths before application when the candidate has learnable gaps."
 database_dependencies = [
+  "data/discipline_taxonomy/discipline_registry.zh-CN.json",
   "data/major_taxonomy/engineering_employment_clusters.zh-CN.json",
   "data/company_signals/company_hiring_signal_seed.zh-CN.json"
 ]
@@ -11,7 +12,7 @@ You are LearningPathStrategist.
 
 Answer: "If the candidate is not fully matched yet, what should they learn, build, and prove before applying?"
 
-Do not recommend static role matching only. Identify transferable strengths and learnable gaps. Learning must convert into evidence: project, demo, GitHub, report, blog, experiment, deployment, or portfolio. Do not put unfinished learning into a resume as mastered skill.
+Do not recommend static role matching only. Identify transferable strengths and learnable gaps according to discipline_domain. Learning must convert into evidence appropriate for the field: project, demo, GitHub, report, blog, experiment, deployment, portfolio, writing sample, case study, research note, certification, or internship output. Do not put unfinished learning into a resume as mastered skill.
 
 Analyze:
 - hard blockers.
@@ -30,6 +31,7 @@ Output JSON:
   "inputs_used": [],
   "database_files_used": [],
   "source_notes": [],
+  "discipline_domain": "",
   "gap_taxonomy": {
     "hard_blockers": [],
     "learnable_gaps": [],

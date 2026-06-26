@@ -1,0 +1,220 @@
+{
+  "metadata": {
+    "version": "0.1.0",
+    "language": "zh-CN",
+    "created_on": "2026-06-26",
+    "purpose": "Registry for discipline-domain routing before employment-oriented major classification.",
+    "status": "framework_seed",
+    "default_behavior_for_unimplemented_domains": "return taxonomy_pending instead of forcing engineering clusters"
+  },
+  "domains": [
+    {
+      "domain_id": "engineering",
+      "domain_name": "工科",
+      "taxonomy_status": "implemented",
+      "database_paths": [
+        "data/major_taxonomy/engineering_major_index.zh-CN.csv",
+        "data/major_taxonomy/engineering_employment_clusters.zh-CN.json",
+        "data/major_taxonomy/engineering_related_interdisciplinary_majors_2026.zh-CN.json"
+      ],
+      "classification_logic": [
+        "就业导向大类优先于官方专业类。",
+        "一个具体专业保留一个 primary_cluster，并用 cross_tags 表达交叉能力。",
+        "判断用户能力时必须结合课程、项目、技能和目标岗位。"
+      ],
+      "evidence_focus": [
+        "工程项目",
+        "工具链",
+        "实验、仿真、测试或制造数据",
+        "可运行代码或可验证交付物",
+        "行业约束和安全/质量意识"
+      ]
+    },
+    {
+      "domain_id": "science",
+      "domain_name": "理科",
+      "taxonomy_status": "planned",
+      "database_paths": [],
+      "classification_logic": [
+        "区分基础科研、数据建模、实验分析、工程转化和教育培训等方向。",
+        "数学、物理、化学、生物、地理等专业应按方法论和目标岗位重新映射，而不是直接归入工科。",
+        "理科转工程或 AI 岗位时，需要显式标注工程化证据缺口。"
+      ],
+      "evidence_focus": [
+        "数学建模",
+        "实验设计",
+        "数据分析",
+        "科研训练",
+        "论文、报告、竞赛或可复现实验"
+      ]
+    },
+    {
+      "domain_id": "humanities",
+      "domain_name": "文科",
+      "taxonomy_status": "planned",
+      "database_paths": [],
+      "classification_logic": [
+        "重点识别语言、写作、研究、内容生产、文化理解、传播和知识组织能力。",
+        "岗位建议应区分内容、教育、出版、品牌、公关、用户研究、政策研究等方向。",
+        "不要用工程项目数量衡量文科候选人的潜力。"
+      ],
+      "evidence_focus": [
+        "写作样本",
+        "研究报告",
+        "语言能力",
+        "内容作品",
+        "项目策划",
+        "组织与表达"
+      ]
+    },
+    {
+      "domain_id": "social_science",
+      "domain_name": "社科",
+      "taxonomy_status": "planned",
+      "database_paths": [],
+      "classification_logic": [
+        "重点识别调研、统计、政策分析、组织理解、公共事务、咨询和用户研究能力。",
+        "经济、社会、心理、政治、管理交叉方向应按方法和行业场景拆分。",
+        "数据能力和田野/访谈/问卷能力应分别记录。"
+      ],
+      "evidence_focus": [
+        "调研设计",
+        "问卷和访谈",
+        "统计分析",
+        "政策或行业报告",
+        "咨询案例",
+        "用户研究"
+      ]
+    },
+    {
+      "domain_id": "business",
+      "domain_name": "商科与管理",
+      "taxonomy_status": "planned",
+      "database_paths": [],
+      "classification_logic": [
+        "按财务、会计、金融、市场、运营、供应链、人力、战略和数据分析等方向分类。",
+        "业务结果、指标意识、商业判断和实习场景比课程名称更重要。",
+        "商科转产品、数据或咨询时，应拆出方法论与作品证据。"
+      ],
+      "evidence_focus": [
+        "实习业务场景",
+        "财务或运营指标",
+        "市场分析",
+        "案例竞赛",
+        "商业报告",
+        "数据分析"
+      ]
+    },
+    {
+      "domain_id": "arts_design",
+      "domain_name": "艺术与设计",
+      "taxonomy_status": "planned",
+      "database_paths": [],
+      "classification_logic": [
+        "按视觉、交互、工业设计、服装、传媒、影视、动画、游戏、美术等作品形态分类。",
+        "作品集、设计过程、审美判断和用户/品牌理解是核心证据。",
+        "技术工具只能辅助判断，不能替代作品质量。"
+      ],
+      "evidence_focus": [
+        "作品集",
+        "设计过程",
+        "视觉表达",
+        "用户研究",
+        "品牌理解",
+        "交互或媒介实现"
+      ]
+    },
+    {
+      "domain_id": "medicine_health",
+      "domain_name": "医学与健康",
+      "taxonomy_status": "planned",
+      "database_paths": [],
+      "classification_logic": [
+        "区分临床、基础医学、药学、公共卫生、护理、医学技术、医疗器械和健康数据方向。",
+        "涉及资质、伦理、法规、临床或实验边界时必须谨慎。",
+        "医工交叉方向可桥接到工科或数据方向，但不能忽略专业合规。"
+      ],
+      "evidence_focus": [
+        "专业资质",
+        "实验或临床训练",
+        "法规和伦理意识",
+        "科研或病例分析",
+        "医疗器械/健康数据项目"
+      ]
+    },
+    {
+      "domain_id": "agriculture",
+      "domain_name": "农学与生态产业",
+      "taxonomy_status": "planned",
+      "database_paths": [],
+      "classification_logic": [
+        "按种植、养殖、食品、生态、资源、园艺、智慧农业和产业链方向分类。",
+        "应同时关注实验、生产流程、产业应用和区域资源。",
+        "转食品、新能源、环保或数据岗位时，需要标注桥接证据。"
+      ],
+      "evidence_focus": [
+        "实验田或生产实践",
+        "食品/生态/资源项目",
+        "数据记录",
+        "产业链理解",
+        "质量与安全意识"
+      ]
+    },
+    {
+      "domain_id": "law_public_affairs",
+      "domain_name": "法学与公共事务",
+      "taxonomy_status": "planned",
+      "database_paths": [],
+      "classification_logic": [
+        "区分法律实务、合规、政策、公共管理、知识产权、政府事务和企业公共事务。",
+        "法律检索、案例分析、文书、表达和合规意识是核心证据。",
+        "跨到互联网、金融、医药、新能源等行业时，应保留行业法规标签。"
+      ],
+      "evidence_focus": [
+        "法律检索",
+        "案例分析",
+        "文书写作",
+        "合规项目",
+        "政策研究",
+        "表达与谈判"
+      ]
+    },
+    {
+      "domain_id": "interdisciplinary",
+      "domain_name": "跨专业与复合背景",
+      "taxonomy_status": "bridge_layer",
+      "database_paths": [
+        "data/major_taxonomy/engineering_related_interdisciplinary_majors_2026.zh-CN.json"
+      ],
+      "classification_logic": [
+        "不把跨专业本身当作唯一就业大类。",
+        "先识别原始学科域、目标岗位域和已有证据，再输出 bridge_path。",
+        "跨专业推荐必须包含补齐路径和可写入简历的证据标准。"
+      ],
+      "evidence_focus": [
+        "桥接课程",
+        "跨域项目",
+        "作品或论文",
+        "实习",
+        "证书",
+        "可迁移技能"
+      ]
+    }
+  ],
+  "runtime_contract": {
+    "output_fields": [
+      "discipline_domain",
+      "taxonomy_status",
+      "normalized_major",
+      "primary_cluster",
+      "cross_tags",
+      "bridge_path",
+      "recommended_data_to_collect",
+      "needs_user_confirmation"
+    ],
+    "pending_status": "pending_static_database",
+    "implemented_status": "implemented",
+    "bridge_status": "bridge_layer"
+  }
+}
+

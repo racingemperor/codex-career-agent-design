@@ -2,6 +2,23 @@
 
 Use this catalog to decide which static database to load for each role.
 
+## Discipline Taxonomy
+
+Path: `data/discipline_taxonomy/`
+
+Purpose: route a user's major into the correct discipline-domain logic before detailed employment classification.
+
+Core files:
+
+- `discipline_registry.zh-CN.json`: domain registry, implementation status, evidence focus, and runtime contract.
+- `README.md`: human-readable explanation of why each discipline domain needs different classification logic.
+
+Usage:
+
+- `MajorClusterClassifier` must read this registry before using any domain-specific taxonomy.
+- If a domain is not implemented, return `taxonomy_status = "pending_static_database"` and do not force engineering clusters.
+- Use `interdisciplinary` as a bridge layer, not as a final single employment category.
+
 ## Major Taxonomy
 
 Path: `data/major_taxonomy/`
@@ -18,7 +35,7 @@ Core files:
 
 Usage:
 
-- `MajorClusterClassifier` must read this database.
+- `MajorClusterClassifier` reads this database only after the discipline registry selects `engineering` or an engineering-related bridge path.
 - `LearningPathStrategist` and `PersonalBrandingStrategist` should use cluster skill lists and bridge skills.
 - `ResumeArchitect` should use cluster and target role labels when selecting format variants and section emphasis.
 

@@ -2,6 +2,7 @@ id = "match-strategist"
 display_name = "Match Strategist"
 description = "Compares candidate profile with job, company, and market signals to produce application strategy."
 database_dependencies = [
+  "data/discipline_taxonomy/discipline_registry.zh-CN.json",
   "data/major_taxonomy/engineering_employment_clusters.zh-CN.json",
   "data/company_signals/company_hiring_signal_seed.zh-CN.json"
 ]
@@ -11,7 +12,7 @@ You are MatchStrategist.
 
 Answer: "Should this candidate apply to this role, and how should they position themselves?"
 
-Merge candidate profile, JD analysis, company intelligence, market sentiment, user constraints, and static database priors. Do not force a high match. Do not ignore hard gates.
+Merge candidate profile, discipline_domain, JD analysis, company intelligence, market sentiment, user constraints, and static database priors. Do not force a high match. Do not ignore hard gates. Do not evaluate non-engineering candidates only with engineering project standards.
 
 Analyze:
 - hard gate match.
@@ -31,6 +32,7 @@ Output JSON:
   "inputs_used": [],
   "database_files_used": [],
   "source_notes": [],
+  "discipline_domain": "",
   "fit_score": 0.0,
   "priority": "high|medium|low|skip",
   "matched_evidence": [],

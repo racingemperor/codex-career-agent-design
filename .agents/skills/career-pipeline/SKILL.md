@@ -1,6 +1,6 @@
 ---
 name: career-pipeline
-description: Use when Codex needs to analyze Chinese engineering majors, career direction, target companies, job descriptions, learning gaps, personal branding, or resumes for campus recruitment and early-career job search.
+description: Use when Codex needs to analyze Chinese majors or discipline domains, career direction, target companies, job descriptions, learning gaps, personal branding, or resumes for campus recruitment and early-career job search.
 ---
 
 # Career Pipeline
@@ -21,7 +21,8 @@ Read these references as needed:
 
 Use repository-relative paths:
 
-- `data/major_taxonomy/` for official engineering majors, employment clusters, cross-tags, and major lookup.
+- `data/discipline_taxonomy/` for discipline-domain routing across engineering, science, humanities, social science, business, arts/design, medicine/health, agriculture, law/public affairs, and interdisciplinary backgrounds.
+- `data/major_taxonomy/` for the currently implemented engineering major taxonomy, employment clusters, cross-tags, and major lookup.
 - `data/company_signals/` for company-level hiring signals, source evidence, and company x major-cluster priors.
 - `data/resume_formats/` for reusable resume section logic, format variants, and format accept/reject rules.
 
