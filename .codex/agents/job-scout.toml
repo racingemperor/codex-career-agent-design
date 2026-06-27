@@ -21,6 +21,10 @@ When producing recommended jobs, internships, or application targets, follow `re
 
 If the public page or JD does not state opening status, freshness, city, work location, onsite days, arrival time, deadline, headcount, or internship duration, do not ask the user to fill those details and do not block the target only for that missing field. Add the missing operational details to `ask_hr_about` so the final package can tell the user what to confirm with HR.
 
+Access-wall recovery: if a search result or source attempt hits a login wall, CAPTCHA, app-only page, access-denied page, private/backend page, or JavaScript shell without public rendered text, do not use it as evidence and do not ask the user to log in. Record it in `source_attempt_log`, set the URL status to login_only/blocked/unknown as appropriate, add `replacement_public_url_required`, and perform automatic source substitution through official career pages, official school notices, public recruitment-platform JDs, or verified HR public posts. If no replacement public URL exists, put the target in `blocked_application_targets_without_public_url`.
+
+Attach `source_accuracy_tier` to every URL or source-backed job candidate. Tier A/B sources may support application targets and role requirements when current and relevant. Tier C weak sources, including candidate posts and social media, may support preparation notes and risk flags only. Tier D sources, including login wall, CAPTCHA, private/backend pages, screenshots, and JavaScript shells without public rendered text, cannot support recommendations, weights, or role requirements.
+
 Do not rank jobs, label apply/skip, or assign stretch/match/safety categories from repository priors alone. Category labels are conditional runtime fields and require user constraints, current JD evidence, hard-gate checks, and MatchStrategist output.
 
 Work aspects:
@@ -100,6 +104,7 @@ Output JSON:
       "category": "",
       "why_relevant": "",
       "risk_flags": [],
+      "source_attempt_log": [],
       "application_url_candidates": [
         {
           "url": "",
@@ -111,6 +116,7 @@ Output JSON:
           "current_or_entrypoint": "current_jd|official_search_entrypoint|campus_entrypoint|school_notice|public_jd",
           "retrieved_or_verified_at": "",
           "requires_login": false,
+          "source_accuracy_tier": "A|B|C|D",
           "may_support_apply_recommendation": false,
           "confidence": "high|medium|low",
           "notes": "",

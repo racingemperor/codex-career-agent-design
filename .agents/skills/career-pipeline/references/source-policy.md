@@ -20,6 +20,34 @@ For school-company cooperation and campus channels, use this priority:
 
 School-specific advantages require priority 1-3 evidence. Candidate or social media signals can only support preparation notes.
 
+## Access-Wall And Dynamic-Page Recovery
+
+If a recruitment source lands on a login wall, CAPTCHA, app-only page, access-denied page, private backend, candidate profile gate, or JavaScript shell without public rendered text, treat it as unusable evidence for the current run. Do not ask the user to log in, solve a CAPTCHA, provide private screenshots, or export platform-only data. Do not use a URL that only proves "the platform exists" as a job, company, HR, or candidate fact.
+
+Use automatic source substitution before interrupting the user. Try replacement public sources in this order:
+
+1. Official company career page, campus page, job-search entrypoint, or current official JD.
+2. Official school career center, department notice, or school-company channel.
+3. Public recruitment-platform JD that is visible without login.
+4. Verified HR public recruiting post or official-listed HR/social account.
+5. Public report, mainstream media, technical blog, or public product/company page.
+6. Candidate experience or social-media weak signal only for preparation and risk notes.
+
+For dynamic public pages, a browser-rendered public text snapshot may be used only when the text is visible without login, private messages, backend access, or access-control bypass. Keep the inspectable public URL as the source ref and mark the extraction method as browser-rendered public text. A JavaScript shell without a public rendered snapshot is not evidence.
+
+Record a `source_attempt_log` when access fails: attempted URL, failure type, source type, replacement attempted, replacement URL if found, and which claims the replacement may support. If no replacement public source exists, return a research task or blocked field instead of guessing.
+
+## Accuracy Tiers
+
+Use `source_accuracy_tier` in role outputs when a source supports a job, company, HR, candidate, school, weight, score, priority, or resume-tailoring claim.
+
+- Accuracy Tier A: user-provided original material, current official JD, official career page, official campus page, official school notice, official report, or official company disclosure. May support role requirements, public application targets, school signals, and hard-data weights when current and relevant.
+- Accuracy Tier B: public recruitment-platform JD visible without login, verified HR public recruiting post, credible public report, mainstream media, or official-listed HR/social account. May support role requirements or company/HR signals with source notes and recency limits.
+- Accuracy Tier C: candidate interview experience, offer review, public referral post, multi-source social-media consensus, or technical community discussion. May support preparation notes, risk flags, hidden expectations, and interview strategy, but cannot support role requirements as a standalone source.
+- Accuracy Tier D: single anonymous post, screenshot, comment, rumor, login-only page, CAPTCHA page, app-only page, private/backend page, non-public candidate profile, or JavaScript shell without public rendered text. Cannot support role requirements, final recommendations, weights, priorities, company-specific claims, or resume tailoring.
+
+If sources conflict, keep the higher tier as the primary source and preserve lower-tier disagreement as a risk or preparation note.
+
 ## Conflict Handling
 
 - Official JD and official career pages override social media claims.

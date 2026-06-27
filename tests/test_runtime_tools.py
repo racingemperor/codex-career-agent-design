@@ -3480,3 +3480,85 @@ def test_work_orders_require_serialized_utf8_prompt_bundle_content(tmp_path):
     instruction = orders[0]["execution_instruction"]
     assert "serialized UTF-8 prompt_bundle_ref content" in instruction
     assert "Do not rely on PowerShell terminal rendering for Chinese JSON" in instruction
+
+
+def test_source_policy_documents_access_wall_recovery_and_accuracy_tiers():
+    source_policy = (
+        ROOT
+        / ".agents"
+        / "skills"
+        / "career-pipeline"
+        / "references"
+        / "source-policy.md"
+    ).read_text(encoding="utf-8")
+    url_policy = (
+        ROOT
+        / ".agents"
+        / "skills"
+        / "career-pipeline"
+        / "references"
+        / "application-url-output-policy.md"
+    ).read_text(encoding="utf-8")
+    network_setup = RUNTIME_NETWORK_ADAPTER_SETUP.read_text(encoding="utf-8")
+
+    required_source_policy_terms = [
+        "Access-Wall And Dynamic-Page Recovery",
+        "login wall",
+        "CAPTCHA",
+        "JavaScript shell",
+        "automatic source substitution",
+        "Accuracy Tiers",
+        "Accuracy Tier A",
+        "Accuracy Tier B",
+        "Accuracy Tier C",
+        "Accuracy Tier D",
+        "cannot support role requirements",
+    ]
+    for term in required_source_policy_terms:
+        assert term in source_policy
+
+    required_url_policy_terms = [
+        "Access-Wall Handling",
+        "login wall",
+        "do not show that URL as a recommended target",
+        "replacement_public_url_required",
+        "source_accuracy_tier",
+    ]
+    for term in required_url_policy_terms:
+        assert term in url_policy
+
+    assert "Access-Wall Runtime Recovery" in network_setup
+    assert "source_attempt_log" in network_setup
+    assert "replace the source automatically" in network_setup
+
+
+def test_recruitment_role_prompts_avoid_login_walls_and_require_accuracy_tiers():
+    role_paths = [
+        ROOT / ".codex" / "agents" / "job-scout.toml",
+        ROOT / ".codex" / "agents" / "jd-analyzer.toml",
+        ROOT / ".codex" / "agents" / "company-intelligence-analyst.toml",
+        ROOT / ".codex" / "agents" / "market-sentiment-analyzer.toml",
+        ROOT / ".codex" / "agents" / "hr-supervisor.toml",
+        ROOT / ".codex" / "agents" / "factual-reviewer.toml",
+    ]
+
+    for path in role_paths:
+        text = path.read_text(encoding="utf-8")
+        assert "Access-wall recovery" in text
+        assert "login wall" in text
+        assert "CAPTCHA" in text
+        assert "automatic source substitution" in text
+        assert "source_accuracy_tier" in text
+        assert "weak sources" in text
+
+    job_scout = (ROOT / ".codex" / "agents" / "job-scout.toml").read_text(
+        encoding="utf-8"
+    )
+    assert "replacement_public_url_required" in job_scout
+    assert "source_attempt_log" in job_scout
+
+    factual_reviewer = (
+        ROOT / ".codex" / "agents" / "factual-reviewer.toml"
+    ).read_text(encoding="utf-8")
+    assert "reject final wording" in factual_reviewer
+    assert "Accuracy Tier C or D" in factual_reviewer

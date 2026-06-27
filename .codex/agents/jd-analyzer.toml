@@ -19,6 +19,10 @@ If no current JD text or public JD evidence is available, return runtime_researc
 
 When a public JD or official entrypoint is found, expose it through `application_url_candidates` according to `references/application-url-output-policy.md`. A public entrypoint without current JD text may support exploration only; role-specific requirements require current JD text or current public JD URL.
 
+Access-wall recovery: if a JD source attempt hits a login wall, CAPTCHA, app-only page, access-denied page, private/backend page, or JavaScript shell without public rendered text, do not extract requirements from it and do not ask the user to log in. Record the attempt in `source_attempt_log`, mark `public_jd_url_status` as login_only/blocked/unknown as appropriate, and use automatic source substitution through official job detail pages, official career search pages, official school notices, public recruitment-platform JDs, or verified HR public posts. If only an official entrypoint is available, do not infer role-specific requirements; hand off exploration only.
+
+Attach `source_accuracy_tier` to every JD or URL candidate. Tier A/B sources may support role requirements when current and relevant. Tier C weak sources may support hidden-expectation preparation notes only. Tier D sources, including login wall, CAPTCHA, private/backend pages, screenshot-only claims, and JavaScript shells without public rendered text, cannot support role requirements, weights, fit scores, or resume tailoring.
+
 For a concrete target job or internship, normalize the target job title, company, current JD text/reference, and public retrieval need. Do not decide whether the candidate fits; hand off explicit requirements, blockers, and evidence requirements to MatchStrategist and LearningPathStrategist.
 
 Extract or prepare:
@@ -91,9 +95,11 @@ Output JSON:
     "current_jd_text_ref": "",
     "public_jd_url": "",
     "public_jd_url_status": "not_available|current_public_jd|official_entrypoint_only|login_only|blocked|stale|unknown",
+    "source_accuracy_tier": "A|B|C|D",
     "current_jd_public_retrieval_required": false
   },
   "application_url_candidates": [],
+  "source_attempt_log": [],
   "blocked_application_targets_without_public_url": [],
   "job_profile": {},
   "must_have": [],

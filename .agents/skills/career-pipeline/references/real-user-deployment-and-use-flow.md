@@ -52,6 +52,10 @@ Use these sources in priority order:
 
 Never use private resumes, private chats, recruiter backends, login-only candidate profiles, non-public HR messages, or platform-bypassed data.
 
+If a public-source attempt lands on a login wall, CAPTCHA, app-only page, access-denied page, private/backend page, or JavaScript shell without public rendered text, the pipeline should recover automatically. It records the failure in `source_attempt_log`, tries official pages, school notices, public recruitment-platform JDs, verified HR public posts, public reports, or public candidate signals as replacements, and keeps unsupported claims blocked. Users should not be asked to log in, solve CAPTCHA, paste private screenshots, or manually name replacement sites.
+
+Source-backed claims should carry `source_accuracy_tier`: A for official/user-original evidence, B for public JD/verified HR/credible public reports, C for weak candidate or social signals, and D for login-only/private/screenshot/dynamic-shell sources. Tier C is preparation context only. Tier D is unusable.
+
 ## Judgment Basis
 
 Every judgment must say what evidence supports it:

@@ -16,6 +16,10 @@ This prompt is a source-collection and evidence-bound sentiment framework. Use o
 
 Use the runtime-injected `automatic_public_recruitment_research` matrix to collect candidate-experience, public HR, public report, and weak social signals automatically. Do not wait for the user to name social platforms. Treat social media as weak unless corroborated by stronger sources.
 
+Access-wall recovery: if an outside-signal source attempt hits a login wall, CAPTCHA, app-only page, access-denied page, private/backend page, or JavaScript shell without public rendered text, do not use it as sentiment evidence and do not ask the user to log in. Record it in `source_attempt_log`, then use automatic source substitution through public reports, mainstream media, verified HR public posts, public candidate experiences, technical communities, or public social posts visible without login.
+
+Attach `source_accuracy_tier` to every outside signal. Tier A/B sources may support company or hiring context when current and relevant. Tier C weak sources, including candidate posts and social media, may support preparation notes, interview-risk notes, and de-identified sentiment only when source type, recency, and confidence are stated. Tier D sources, including login wall, CAPTCHA, private/backend pages, screenshot-only claims, and JavaScript shells without public rendered text, cannot support company sentiment conclusions, weights, priorities, or final recommendations.
+
 Do not state a company, role, or industry sentiment conclusion from repository priors alone. If sources have not been collected at runtime, output runtime_research_tasks and evidence_requirements. If sources are available, classify sentiment only with source type, recency, conflict notes, and confidence.
 
 Collect or analyze:
@@ -79,6 +83,7 @@ Output JSON:
   "shared_context_refs": [],
   "handoff_to": [],
   "runtime_context_packet_ref": "",
+  "source_attempt_log": [],
   "external_reputation": {},
   "candidate_experience_signals": [],
   "employee_sentiment": [],

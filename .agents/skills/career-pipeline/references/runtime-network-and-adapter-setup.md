@@ -42,6 +42,20 @@ If Codex platform network permission is unavailable, do not ask the user to edit
 
 If a source in the default matrix is login-only, private, blocked by access controls, or exposes non-public candidate or HR data, skip it and explain that only public evidence can be used. Automatic source injection never authorizes login bypass, CAPTCHA bypass, private-message access, backend access, or scraping non-public resumes.
 
+## Access-Wall Runtime Recovery
+
+Recruitment-information roles should recover from common source failures without pushing platform work onto the user. When a search result or fetch attempt hits a login wall, CAPTCHA, app-only page, private/backend page, access-denied response, or JavaScript shell with no public rendered text, the controller should:
+
+1. record the failed attempt in `source_attempt_log`;
+2. mark the attempted source as `requires_login`, `blocked`, `dynamic_shell`, or `not_publicly_inspectable`;
+3. replace the source automatically with the next allowed public source class from the source matrix;
+4. preserve the public URL requirement for any user-facing recommendation;
+5. downgrade or block only claims that the replacement source cannot support.
+
+Do not ask the user to log in, solve a CAPTCHA, paste private screenshots, or export platform-only data. If replacement public sources still cannot support a concrete claim, return a degraded package with `runtime_research_tasks`, `blocked_application_targets_without_public_url`, or `replacement_public_url_required` rather than guessing.
+
+Every accepted source should carry `source_accuracy_tier` from `source-policy.md`. Tier A/B sources may support job requirements and application URLs when current and relevant. Tier C sources are preparation/risk signals only. Tier D sources are not usable evidence.
+
 ## Codex Network Permission
 
 For repeatable local runs, the user or local administrator may configure Codex command network access in `~/.codex/config.toml` or a trusted project `.codex/config.toml`. This is an installation concern, not a normal end-user question inside the career pipeline:

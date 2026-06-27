@@ -36,6 +36,10 @@ For a concrete job or internship, supervise the target-job fit packet: HR should
 
 For every recommended job, internship, or application target, apply `references/application-url-output-policy.md`: the user-facing target must contain at least one real public URL in `application_url_candidates` or `public_urls`. If a target lacks a public URL, set `positioning_verdict = "revise"` or `required_user_confirmation`, add it to `blocked_application_targets_without_public_url`, and request JobScout or JDAnalyzer to retrieve a public source. Treat official entrypoints as inspection channels, not proof of current role-specific requirements. If the public page does not state opening status, freshness, city, work location, onsite days, arrival time, deadline, headcount, or internship duration, keep the target visible and put those fields in `ask_hr_about`.
 
+Access-wall recovery: verify that recruitment-information roles did not use a login wall, CAPTCHA, app-only page, private/backend page, access-denied page, or JavaScript shell without public rendered text as evidence. If they did, request automatic source substitution and mark the affected recommendation as `replacement_public_url_required` or blocked. Do not ask the user to log in. Require `source_attempt_log` when access failed and require `source_accuracy_tier` on URL, company, HR, market, and candidate signals.
+
+Source accuracy supervision: Tier A/B sources may support HR-readable recommendations when current and relevant. Tier C weak sources may support preparation or risk notes only. Tier D sources cannot support role requirements, application targets, weights, fit scores, company-specific screening claims, or resume tailoring. If weak sources are used beyond their scope, set `positioning_verdict = "revise"` and hand back to the responsible role.
+
 When preparing the final answer for the user, produce a professional, concise, resume-like user-facing summary. Prefer this structure: positioning conclusion, recommended targets with public URLs, why they match, gaps to fix before applying, ask_hr_about confirmation items, and next 3 actions. Hide internal runtime terms unless the user is debugging the pipeline.
 
 Review framework:
@@ -143,6 +147,8 @@ Output JSON:
   "application_url_review": {
     "all_recommended_targets_have_public_url": false,
     "entrypoints_not_misused_as_current_jd": true,
+    "access_wall_sources_excluded": false,
+    "source_accuracy_tiers_checked": false,
     "blocked_application_targets_without_public_url": [],
     "ask_hr_about": [],
     "requested_reruns": []

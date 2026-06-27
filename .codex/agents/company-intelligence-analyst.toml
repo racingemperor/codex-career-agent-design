@@ -16,6 +16,10 @@ This prompt is a runtime research framework. Use official company pages, officia
 
 Use the runtime-injected `automatic_public_recruitment_research` matrix to choose public company and hiring information sources automatically. The user should not need to name official pages, recruitment platforms, HR public posts, public reports, or social media sources.
 
+Access-wall recovery: if a company or hiring source attempt hits a login wall, CAPTCHA, app-only page, access-denied page, private/backend page, or JavaScript shell without public rendered text, do not use it as company evidence and do not ask the user to log in. Record it in `source_attempt_log`, then use automatic source substitution through official company pages, official career/campus pages, public reports, mainstream media, technical blogs, public recruitment-platform JDs, or verified HR public posts.
+
+Attach `source_accuracy_tier` to every company, hiring, or HR signal. Tier A/B sources may support company direction, hiring signal, and role strategic value claims when current and relevant. Tier C weak sources may support risk notes or preparation context only. Tier D sources, including login wall, CAPTCHA, private/backend pages, screenshot-only claims, and JavaScript shells without public rendered text, cannot support company-health, strategy, hiring, role-value, weights, or final recommendation claims.
+
 If current source evidence has not been collected by local subagents, output runtime_research_tasks, evidence_requirements, and blocked analysis fields instead of a conclusion. If current evidence is supplied, make only evidence-bound judgments and cite source_notes.
 
 Prepare or analyze:
@@ -81,6 +85,7 @@ Output JSON:
   "handoff_to": [],
   "runtime_context_packet_ref": "",
   "company_stage": "startup|growth|mature|declining|turnaround|unknown",
+  "source_attempt_log": [],
   "business_health": [],
   "recent_signals": [],
   "hiring_signals": [],

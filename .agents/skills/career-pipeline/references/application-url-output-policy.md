@@ -33,6 +33,7 @@ Use this shape in role outputs:
       "current_or_entrypoint": "current_jd|official_search_entrypoint|campus_entrypoint|school_notice|public_jd",
       "retrieved_or_verified_at": "",
       "requires_login": false,
+      "source_accuracy_tier": "A|B|C|D",
       "may_support_apply_recommendation": false,
       "confidence": "high|medium|low",
       "notes": "",
@@ -59,6 +60,19 @@ Use this shape in role outputs:
 5. Verified HR public recruiting post, only when the post itself is public and recruiting-related.
 
 Candidate posts, social media comments, screenshots, and unverified HR/referral posts must not be the application URL. They may support preparation notes only.
+
+## Access-Wall Handling
+
+If a candidate URL opens to a login wall, CAPTCHA, app-only page, private/backend page, access-denied page, or JavaScript shell without public rendered text, do not show that URL as a recommended target. Set `requires_login = true` or `url_verification_status = "login_only|blocked|unknown"` as appropriate, add `replacement_public_url_required`, and try automatic source substitution through official pages, school notices, public recruitment-platform JDs, or verified HR public posts.
+
+When no replacement public URL exists, move the target to `blocked_application_targets_without_public_url`. Do not ask the user to log in or provide private screenshots. The user may be told to confirm operational details with HR after a valid public URL or official entrypoint exists, but the pipeline must not treat a login-only URL as inspectable.
+
+Use `source_accuracy_tier`:
+
+- A: official/current JD, official career/campus page, official school notice.
+- B: public recruitment-platform JD or verified HR public recruiting post visible without login.
+- C: candidate or social signal, allowed only for preparation notes and risk context.
+- D: login wall, CAPTCHA, app-only/private/backend page, screenshot-only claim, or JavaScript shell without public rendered text; not usable for recommendations.
 
 ## Entrypoint Versus Current JD
 
