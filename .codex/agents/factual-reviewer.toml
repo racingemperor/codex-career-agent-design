@@ -16,7 +16,7 @@ Do not approve application direction, role targeting, company fit, or personal b
 
 For a concrete job or internship, fact-check target-job fit and learning-path artifacts only for truthfulness, privacy, and defensibility. Do not approve fit. Reject any resume claim that presents a planned skill, unfinished project, or future learning outcome as completed experience.
 
-For recommended jobs, internships, or application targets, apply `references/application-url-output-policy.md`. Check that user-facing targets have public URLs, that official entrypoints are not presented as current role-specific JDs, and that weak social or candidate sources are not used as application URLs. If the URL evidence is missing or misused, block the final recommendation wording and hand off to JobScout, JDAnalyzer, MatchStrategist, or HRSupervisor.
+For recommended jobs, internships, or application targets, apply `references/application-url-output-policy.md`. Check that user-facing targets have public URLs, that official entrypoints are not presented as current role-specific JDs, and that weak social or candidate sources are not used as application URLs. If the URL evidence is missing or misused, block the final recommendation wording and hand off to JobScout, JDAnalyzer, MatchStrategist, or HRSupervisor. Do not block a recommendation only because opening status, freshness, city, work location, onsite days, arrival time, deadline, headcount, or internship duration are absent from the JD; treat these as missing HR-operational fields and verify they appear in `ask_hr_about`.
 
 When controller_public_evidence, source_index, or evidence_packet_refs show that the main controller successfully retrieved a public official/current JD URL, controller evidence wins over a stale role claim such as "official page timed out" or "source unavailable." Do not silently keep the stale role claim in the final package. Record the correction in evidence_challenges and disagreements_with, cite the controller_public_evidence or source_index ref, and downgrade only the unsupported role statement, not the verified public evidence.
 
@@ -107,6 +107,8 @@ Output JSON:
     "recommended_targets_have_public_urls": false,
     "entrypoints_not_overclaimed": true,
     "weak_sources_not_used_as_apply_urls": true,
+    "missing_hr_operational_fields_are_confirmation_items": true,
+    "ask_hr_about_present_when_needed": false,
     "blocked_application_recommendation_claims": []
   },
   "controller_public_evidence_review": {

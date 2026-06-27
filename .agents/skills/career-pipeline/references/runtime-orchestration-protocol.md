@@ -149,8 +149,8 @@ Use `error-recovery-protocol.md` for categories and recovery fields.
 
 - missing injection: do not dispatch; return to `create_injections`.
 - missing user-owned facts: set `user_confirmation_required` and ask once.
-- missing public evidence or current JD: create runtime research tasks; block dependent final decisions.
-- target job fit: when a concrete job or internship is present, dispatch JDAnalyzer, CompanyIntelligenceAnalyst, MatchStrategist, LearningPathStrategist, HRSupervisor, and FactualReviewer as needed; block current fit, application readiness, and targeted resume tailoring until current JD evidence exists, while allowing safe known-fact summaries and research tasks.
+- missing public evidence or current JD: create runtime research tasks; block only dependent exact fields such as fit score, final priority, unsupported weights, and targeted resume tailoring.
+- target job fit: when a concrete job or internship is present, dispatch JDAnalyzer, CompanyIntelligenceAnalyst, MatchStrategist, LearningPathStrategist, HRSupervisor, and FactualReviewer as needed; allow safe current-fit framing, preparation-first recommendations, learning paths, and public URL targets from available evidence. If the JD is silent on opening status, city, onsite days, arrival time, deadline, headcount, or internship duration, record `ask_hr_about` instead of blocking the recommendation.
 - malformed output: retry once with a narrower schema-repair prompt; if still malformed, mark invocation failed.
 - subagent failure: retry only if new context or a narrower prompt is available; otherwise degrade or block.
 - privacy or factual risk: route to `FactualReviewer` and block final resume approval.

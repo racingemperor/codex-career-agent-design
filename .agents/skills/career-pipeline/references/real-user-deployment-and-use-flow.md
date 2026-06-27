@@ -57,14 +57,14 @@ Never use private resumes, private chats, recruiter backends, login-only candida
 Every judgment must say what evidence supports it:
 
 - taxonomy lookup: static major database only, marked as prior.
-- current role requirement: current JD text or public JD URL.
-- application readiness: user evidence plus current JD/public evidence.
+- current role requirement: user-provided JD text, public JD URL, official entrypoint, or role-family public evidence, with limits stated.
+- application readiness: user evidence plus available JD/public evidence; exact fit score, final priority, and tailored resume claims need stronger evidence.
 - learning gap: JD requirements, role-family public evidence, and current user evidence.
 - company direction: official company sources, public reports, and verified/public hiring signals.
 - HR readability: role outputs, user evidence, company priors, and factual review.
 - resume claim: original user material, extracted evidence, and FactualReviewer approval.
 
-Scores, weights, rankings, confidence, application priority, and external-display priorities require hard-data provenance. If evidence is missing, return `not_available`, `needs_more_sources`, or blocked outputs.
+Scores, weights, rankings, confidence, final application priority, and external-display priorities require hard-data provenance. If evidence is missing, return `not_available`, `needs_more_sources`, or blocked outputs for those exact fields, while still giving safe preparation and exploration recommendations. If a JD is silent on city, onsite days, arrival time, opening status, deadline, headcount, or internship duration, add `ask_hr_about` rather than asking the user repeatedly.
 
 ## Role-by-Role Runtime Work
 
@@ -260,7 +260,7 @@ Data Sources:
 
 Judgment Basis:
 
-- current JD and public role evidence plus user evidence.
+- available JD, public role-family evidence, and user evidence. Missing operational JD details should become `ask_hr_about`, not a learning-plan blocker.
 - output includes conditions for when a skill/project may be written into the resume.
 
 ### PersonalBrandingStrategist
@@ -379,7 +379,7 @@ Common debate paths:
 
 - MatchStrategist says fit is high but ProfileExtractor evidence is weak: HRSupervisor asks for evidence or lowers confidence.
 - PersonalBrandingStrategist proposes GitHub/personal site but role evidence does not value it: return to runtime research or reframe.
-- JDAnalyzer lacks current JD URL: MatchStrategist blocks apply-now and asks JobScout/JDAnalyzer to retrieve current public JD.
+- JDAnalyzer lacks current JD URL: MatchStrategist downgrades apply-now to prepare-first or explore, keeps valid public URLs visible, and adds missing operational details to `ask_hr_about`.
 - ResumeArchitect writes a strong claim but FactualReviewer flags it: revise or ask user for proof.
 - School-company cooperation is claimed without official school/company evidence: HRSupervisor rejects that claim.
 
@@ -419,6 +419,7 @@ The final package should include:
 - target role/JD analysis when available.
 - recommended_application_targets with real public URLs.
 - blocked_application_targets_without_public_url.
+- ask_hr_about for missing HR-operational details.
 - current fit and learnable gaps.
 - learning plan and proof artifacts.
 - personal branding plan.
@@ -428,4 +429,4 @@ The final package should include:
 - factual review and risk notes.
 - next actions.
 
-If a required source, URL, subagent, or user fact is missing, return a blocked or degraded package instead of guessing.
+Keep the final user output concise and professional: conclusion first, then evidence, recommended public URLs, gaps to fix, HR confirmation items, and next 3 actions. If a required source, URL, subagent, or user fact is missing, return a degraded package for the affected fields instead of guessing or exposing internal runtime details.

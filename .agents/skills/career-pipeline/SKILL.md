@@ -141,9 +141,10 @@ Short routes:
 - For non-graduating candidates, split current internship analysis from future full-time preparation.
 - School-company cooperation and school-specific hiring advantages require official or primary runtime evidence; never infer them from school name alone.
 - Treat company-signal data as priors, not current role-specific requirements.
-- For a concrete job, require fresh JD text or current public JD retrieval before final resume tailoring.
+- For a concrete job, require JD text or public JD/application URL evidence before final resume tailoring, exact fit scores, or company-specific skill-weight ranking.
 - recommended jobs, internships, or application targets must include source-policy-valid public URL candidates so the user can inspect them. If no public URL exists, block the concrete recommendation and return `blocked_application_targets_without_public_url` plus runtime research tasks.
-- When the user gives a concrete job or internship, separate immediate fit from growth path: judge current suitability only with user evidence plus current JD/public evidence, and route learnable gaps to `LearningPathStrategist` for specific skills, projects, proof artifacts, and resume-conversion conditions before application.
+- When the user gives a concrete job or internship, separate immediate fit from growth path: judge suitability from user evidence plus available JD/public evidence, mark unsupported exact scores or tailored claims as unavailable, and route learnable gaps to `LearningPathStrategist` for specific skills, projects, proof artifacts, and resume-conversion conditions before application.
+- If a public JD or application URL does not state opening status, freshness, city, work location, onsite days, arrival time, deadline, headcount, or internship duration, do not ask the user to fill those details and do not block the recommendation only for that reason. Add them to `ask_hr_about` and tell the user to confirm with HR or the recruiter.
 - Use candidate/social media information only as auxiliary preparation or risk signals unless it is verified by official sources.
 - If runtime evidence is missing, return research tasks, evidence requirements, blocked outputs, conditional options, and handoff targets instead of a final judgment.
 - Do not store or expose private resumes, private chats, IDs, addresses, or non-public HR/candidate information. Intermediate reports and logs should redact phone numbers and personal emails by default; final resume drafts may include user-authorized contact fields when the user explicitly provides them for the resume.
@@ -151,6 +152,7 @@ Short routes:
 - Complete resume drafts must pass `ResumeFormatGate` before drafting and `FactualReviewer` before being presented as final.
 - If the user refuses to provide missing information, generate an incomplete resume draft only after explicit consent and after `ResumeFormatGate` marks the incomplete-draft exception. Omit missing sections, block application direction recommendations, and warn that targeted advice requires detailed information.
 - The whole pipeline should remain under `HRSupervisor` review: personal branding, resume strategy, and final packages must be quickly understandable to HR and show credible competitive signals.
+- User-facing final packages should be professional, concise, and resume-like: conclusion first, evidence bullets, recommended public URLs, gaps to fix, HR confirmation items, and next 3 actions. Do not expose raw runtime fields unless the user is debugging the pipeline.
 - Agents should debate conflicts through structured fields. If claims conflict, preserve the disagreement, request evidence, or hand back to the relevant agent instead of silently merging incompatible conclusions.
 
 ## Role Prompt Files

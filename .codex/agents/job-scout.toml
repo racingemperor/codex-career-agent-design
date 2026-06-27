@@ -19,6 +19,8 @@ The runtime secondary prompt injection should include `automatic_public_recruitm
 
 When producing recommended jobs, internships, or application targets, follow `references/application-url-output-policy.md`. Every candidate that might be shown to the user as an application target must include `application_url_candidates` with public, inspectable URLs. If no public URL exists, put the item in `blocked_application_targets_without_public_url` and create a runtime research task. Official entrypoints from `data/company_signals/official_application_entrypoints.zh-CN.json` can support exploration, but they do not prove a concrete role is currently open.
 
+If the public page or JD does not state opening status, freshness, city, work location, onsite days, arrival time, deadline, headcount, or internship duration, do not ask the user to fill those details and do not block the target only for that missing field. Add the missing operational details to `ask_hr_about` so the final package can tell the user what to confirm with HR.
+
 Do not rank jobs, label apply/skip, or assign stretch/match/safety categories from repository priors alone. Category labels are conditional runtime fields and require user constraints, current JD evidence, hard-gate checks, and MatchStrategist output.
 
 Work aspects:
@@ -111,7 +113,8 @@ Output JSON:
           "requires_login": false,
           "may_support_apply_recommendation": false,
           "confidence": "high|medium|low",
-          "notes": ""
+          "notes": "",
+          "ask_hr_about": []
         }
       ],
       "blocked_until_public_url": false

@@ -274,7 +274,12 @@ def test_engineering_smoke_test_writes_results_for_ten_profiles(tmp_path):
     assert "本科大二 计算机 AI 实习探索" in md_text
     assert "用户端可读包" in md_text
     assert "公开来源研究计划已生成但尚未执行" in md_text
-    assert "run_dir" not in user_report.read_text(encoding="utf-8")
+    user_report_text = user_report.read_text(encoding="utf-8")
+    assert "run_dir" not in user_report_text
+    assert "fit_score" not in user_report_text
+    assert "blocked_outputs" not in user_report_text
+    assert "下一步建议" in user_report_text
+    assert "HR 确认项" in user_report_text
 
 
 def test_work_order_builder_exports_subagent_ready_orders(tmp_path):
@@ -2870,7 +2875,7 @@ def test_public_source_plan_builder_creates_policy_bound_tasks(tmp_path):
     assert source_plan["blocked_source_types"]
 
 
-def test_public_source_plan_for_target_job_fit_requires_current_jd_and_gap_evidence(tmp_path):
+def test_public_source_plan_for_target_job_fit_keeps_incomplete_jd_fields_as_hr_questions(tmp_path):
     run_root = tmp_path / ".career-pipeline-runs"
     simulate = run_python(
         SIMULATOR,
@@ -2901,9 +2906,19 @@ def test_public_source_plan_for_target_job_fit_requires_current_jd_and_gap_evide
     task_ids = {task["task_id"] for task in source_plan["research_tasks"]}
     assert "target-current-jd-verification" in task_ids
     assert "target-learning-gap-evidence" in task_ids
-    assert "current_fit_assessment" in source_plan["blocked_outputs_without_current_jd"]
-    assert "application_readiness_decision" in source_plan["blocked_outputs_without_current_jd"]
-    assert "learning_plan_before_application" in source_plan["blocked_outputs_without_current_jd"]
+    assert "current_fit_assessment" not in source_plan["blocked_outputs_without_current_jd"]
+    assert "application_readiness_decision" not in source_plan["blocked_outputs_without_current_jd"]
+    assert "learning_plan_before_application" not in source_plan["blocked_outputs_without_current_jd"]
+    assert "application_strategy" not in source_plan["blocked_outputs_without_current_jd"]
+    assert "fit_score" in source_plan["blocked_outputs_without_current_jd"]
+    assert "targeted_resume_tailoring" in source_plan["blocked_outputs_without_current_jd"]
+    assert "company_specific_skill_weight_ranking" in source_plan["blocked_outputs_without_current_jd"]
+    assert source_plan["missing_jd_fields_policy"] == "ask_hr_not_user_and_do_not_block_recommendation"
+    assert {
+        "opening_status",
+        "city_or_work_location",
+        "onsite_days_or_arrival",
+    }.issubset(set(source_plan["hr_confirmation_fields_when_jd_silent"]))
 
 
 def test_source_policy_validator_rejects_login_only_and_private_sources(tmp_path):
@@ -3018,6 +3033,8 @@ def test_skill_documents_require_public_application_urls():
     assert "recommended jobs, internships, or application targets" in skill_text
     assert "application_url_candidates" in policy_text
     assert "blocked_application_targets_without_public_url" in policy_text
+    assert "ask_hr_about" in policy_text
+    assert "If the JD or URL does not state opening status, freshness, city, work location, arrival time, onsite days, deadline, or headcount, do not block the recommendation" in policy_text
     assert "official_application_entrypoints.zh-CN.json" in data_catalog
 
 
@@ -3037,11 +3054,15 @@ def test_role_prompts_gate_application_recommendations_on_public_urls():
 
     assert "application_url_candidates" in job_scout
     assert "blocked_application_targets_without_public_url" in job_scout
+    assert "ask_hr_about" in job_scout
     assert "recommended_application_targets" in match_strategist
     assert "concrete application recommendation" in match_strategist
+    assert "Do not turn missing opening status, freshness, city, work location, onsite days, arrival time, deadline, or headcount into a blocker" in match_strategist
     assert "public URL" in hr_supervisor
     assert "application_url_review" in hr_supervisor
+    assert "professional, concise, resume-like user-facing summary" in hr_supervisor
     assert "application_url_fact_review" in factual_reviewer
+    assert "missing HR-operational fields" in factual_reviewer
 
 
 def test_factual_reviewer_prompt_requires_controller_evidence_correction():

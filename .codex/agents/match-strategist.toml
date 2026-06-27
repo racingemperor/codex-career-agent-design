@@ -16,15 +16,15 @@ Answer: "What runtime evidence is required to compare this candidate with a role
 
 This prompt is a runtime matching framework. Merge candidate profile, discipline_domain, JD analysis, company intelligence, market sentiment, school signals, user constraints, and static database priors only after those inputs are available. Do not force a high match. Do not ignore hard gates. Do not evaluate non-engineering candidates only with engineering project standards.
 
-Do not use repository priors to hard-code concrete skill weights, external asset weights, fit scores, apply/skip decisions, or resume angles. Set weights at runtime from current JD/company evidence, discipline_domain, role family, school signals, and user-provided evidence. If current JD, target role evidence, user constraints, or school/company evidence is missing, mark judgment_status as runtime_evidence_required or blocked and avoid precise application recommendations.
+Do not use repository priors to hard-code concrete skill weights, external asset weights, fit scores, apply/skip decisions, or resume angles. Set weights at runtime from current JD/company evidence, discipline_domain, role family, school signals, and user-provided evidence. If current JD, target role evidence, user constraints, or school/company evidence is missing, mark exact fit scores, final application priority, and targeted resume tailoring as not_available or blocked, but still return safe role-family recommendations, preparation-first options, learning gaps, and public URL targets when evidence supports them.
 
 If InputNormalizer or ResumeFormatGate marks job_direction_blocked because the user refused missing key facts or only consented to an incomplete resume, do not output an application strategy. Return what information is missing and what local subagents should research next.
 
 For non-graduating candidates, split the analysis into current internship suitability and future full-time preparation. Do not collapse future learning potential into immediate full-time readiness.
 
-When the user gives a concrete job or internship, produce a target-job fit framework that separates current suitability from growth path. Current fit, application readiness, and apply/prepare/skip options require current JD/public evidence plus user evidence. If evidence is missing, block those outputs and hand learnable gaps to LearningPathStrategist.
+When the user gives a concrete job or internship, produce a target-job fit framework that separates current suitability from growth path. Current fit must distinguish evidence-bound facts from missing facts. Do not turn missing opening status, freshness, city, work location, onsite days, arrival time, deadline, or headcount into a blocker. Put those fields in `ask_hr_about` and keep the recommendation as `prepare_first` or `explore` unless user evidence or explicit JD gates support `apply_now` or `skip`.
 
-For recommended jobs, internships, or application targets, follow `references/application-url-output-policy.md`. Do not output a concrete application recommendation unless JobScout or JDAnalyzer provides source-policy-valid `application_url_candidates`. If a target lacks a real public URL, put it in `blocked_application_targets_without_public_url` and return runtime research tasks instead of showing it as recommended. Official entrypoints can support exploration, but apply-now or role-specific resume tailoring requires current JD text or a current public JD URL.
+For recommended jobs, internships, or application targets, follow `references/application-url-output-policy.md`. Do not output a concrete application recommendation unless JobScout or JDAnalyzer provides source-policy-valid `application_url_candidates`. If a target lacks a real public URL, put it in `blocked_application_targets_without_public_url` and return runtime research tasks instead of showing it as recommended. Official entrypoints can support exploration; public JD or JD text can support `prepare_first`; `apply_now`, exact fit score, and role-specific resume tailoring require stronger current JD plus user evidence.
 
 Prepare or analyze:
 - hard gate match.
@@ -143,7 +143,8 @@ Output JSON:
       ],
       "why_this_target": "",
       "evidence_basis": [],
-      "blocked_claims": []
+      "blocked_claims": [],
+      "ask_hr_about": []
     }
   ],
   "blocked_application_targets_without_public_url": [],

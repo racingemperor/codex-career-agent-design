@@ -345,12 +345,9 @@ def build_source_plan(run_dir: Path, output_ref: str) -> dict[str, Any]:
     if is_target_job_fit_context(context):
         research_tasks.extend(build_target_job_fit_tasks(invocations, terms))
         blocked_outputs_without_current_jd = [
-            "current_fit_assessment",
-            "application_readiness_decision",
-            "learning_plan_before_application",
             "targeted_resume_tailoring",
             "fit_score",
-            "application_strategy",
+            "company_specific_skill_weight_ranking",
         ]
     plan = {
         "public_source_research_plan": {
@@ -370,6 +367,15 @@ def build_source_plan(run_dir: Path, output_ref: str) -> dict[str, Any]:
             "target_companies_detected": detect_target_companies(context),
             "target_job_fit_requested": is_target_job_fit_context(context),
             "blocked_outputs_without_current_jd": blocked_outputs_without_current_jd,
+            "missing_jd_fields_policy": "ask_hr_not_user_and_do_not_block_recommendation",
+            "hr_confirmation_fields_when_jd_silent": [
+                "opening_status",
+                "city_or_work_location",
+                "onsite_days_or_arrival",
+                "deadline",
+                "headcount",
+                "internship_duration",
+            ],
             "research_tasks": research_tasks,
             "blocked_source_types": [
                 {

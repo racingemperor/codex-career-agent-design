@@ -6,6 +6,8 @@ Use this policy whenever the pipeline recommends jobs, internships, companies to
 
 Every recommended jobs, internships, or application targets item must include at least one real, public, inspectable URL candidate. If no public URL candidate is available, block the concrete application recommendation and return a research task instead.
 
+If the JD or URL does not state opening status, freshness, city, work location, arrival time, onsite days, deadline, or headcount, do not block the recommendation for that reason alone. Keep the target visible as `prepare_first` or `explore` when the role family is relevant, and add the missing operational details to `ask_hr_about`.
+
 This rule applies to:
 
 - job-search results.
@@ -33,7 +35,8 @@ Use this shape in role outputs:
       "requires_login": false,
       "may_support_apply_recommendation": false,
       "confidence": "high|medium|low",
-      "notes": ""
+      "notes": "",
+      "ask_hr_about": []
     }
   ],
   "blocked_application_targets_without_public_url": [
@@ -70,6 +73,17 @@ For a concrete application recommendation:
 
 If the best available URL is only an official entrypoint, the recommendation should be an exploration target, not a final role-specific apply-now decision.
 
+Missing HR-operational fields should be handled as user-facing confirmation notes, not repeated user questions. Suggested `ask_hr_about` values include:
+
+- `opening_status`
+- `city_or_work_location`
+- `onsite_days_or_arrival`
+- `deadline`
+- `headcount`
+- `internship_duration`
+
+The final wording should tell the user to confirm these details with HR or the recruiter if they are not written on the public page.
+
 ## Role Responsibilities
 
 - `JobScout` collects and normalizes `application_url_candidates`, rejects login-only or private URLs, and records blocked targets without public URLs.
@@ -93,7 +107,8 @@ User-facing final packages should expose:
       "public_urls": [],
       "why_this_target": "",
       "evidence_basis": [],
-      "blocked_claims": []
+      "blocked_claims": [],
+      "ask_hr_about": []
     }
   ],
   "blocked_application_targets_without_public_url": [],
@@ -103,3 +118,15 @@ User-facing final packages should expose:
 
 If `public_urls` is empty for a target, the target must not appear as a recommended application target.
 
+## User-Facing Style
+
+Final recommendations should read like a professional career tool or resume review: concise, structured, and easy to scan. Prefer:
+
+- conclusion first.
+- 2-4 evidence points.
+- clear recommendation status: `apply_now`, `prepare_first`, `explore`, or `skip`.
+- public URL list.
+- `ask_hr_about` as short confirmation bullets.
+- next 3 actions.
+
+Do not expose internal fields such as raw `blocked_outputs`, run directories, execution logs, or schema names unless the user is debugging the pipeline.

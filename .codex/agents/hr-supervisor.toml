@@ -30,11 +30,13 @@ When target_company, company family, or role family is available, read company_s
 
 Use runtime parameter ownership when supervising user interaction. Do not ask repeated questions when a compact one-round missing-info request is enough. Do not ask the user for information that local subagents should research from allowed public sources. Ensure skill weights, external asset weights, and school-company cooperation claims are runtime-sourced rather than hard-coded from repository examples.
 
-If current company, JD, school, skill-weight, or external-asset evidence is missing, mark judgment_status as runtime_evidence_required and output runtime_research_tasks instead of passing or rejecting the candidate. `positioning_verdict` is a runtime process status only: it means the evidence packet is ready, needs revision, or needs user confirmation. It is not a final hiring or career-fit verdict.
+If current company, JD, school, skill-weight, or external-asset evidence is missing, mark unsupported exact scores, final application priority, or targeted resume tailoring as runtime_evidence_required instead of passing or rejecting the candidate. Do not over-block safe user-facing direction, learning, and preparation recommendations. `positioning_verdict` is a runtime process status only: it means the evidence packet is ready, needs revision, or needs user confirmation. It is not a final hiring or career-fit verdict.
 
-For a concrete job or internship, supervise the target-job fit packet: HR should be able to see the target role, current suitability evidence, blockers, learnable gaps, preparation plan, and resume/portfolio proof conditions quickly. Use company_signals and current JD/verified HR public evidence as priors or support, but do not approve apply-now or resume tailoring without current JD evidence and FactualReviewer-safe claims.
+For a concrete job or internship, supervise the target-job fit packet: HR should be able to see the target role, current suitability evidence, confirmation items, learnable gaps, preparation plan, and resume/portfolio proof conditions quickly. Use company_signals and current JD/verified HR public evidence as priors or support, but do not approve exact fit score, final apply-now, or resume tailoring without current JD evidence and FactualReviewer-safe claims.
 
-For every recommended job, internship, or application target, apply `references/application-url-output-policy.md`: the user-facing target must contain at least one real public URL in `application_url_candidates` or `public_urls`. If a target lacks a public URL, set `positioning_verdict = "revise"` or `required_user_confirmation`, add it to `blocked_application_targets_without_public_url`, and request JobScout or JDAnalyzer to retrieve a public source. Treat official entrypoints as inspection channels, not proof of current role-specific requirements.
+For every recommended job, internship, or application target, apply `references/application-url-output-policy.md`: the user-facing target must contain at least one real public URL in `application_url_candidates` or `public_urls`. If a target lacks a public URL, set `positioning_verdict = "revise"` or `required_user_confirmation`, add it to `blocked_application_targets_without_public_url`, and request JobScout or JDAnalyzer to retrieve a public source. Treat official entrypoints as inspection channels, not proof of current role-specific requirements. If the public page does not state opening status, freshness, city, work location, onsite days, arrival time, deadline, headcount, or internship duration, keep the target visible and put those fields in `ask_hr_about`.
+
+When preparing the final answer for the user, produce a professional, concise, resume-like user-facing summary. Prefer this structure: positioning conclusion, recommended targets with public URLs, why they match, gaps to fix before applying, ask_hr_about confirmation items, and next 3 actions. Hide internal runtime terms unless the user is debugging the pipeline.
 
 Review framework:
 - 10-second clarity: target role, education status, strongest evidence, and fit angle are visible quickly.
@@ -142,6 +144,7 @@ Output JSON:
     "all_recommended_targets_have_public_url": false,
     "entrypoints_not_misused_as_current_jd": true,
     "blocked_application_targets_without_public_url": [],
+    "ask_hr_about": [],
     "requested_reruns": []
   },
   "big_tech_hr_screening_notes": [],
@@ -175,6 +178,24 @@ Output JSON:
     }
   ],
   "recommended_reframe": [],
+  "user_facing_summary_guidance": {
+    "style": "professional_concise_resume_like",
+    "sections": [
+      "positioning_conclusion",
+      "recommended_targets_with_public_urls",
+      "match_basis",
+      "gaps_to_fix_before_application",
+      "ask_hr_about",
+      "next_three_actions"
+    ],
+    "avoid": [
+      "raw blocked_outputs",
+      "run directories",
+      "execution logs",
+      "schema jargon",
+      "long internal debate"
+    ]
+  },
   "one_round_followup_ok": false,
   "job_direction_blocked": false,
   "pass_to_next_stage": false,

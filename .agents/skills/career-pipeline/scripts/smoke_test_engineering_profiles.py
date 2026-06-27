@@ -446,9 +446,9 @@ def summarize_profile(profile: Profile, run_dir: Path) -> dict[str, Any]:
     user_facing_package = {
         "safe_summary": profile.concise_result,
         "can_do_now": [
-            "整理已知用户事实和缺失信息",
+            "整理已知经历与缺失材料",
             "给出专业大类、候选方向和成长型准备路线",
-            "生成后续公开来源研究任务",
+            "生成可继续检索的公开来源任务",
         ],
         "blocked_until_evidence": [
             "current_fit_assessment",
@@ -457,10 +457,20 @@ def summarize_profile(profile: Profile, run_dir: Path) -> dict[str, Any]:
             "application_strategy",
             "company-specific resume tailoring",
         ],
+        "not_ready_for_user_output": [
+            "精确适配评分",
+            "最终投递优先级",
+            "公司定制版简历",
+        ],
+        "ask_hr_about": [
+            "岗位是否仍开放",
+            "工作城市和到岗方式",
+            "实习周期、每周到岗天数和最早到岗时间",
+        ],
         "next_three_actions": profile.user_next_steps,
         "hr_supervision_note": (
-            "当前包只允许把真实经历整理得更清楚，不能生成虚假经历、假指标或无证据的投递结论；"
-            f"HR/Factual 状态：{hr_guard_status}。"
+            "当前结论只基于用户已提供材料和本地规划结果，可用于整理经历与准备方向；不得生成虚假经历、假指标或无证据的强投递结论。"
+            f"监督状态：{hr_guard_status}。"
         ),
         "evidence_status": "research_plan_created_not_executed",
         "execution_status": "dry_run_no_real_subagent",
@@ -575,9 +585,9 @@ def render_markdown(
 
 def render_user_report(summaries: list[dict[str, Any]]) -> str:
     lines = [
-        "# 工科职业管线用户端测试报告",
+        "# 工科职业规划测试报告",
         "",
-        "这份报告只展示用户需要理解的内容。公开来源 fetcher 已具备，但本次烟测未联网执行；真实 fit score、投递优先级和公司定向简历仍然阻塞。",
+        "这份报告按真实用户视角展示：先给定位结论，再给准备重点和下一步建议。岗位页面未写清的开放状态、城市或到岗要求，统一作为 HR 确认项，不作为推荐阻塞。",
         "",
     ]
     for item in summaries:
@@ -586,14 +596,15 @@ def render_user_report(summaries: list[dict[str, Any]]) -> str:
             [
                 f"## {item['profile_id']} {item['label']}",
                 "",
-                f"- 画像定位：{item['major_cluster']}，{item['candidate_stage']}。",
-                f"- 当前可安全判断：{package['safe_summary']}",
-                f"- 现在能做：{'; '.join(package['can_do_now'])}",
-                f"- 暂时不能做：{', '.join(package['blocked_until_evidence'])}。",
-                f"- 下一步 1：{package['next_three_actions'][0]}",
-                f"- 下一步 2：{package['next_three_actions'][1]}",
-                f"- 下一步 3：{package['next_three_actions'][2]}",
-                f"- HR 监督：{package['hr_supervision_note']}",
+                f"- 定位结论：{item['major_cluster']}，{item['candidate_stage']}。",
+                f"- 推荐判断：{package['safe_summary']}",
+                f"- 当前可做：{'; '.join(package['can_do_now'])}。",
+                f"- 暂不输出：{'; '.join(package['not_ready_for_user_output'])}。",
+                f"- HR 确认项：{'; '.join(package['ask_hr_about'])}。",
+                f"- 下一步建议：{package['next_three_actions'][0]}",
+                f"- 下一步建议：{package['next_three_actions'][1]}",
+                f"- 下一步建议：{package['next_three_actions'][2]}",
+                f"- 风险控制：{package['hr_supervision_note']}",
                 "",
             ]
         )

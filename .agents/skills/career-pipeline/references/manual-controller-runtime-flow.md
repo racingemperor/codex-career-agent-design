@@ -39,7 +39,7 @@ It must:
 - persist every role output artifact before closing a subagent, then close completed subagents before opening the next batch.
 - merge only safe fields.
 - run debate, HR review, and factual review before final output.
-- block final outputs when required evidence, URLs, user facts, or role outputs are missing.
+- block only the final fields that truly require missing evidence, URLs, user facts, or role outputs. Keep safe direction, preparation, public URL targets, and HR confirmation notes visible.
 
 It must not:
 
@@ -47,6 +47,7 @@ It must not:
 - treat static company priors as current JD evidence.
 - treat official entrypoints as concrete open jobs.
 - show recommended application targets without a public URL.
+- treat missing opening status, city, onsite days, arrival time, deadline, headcount, or internship duration as user-owned facts; these are HR confirmation items when the public page is silent.
 - turn planned learning into completed resume evidence.
 - mark `real_subagent_execution = true` unless actual role outputs were produced by separated role execution.
 
@@ -216,7 +217,7 @@ Use these fields:
 
 Debate examples:
 
-- `MatchStrategist` recommends apply-now, but `JobScout` has only an official entrypoint, not a current JD URL: downgrade to explore or prepare-first and request current JD evidence.
+- `MatchStrategist` recommends apply-now, but `JobScout` has only an official entrypoint, not a current JD URL: downgrade to explore or prepare-first, keep the public URL visible, and put missing operational fields in `ask_hr_about`.
 - `PersonalBrandingStrategist` recommends GitHub, but role evidence does not support external asset priority: ask for hard-data provenance or mark external asset weight unavailable.
 - `ResumeArchitect` writes a completed skill from a learning plan: `FactualReviewer` blocks the claim.
 - `HRSupervisor` says presentation is clear, but `FactualReviewer` rejects a metric: factual review wins.
@@ -228,7 +229,7 @@ The manual controller may present a final package only when:
 - user-owned required facts are sufficient or the user has accepted a documented incomplete-output path.
 - source policy has been applied.
 - each recommended application target has a public URL.
-- current JD evidence exists for role-specific fit, apply-now, or tailored resume claims.
+- JD/public evidence is sufficient for the level of claim being made: exact fit score, apply-now, and tailored resume claims need stronger current JD plus user evidence; prepare-first and explore recommendations may use public JD, official entrypoint, or role-family evidence with limitations stated.
 - each runtime weight has hard-data provenance or is marked unavailable.
 - required role outputs are present and not blocked for final fields.
 - HR review and factual review have passed where applicable.
@@ -239,6 +240,7 @@ If not, return a blocked or degraded package with:
 - what is safe to say now.
 - `blocked_application_targets_without_public_url`.
 - `runtime_research_tasks`.
+- `ask_hr_about` for missing opening status, city, onsite days, arrival time, deadline, headcount, or internship duration.
 - one compact user follow-up for user-owned facts only.
 - exact next action for the controller.
 
