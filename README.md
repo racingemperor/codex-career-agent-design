@@ -1,5 +1,23 @@
 # Codex Career Agent Design
 
+## User-Side Smoke Run
+
+This repository now includes a deterministic local runner for checking whether the Codex skill wiring works on a user's machine. It is a contract/smoke run, not a final career-advice run:
+
+```bash
+cd .agents/skills/career-pipeline
+python scripts/career_pipeline_run.py --task-type target_job_fit --route target_job_fit --input-text "computer science senior, assess fit for Tencent backend role. JD: Java and MySQL" --run-root ../../../.career-pipeline-runs --source-adapter seed --subagent-adapter mock-blocked
+```
+
+Expected response today:
+
+- `exit_status = "blocked"` because no real Codex subagent adapter has executed role prompts yet.
+- `real_subagent_execution = false` because `mock-blocked` only writes schema-valid blocked role outputs.
+- `source_discovery_ready = true` when the deterministic `seed` source adapter generated public source candidates and `discover_public_sources.py` accepted at least one allowed URL.
+- Runtime artifacts are written under `.career-pipeline-runs/<run_id>/`, which is gitignored.
+
+The `seed` source adapter is local and deterministic. It is useful for proving the pipeline can build public-source query plans and filter allowed URLs automatically, but it is not live recruitment-platform search and should not be treated as fresh evidence. Replace it with a real browser/search/API adapter before producing current job or company judgments.
+
 这是一个面向 Codex 平台的求职与简历设计 pipeline 方案草稿。
 
 目标不是先部署一个完整项目，而是先把 agent / skill 的边界、角色分工、数据来源、合规约束和后续技术路线写清楚。后续如果要落地，优先采用 **Codex 原生 Skill + Codex Custom Subagents + deterministic scripts**，而不是复刻 Claude Code / Cloud Code 风格的外部 dispatcher。

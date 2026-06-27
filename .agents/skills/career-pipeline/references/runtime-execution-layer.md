@@ -134,6 +134,33 @@ This repository ships a deterministic local execution shell for contract testing
 }
 ```
 
+The repository one-command runner returns the same status in a more artifact-rich envelope:
+
+```json
+{
+  "career_pipeline_run_response": {
+    "exit_status": "success|blocked|degraded|failed",
+    "run_id": "",
+    "run_dir_ref": "",
+    "real_subagent_execution": false,
+    "source_discovery_ready": false,
+    "blocked_by": [],
+    "execution_manifest_ref": "manifest.json",
+    "blocked_package_ref": "final/blocked_package.json",
+    "source_plan_ref": "",
+    "query_plan_ref": "",
+    "search_results_ref": "",
+    "allowed_sources_ref": "",
+    "subagent_plan_ref": "",
+    "work_orders_ref": "",
+    "adapter_output_refs": [],
+    "next_action": ""
+  }
+}
+```
+
+Do not set `real_subagent_execution = true` or provide a final package from the one-command runner until a configured adapter has produced role outputs, those outputs pass schema checks, and the required merge, HR, factual, source-policy, and weight-provenance gates have completed.
+
 Suggested exit semantics:
 
 - `success`: final package is ready and required gates passed.
@@ -145,24 +172,29 @@ For Codex network configuration, source-policy acknowledgement, and real adapter
 
 ## Non-Goals
 
-- This protocol does not define a specific CLI command.
+- This protocol does not require a specific CLI command, but the repository provides `career_pipeline_run.py` as a deterministic local runner that follows this contract.
 - This protocol does not require network access for every run.
 - This protocol does not store private user data in git.
 - This protocol does not replace the source policy, weight engine, or role output contracts.
 
 ## Current Local Scripts
 
+- `career_pipeline_run.py`: one-command deterministic user-side runner. It chains simulation, prompt-bundle generation, public-source planning, deterministic seed source search, allowed-source discovery, work-order export, and the mock-blocked subagent adapter. It returns `blocked` until real role outputs are produced by a configured adapter and validated.
 - `simulate_runtime_run.py`: creates a private no-network blocked run with normalized input, runtime context, secondary injections, invocation packets, blocked package, and simulated blocked role outputs.
 - `build_subagent_plan.py`: turns invocation packets into a plan-only dispatch queue. Plan-only queues are not proof that subagents ran.
 - `build_subagent_prompt_bundle.py`: creates one role-specific derived prompt bundle with the static role prompt, runtime context packet, secondary prompt injection, allowed user facts, source policy, research tasks, hard-data weight tasks, and required output contract. Raw input refs must not appear in the bundle.
 - `build_public_source_plan.py`: creates a source-policy-bound research plan for official/primary pages, public recruitment-platform JDs, verified HR public posts, candidate experience, and weak social signals. It does not browse, log in, scrape, or cache sources.
 - `discover_public_sources.py`: converts search-adapter results into `evidence/allowed_public_sources.generated.json` and `evidence/public_source_discovery_log.json`. It generates search queries from the source plan, rejects login/private/backend/non-public hints, deduplicates URLs, and keeps social media as weak evidence.
+- `search_public_sources.py`: adapter entrypoint for executing generated source queries. The built-in `seed` provider is local and deterministic; it emits candidate URLs from repository source-collection targets and generic public-source entrypoints, not live web results.
 - `fetch_public_sources.py`: fetches allowed public `http(s)` sources or user-provided `file://` snapshots into evidence packets. It refuses forbidden source types, login-only pages, and weak social evidence as final-decision proof.
 - `build_subagent_work_orders.py`: exports adapter-ready work orders with prompt bundle refs, human/source-policy gates, expected output contracts, and backfill requirements. Work orders are not proof of real subagent execution.
+- `run_subagent_adapter.py`: subagent adapter runner entrypoint. The current `--mock-blocked` mode writes schema-valid blocked role output packets so the pipeline can test handoff and backfill contracts while preserving `real_subagent_execution = false`.
 - `execute_subagent_plan.py`: defaults to dry-run inspection, refuses real execution without human approval, refuses network execution without source-policy acknowledgement, writes redacted execution events, and can backfill externally produced role outputs only after schema checks.
 - `backfill_public_evidence.py`: validates externally collected evidence packets against the public-source plan, rejects forbidden/login-only/weak-final-decision evidence, and appends accepted packets to the run evidence index.
 - `continue_runtime_run.py`: accepts one compact batch of user-owned facts and updates the same run so dispatch can continue without starting over.
 
 `target_job_fit` runs should include target job/company/JD context in `runtime_context_packet.target_context`, block `current_fit_assessment`, `application_readiness_decision`, `learning_plan_before_application`, `targeted_resume_tailoring`, `fit_score`, and `application_strategy` until current JD and public/company evidence are available, and keep immediate readiness separate from learnable growth path.
+
+Non-engineering domains currently route through `data/discipline_taxonomy/discipline_registry.zh-CN.json` and return `taxonomy_status = "pending_static_database"` when a domain-specific static taxonomy is not yet implemented. This is intentional degradation: engineering can use the implemented major taxonomy, while science, humanities, social science, business, arts/design, medicine/health, agriculture, law/public affairs, and interdisciplinary domains must block domain-specific taxonomy outputs instead of guessing.
 
 Real subagent execution remains blocked until a concrete adapter is configured and tested. See `runtime-network-and-adapter-setup.md` for Codex Desktop manual-controller, Codex CLI, and API adapter patterns. Any adapter must keep the same privacy, source-policy, weight-provenance, role-output, HR, factual-review, and blocked/final gates.

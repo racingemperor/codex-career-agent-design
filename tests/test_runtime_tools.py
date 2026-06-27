@@ -31,6 +31,9 @@ PUBLIC_SOURCE_FETCHER = ROOT / ".agents" / "skills" / "career-pipeline" / "scrip
 PUBLIC_SOURCE_DISCOVERER = (
     ROOT / ".agents" / "skills" / "career-pipeline" / "scripts" / "discover_public_sources.py"
 )
+PUBLIC_SOURCE_SEARCHER = ROOT / ".agents" / "skills" / "career-pipeline" / "scripts" / "search_public_sources.py"
+SUBAGENT_ADAPTER_RUNNER = ROOT / ".agents" / "skills" / "career-pipeline" / "scripts" / "run_subagent_adapter.py"
+CAREER_PIPELINE_RUNNER = ROOT / ".agents" / "skills" / "career-pipeline" / "scripts" / "career_pipeline_run.py"
 
 
 def run_python(script: Path, *args: str, cwd: Path | None = None) -> subprocess.CompletedProcess[str]:
@@ -616,6 +619,140 @@ def test_public_source_discoverer_accepts_bom_encoded_search_results(tmp_path):
     assert result.returncode == 0, result.stderr
     response = json.loads(result.stdout)["public_source_discovery_response"]
     assert response["accepted_count"] == 1
+
+
+def test_public_source_searcher_generates_seed_search_results_from_query_plan(tmp_path):
+    run_root = tmp_path / ".career-pipeline-runs"
+    simulate = run_python(
+        SIMULATOR,
+        "--task-type",
+        "target_job_fit",
+        "--input-text",
+        "Computer science senior. Assess fit for Tencent backend role. JD: Java and MySQL.",
+        "--run-root",
+        str(run_root),
+        "--route",
+        "target_job_fit",
+    )
+    assert simulate.returncode == 0, simulate.stderr
+    run_id = json.loads(simulate.stdout)["runner_response"]["run_id"]
+    run_dir = run_root / run_id
+    assert run_python(SOURCE_PLAN_BUILDER, "--run-dir", str(run_dir)).returncode == 0
+    assert run_python(PUBLIC_SOURCE_DISCOVERER, "--run-dir", str(run_dir), "--generate-query-plan-only").returncode == 0
+
+    result = run_python(PUBLIC_SOURCE_SEARCHER, "--run-dir", str(run_dir), "--provider", "seed")
+
+    assert result.returncode == 0, result.stderr
+    response = json.loads(result.stdout)["public_source_search_response"]
+    assert response["exit_status"] == "success"
+    assert response["provider"] == "seed"
+    assert response["user_instruction_required"] is False
+    results = json.loads((run_dir / response["search_results_ref"]).read_text(encoding="utf-8"))
+    serialized = json.dumps(results, ensure_ascii=False)
+    assert "join.qq.com" in serialized
+    assert all(item["task_id"] for item in results["search_results"])
+
+    discover = run_python(
+        PUBLIC_SOURCE_DISCOVERER,
+        "--run-dir",
+        str(run_dir),
+        "--search-results-json",
+        str(run_dir / response["search_results_ref"]),
+    )
+    assert discover.returncode == 0, discover.stderr
+    generated_ref = json.loads(discover.stdout)["public_source_discovery_response"]["generated_sources_ref"]
+    generated = json.loads((run_dir / generated_ref).read_text(encoding="utf-8"))
+    assert generated["sources"]
+
+
+def test_subagent_adapter_runner_writes_schema_valid_mock_outputs(tmp_path):
+    run_root = tmp_path / ".career-pipeline-runs"
+    simulate = run_python(
+        SIMULATOR,
+        "--task-type",
+        "job_search",
+        "--input-text",
+        "Computer science sophomore, Python, looking for AI internship",
+        "--run-root",
+        str(run_root),
+        "--route",
+        "job_search",
+    )
+    assert simulate.returncode == 0, simulate.stderr
+    run_id = json.loads(simulate.stdout)["runner_response"]["run_id"]
+    run_dir = run_root / run_id
+    assert run_python(PLAN_BUILDER, "--run-dir", str(run_dir), "--build-prompt-bundles").returncode == 0
+    assert run_python(WORK_ORDER_BUILDER, "--run-dir", str(run_dir)).returncode == 0
+
+    result = run_python(SUBAGENT_ADAPTER_RUNNER, "--run-dir", str(run_dir), "--mock-blocked")
+
+    assert result.returncode == 0, result.stderr
+    response = json.loads(result.stdout)["subagent_adapter_response"]
+    assert response["exit_status"] == "blocked"
+    assert response["real_subagent_execution"] is False
+    assert response["output_refs"]
+    first_output = json.loads((run_dir / response["output_refs"][0]).read_text(encoding="utf-8"))
+    packet = first_output["role_output_packet"]
+    assert packet["status"] == "blocked"
+    assert packet["target_agent"]
+    assert first_output["error_recovery_state"]["next_action"] == "configure_real_adapter"
+
+
+def test_one_command_runner_creates_blocked_user_side_run(tmp_path):
+    run_root = tmp_path / ".career-pipeline-runs"
+    result = run_python(
+        CAREER_PIPELINE_RUNNER,
+        "--task-type",
+        "target_job_fit",
+        "--route",
+        "target_job_fit",
+        "--input-text",
+        "Computer science senior. Assess fit for Tencent backend role. JD: Java and MySQL.",
+        "--run-root",
+        str(run_root),
+        "--source-adapter",
+        "seed",
+        "--subagent-adapter",
+        "mock-blocked",
+    )
+
+    assert result.returncode == 0, result.stderr
+    response = json.loads(result.stdout)["career_pipeline_run_response"]
+    assert response["exit_status"] == "blocked"
+    assert response["real_subagent_execution"] is False
+    assert response["source_discovery_ready"] is True
+    assert response["run_id"]
+    run_dir = run_root / response["run_id"]
+    assert (run_dir / "evidence" / "public_source_research_plan.json").is_file()
+    assert (run_dir / "evidence" / "search_results.generated.json").is_file()
+    assert (run_dir / "evidence" / "allowed_public_sources.generated.json").is_file()
+    assert (run_dir / "invocations" / "subagent_work_orders.json").is_file()
+    assert response["blocked_by"]
+
+
+def test_simulator_routes_non_engineering_major_to_pending_domain(tmp_path):
+    result = run_python(
+        SIMULATOR,
+        "--task-type",
+        "major_positioning",
+        "--input-text",
+        "I am a mathematics junior with Python and statistics, considering AI algorithm roles.",
+        "--run-root",
+        str(tmp_path / ".career-pipeline-runs"),
+        "--route",
+        "major_positioning",
+    )
+
+    assert result.returncode == 0, result.stderr
+    response = json.loads(result.stdout)
+    run_dir = tmp_path / ".career-pipeline-runs" / response["runner_response"]["run_id"]
+    context = json.loads(
+        (run_dir / "input" / "normalized" / "runtime_context_packet.json").read_text(encoding="utf-8")
+    )["runtime_context_packet"]
+    assert context["discipline_domain"] == "science"
+    assert context["major_and_discipline"]["taxonomy_status"] == "pending_static_database"
+    assert context["major_and_discipline"]["normalized_major"] == "mathematics"
+    assert "domain_static_taxonomy" in context["blocked_outputs"]
 
 
 def test_public_source_fetcher_rejects_login_only_sources(tmp_path):

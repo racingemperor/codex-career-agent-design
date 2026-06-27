@@ -325,6 +325,41 @@ def detect_major(text: str) -> str:
     return ""
 
 
+def detect_discipline_and_major(text: str, engineering_major: str) -> dict[str, Any]:
+    lowered = text.lower()
+    if engineering_major:
+        return {
+            "discipline_domain": "engineering",
+            "taxonomy_status": "implemented",
+            "normalized_major": engineering_major,
+            "major_cluster": engineering_major,
+        }
+    non_engineering_patterns = [
+        ("science", "mathematics", ["mathematics", "math", "数学", "统计", "statistics", "physics", "chemistry", "biology"]),
+        ("humanities", "humanities", ["literature", "history", "philosophy", "language", "中文", "文学", "历史", "哲学"]),
+        ("social_science", "social science", ["sociology", "psychology", "political science", "社会学", "心理学", "政治学"]),
+        ("business", "business", ["finance", "accounting", "marketing", "management", "金融", "会计", "市场营销", "工商管理"]),
+        ("arts_design", "arts design", ["design", "visual", "animation", "art", "设计", "动画", "美术"]),
+        ("medicine_health", "medicine health", ["medicine", "clinical", "pharmacy", "nursing", "医学", "临床", "药学", "护理"]),
+        ("agriculture", "agriculture", ["agriculture", "food science", "horticulture", "农学", "食品", "园艺"]),
+        ("law_public_affairs", "law public affairs", ["law", "public affairs", "policy", "法学", "公共管理", "政策"]),
+    ]
+    for domain, normalized_major, tokens in non_engineering_patterns:
+        if any(token in lowered or token in text for token in tokens):
+            return {
+                "discipline_domain": domain,
+                "taxonomy_status": "pending_static_database",
+                "normalized_major": normalized_major,
+                "major_cluster": "",
+            }
+    return {
+        "discipline_domain": "",
+        "taxonomy_status": "pending_static_database",
+        "normalized_major": "",
+        "major_cluster": "",
+    }
+
+
 def detect_candidate_stage(text: str) -> str:
     lowered = text.lower()
     if any(token in text for token in ["大一", "大二", "大三", "研一", "研二", "非毕业"]) or any(
@@ -558,6 +593,7 @@ def artifact_ref(
 
 def build_profile(input_text: str, task_type: str = "") -> dict[str, Any]:
     major_name = detect_major(input_text)
+    discipline = detect_discipline_and_major(input_text, major_name)
     candidate_stage = detect_candidate_stage(input_text)
     skills = extract_skills(input_text)
     target_roles = ["AI 实习"] if re.search(r"AI|人工智能|大模型|LLM", input_text, re.I) else []
@@ -579,8 +615,10 @@ def build_profile(input_text: str, task_type: str = "") -> dict[str, Any]:
             "education_status": candidate_stage,
         },
         "major_and_discipline": {
-            "discipline_domain": "engineering" if major_name else "",
-            "major_cluster": major_name,
+            "discipline_domain": discipline["discipline_domain"],
+            "taxonomy_status": discipline["taxonomy_status"],
+            "normalized_major": discipline["normalized_major"],
+            "major_cluster": discipline["major_cluster"],
         },
         "internship_experience": [],
         "project_competition_research_experience": [],
@@ -608,6 +646,7 @@ def build_context_packet(
 ) -> dict[str, Any]:
     known_user_facts = []
     education = profile["education_status"]
+    major_and_discipline = profile["major_and_discipline"]
     if education["major_name"]:
         known_user_facts.append({"field": "major_name", "value": education["major_name"]})
     if education["grade_or_year"]:
@@ -641,6 +680,8 @@ def build_context_packet(
         "application_strategy",
         "application_priority",
     ]
+    if major_and_discipline.get("taxonomy_status") == "pending_static_database":
+        blocked_outputs.append("domain_static_taxonomy")
     next_possible_actions = [
         "Ask user once for missing user-owned facts.",
         "Run public research subagents for current JD/company/school evidence.",
@@ -706,7 +747,8 @@ def build_context_packet(
         "task_type": task_type,
         "known_user_facts": known_user_facts,
         "candidate_stage": profile["education_status"]["education_status"],
-        "discipline_domain": profile["major_and_discipline"].get("discipline_domain", ""),
+        "discipline_domain": major_and_discipline.get("discipline_domain", ""),
+        "major_and_discipline": major_and_discipline,
         "school_context": {
             "school_name": education["school_name"],
             "major_name": education["major_name"],

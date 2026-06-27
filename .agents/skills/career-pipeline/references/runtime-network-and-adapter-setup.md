@@ -87,12 +87,15 @@ Example:
 cd .agents/skills/career-pipeline
 python scripts/build_public_source_plan.py --run-dir ../../../.career-pipeline-runs/<run_id>
 python scripts/discover_public_sources.py --run-dir ../../../.career-pipeline-runs/<run_id> --generate-query-plan-only
+python scripts/search_public_sources.py --run-dir ../../../.career-pipeline-runs/<run_id> --provider seed
 python scripts/discover_public_sources.py --run-dir ../../../.career-pipeline-runs/<run_id> --search-results-json <search_results.json>
 python scripts/fetch_public_sources.py --run-dir ../../../.career-pipeline-runs/<run_id> --sources-json ../../../.career-pipeline-runs/<run_id>/evidence/allowed_public_sources.generated.json
 python scripts/backfill_public_evidence.py --run-dir ../../../.career-pipeline-runs/<run_id> --evidence-json ../../../.career-pipeline-runs/<run_id>/evidence/fetched_public_evidence.json
 ```
 
 `--generate-query-plan-only` writes `evidence/public_source_discovery_log.json`; a browser/search/API adapter should execute those queries and save the resulting public URLs as `search_results.json`.
+
+For local contract tests, `search_public_sources.py --provider seed` can create `evidence/search_results.generated.json` from the query plan. This provider is deterministic and local. It uses `data/company_signals/source_collection_targets.zh-CN.json` plus generic public-source entrypoints to prove the pipeline can discover and filter source URLs automatically, but it is not live web search and should not be treated as fresh recruitment evidence.
 
 Minimal search adapter result shape:
 
@@ -153,6 +156,7 @@ Current handoff flow:
 ```bash
 python scripts/build_subagent_plan.py --run-dir ../../../.career-pipeline-runs/<run_id> --build-prompt-bundles
 python scripts/build_subagent_work_orders.py --run-dir ../../../.career-pipeline-runs/<run_id>
+python scripts/run_subagent_adapter.py --run-dir ../../../.career-pipeline-runs/<run_id> --mock-blocked
 ```
 
 The adapter reads:
@@ -169,6 +173,8 @@ The adapter must return one JSON file per role with:
 - `error_recovery_state`
 
 Each `role_output_packet` must include the required fields from `role-output-contracts.md`. Failed or malformed role outputs must not include final decision fields such as `fit_score`, `application_priority`, `application_strategy`, `final_resume_draft`, or `tailored_resume`.
+
+`run_subagent_adapter.py --mock-blocked` is only a schema and handoff harness. It writes one blocked role output per work order, sets `real_subagent_execution = false`, and sets `error_recovery_state.next_action = "configure_real_adapter"`. Use it to test user-side orchestration without wasting tokens, not to produce career judgments.
 
 Backfill role outputs after the real adapter finishes:
 
