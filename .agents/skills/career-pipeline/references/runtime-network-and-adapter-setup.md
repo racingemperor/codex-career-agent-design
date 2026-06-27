@@ -172,6 +172,8 @@ Without `source_policy_ack`, network execution must fail.
 
 The repository scripts generate adapter-ready contracts. They do not directly call Codex Desktop subagent tools.
 
+When current-session `multi_agent_v1.spawn_agent` is available, the Codex Desktop built-in subagent adapter is the preferred built-in path for user-side real role execution. The main Codex controller reads the work orders, uses the current-session subagent tools batch by batch, persists role output artifacts, closes completed agents, then backfills outputs with manual-controller execution metadata. Use `references/codex-desktop-subagent-adapter.md` for the exact protocol.
+
 Current handoff flow:
 
 ```bash
@@ -236,7 +238,19 @@ Do not use `--manual-controller-execution` for mock outputs, single-pass unsepar
 
 Use one of these adapter patterns:
 
-1. Manual Controller MVP.
+1. Codex Desktop built-in subagent adapter.
+   - This is the preferred built-in path when the current session exposes `multi_agent_v1.spawn_agent`.
+   - The main Codex controller reads `subagent_work_orders.json`.
+   - It reads each `prompt_bundle_ref`.
+   - It calls `multi_agent_v1.spawn_agent` for each bounded role task, batch by batch.
+   - It calls `multi_agent_v1.wait_agent` for strict role output JSON.
+   - It writes accepted JSON to each role's `output_artifact_target`.
+   - It calls `multi_agent_v1.close_agent` after each role output artifact is persisted.
+   - It backfills with `execute_subagent_plan.py --manual-controller-execution` and finalizes with `finalize_runtime_run.py --execution-mode manual-controller`.
+   - Python scripts cannot directly call the conversation's current-session subagent tools; the main Codex controller must do the live dispatch.
+   - Use `references/codex-desktop-subagent-adapter.md` for the detailed procedure.
+
+2. Manual Controller MVP.
    - The main Codex conversation acts as the controller.
    - It performs Codex-side source search from the generated source plan and writes or assembles `search_results.json`.
    - It records `source_policy_ack` internally after the source plan passes policy checks.
@@ -247,7 +261,7 @@ Use one of these adapter patterns:
    - API is not required, but source URLs, role output contracts, HR review, factual review, and blocked/final gates still apply.
    - Use `references/manual-controller-runtime-flow.md` for the detailed procedure.
 
-2. Codex Desktop manual controller adapter.
+3. Codex Desktop manual controller adapter.
    - The main Codex thread reads `subagent_work_orders.json`.
    - It reads each `prompt_bundle_ref`.
    - It calls the current-session `spawn_agent` tool for each bounded role task, batch by batch.
@@ -256,14 +270,14 @@ Use one of these adapter patterns:
    - It closes completed subagents before opening the next batch.
    - This is valid for interactive testing, but normal Python scripts cannot call the conversation's `spawn_agent` tool directly.
 
-3. Codex CLI adapter.
+4. Codex CLI adapter.
    - A runner reads each work order.
    - It invokes `codex exec` with the prompt bundle content.
    - It stores each final answer as a role output JSON.
    - It backfills validated outputs into the run.
    - Use this for local automation when Codex CLI access and auth are configured.
 
-4. API or Agents SDK adapter.
+5. API or Agents SDK adapter.
    - An external runner calls an agent API with each role prompt bundle.
    - It validates the model output against the role output schema.
    - It backfills accepted packets.

@@ -18,8 +18,10 @@ cd .agents/skills/career-pipeline
 python scripts/career_pipeline_run.py --task-type target_job_fit --route target_job_fit --input-text "computer science senior, assess fit for Tencent backend role. JD: Java and MySQL" --run-root ../../../.career-pipeline-runs --source-adapter seed --subagent-adapter mock-blocked
 ```
 
-6. For real career output, either use the Manual Controller MVP in `manual-controller-runtime-flow.md` or configure a real source adapter and a real subagent adapter. The seed source adapter is not live web search. The mock-blocked subagent adapter is not real subagent execution.
-7. Runtime artifacts are written under `.career-pipeline-runs/<run_id>/` and should not be committed.
+6. For real career output, prefer the Codex Desktop built-in subagent adapter when the current Codex session exposes `multi_agent_v1.spawn_agent`. The main Codex controller reads `subagent_work_orders.json`, dispatches role agents by batch, persists outputs, backfills with `execute_subagent_plan.py --manual-controller-execution`, and finalizes with `finalize_runtime_run.py --execution-mode manual-controller`. See `references/codex-desktop-subagent-adapter.md`.
+7. If current-session subagent tools are unavailable, use the Manual Controller MVP in `manual-controller-runtime-flow.md` or configure a real Codex CLI/API/external-command subagent adapter.
+8. The seed source adapter is not live web search. The mock-blocked subagent adapter is not real subagent execution.
+9. Runtime artifacts are written under `.career-pipeline-runs/<run_id>/` and should not be committed.
 
 ## User-Facing Invocation
 

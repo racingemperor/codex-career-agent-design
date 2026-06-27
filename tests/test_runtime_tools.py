@@ -24,6 +24,14 @@ RUNTIME_NETWORK_ADAPTER_SETUP = (
     / "references"
     / "runtime-network-and-adapter-setup.md"
 )
+CODEX_DESKTOP_SUBAGENT_ADAPTER = (
+    ROOT
+    / ".agents"
+    / "skills"
+    / "career-pipeline"
+    / "references"
+    / "codex-desktop-subagent-adapter.md"
+)
 ENGINEERING_SMOKE = ROOT / ".agents" / "skills" / "career-pipeline" / "scripts" / "smoke_test_engineering_profiles.py"
 WORK_ORDER_BUILDER = ROOT / ".agents" / "skills" / "career-pipeline" / "scripts" / "build_subagent_work_orders.py"
 EVIDENCE_BACKFILL = ROOT / ".agents" / "skills" / "career-pipeline" / "scripts" / "backfill_public_evidence.py"
@@ -35,6 +43,14 @@ PUBLIC_SOURCE_SEARCHER = ROOT / ".agents" / "skills" / "career-pipeline" / "scri
 SUBAGENT_ADAPTER_RUNNER = ROOT / ".agents" / "skills" / "career-pipeline" / "scripts" / "run_subagent_adapter.py"
 CAREER_PIPELINE_RUNNER = ROOT / ".agents" / "skills" / "career-pipeline" / "scripts" / "career_pipeline_run.py"
 FINALIZER = ROOT / ".agents" / "skills" / "career-pipeline" / "scripts" / "finalize_runtime_run.py"
+REAL_USER_DEPLOYMENT_FLOW = (
+    ROOT
+    / ".agents"
+    / "skills"
+    / "career-pipeline"
+    / "references"
+    / "real-user-deployment-and-use-flow.md"
+)
 
 
 def run_python(script: Path, *args: str, cwd: Path | None = None) -> subprocess.CompletedProcess[str]:
@@ -79,6 +95,49 @@ def test_runtime_setup_reference_documents_real_execution_gates():
     assert "spawn_agent" in text
     assert "role_output_packet" in text
     assert "login-only" in text
+
+
+def test_skill_documents_codex_desktop_subagent_adapter_protocol():
+    skill_text = SKILL_MD.read_text(encoding="utf-8")
+    network_text = RUNTIME_NETWORK_ADAPTER_SETUP.read_text(encoding="utf-8")
+    adapter_text = CODEX_DESKTOP_SUBAGENT_ADAPTER.read_text(encoding="utf-8")
+
+    assert "references/codex-desktop-subagent-adapter.md" in skill_text
+    assert "before using Codex Desktop current-session subagent tools" in skill_text
+    assert "Codex Desktop built-in subagent adapter" in network_text
+    assert "preferred built-in path" in network_text
+    assert "references/codex-desktop-subagent-adapter.md" in network_text
+
+    required_terms = [
+        "multi_agent_v1.spawn_agent",
+        "multi_agent_v1.wait_agent",
+        "multi_agent_v1.close_agent",
+        "dispatch_batches",
+        "batch_id",
+        "output_artifact_target",
+        "role_output_packet",
+        "error_recovery_state",
+        "execute_subagent_plan.py --manual-controller-execution",
+        "finalize_runtime_run.py --execution-mode manual-controller",
+        "Python scripts cannot directly call",
+        "main Codex controller",
+    ]
+    for term in required_terms:
+        assert term in adapter_text
+
+
+def test_real_user_flow_prefers_codex_desktop_adapter_when_available():
+    flow_text = REAL_USER_DEPLOYMENT_FLOW.read_text(encoding="utf-8")
+    readme_text = (ROOT / "README.md").read_text(encoding="utf-8")
+
+    assert "Codex Desktop built-in subagent adapter" in flow_text
+    assert "references/codex-desktop-subagent-adapter.md" in flow_text
+    assert "multi_agent_v1.spawn_agent" in flow_text
+    assert "subagent_work_orders.json" in flow_text
+    assert "execute_subagent_plan.py --manual-controller-execution" in flow_text
+    assert "finalize_runtime_run.py --execution-mode manual-controller" in flow_text
+    assert "Codex Desktop built-in subagent adapter" in readme_text
+    assert "mock-blocked" in readme_text
 
 
 def test_runtime_execution_layer_points_to_setup_reference():

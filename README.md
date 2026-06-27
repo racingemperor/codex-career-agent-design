@@ -9,12 +9,14 @@ cd .agents/skills/career-pipeline
 python scripts/career_pipeline_run.py --task-type target_job_fit --route target_job_fit --input-text "computer science senior, assess fit for Tencent backend role. JD: Java and MySQL" --run-root ../../../.career-pipeline-runs --source-adapter seed --subagent-adapter mock-blocked
 ```
 
-Expected response today:
+Expected response for this mock smoke run:
 
-- `exit_status = "blocked"` because no real Codex subagent adapter has executed role prompts yet.
+- `exit_status = "blocked"` because this command uses `mock-blocked`, not a real Codex subagent adapter.
 - `real_subagent_execution = false` because `mock-blocked` only writes schema-valid blocked role outputs.
 - `source_discovery_ready = true` when the deterministic `seed` source adapter generated public source candidates and `discover_public_sources.py` accepted at least one allowed URL.
 - Runtime artifacts are written under `.career-pipeline-runs/<run_id>/`, which is gitignored.
+
+For real user-side execution in Codex Desktop, prefer the Codex Desktop built-in subagent adapter when current-session `multi_agent_v1.spawn_agent` is available. The main Codex controller reads `subagent_work_orders.json`, dispatches role agents by batch, persists strict JSON role outputs, backfills with `execute_subagent_plan.py --manual-controller-execution`, and finalizes with `finalize_runtime_run.py --execution-mode manual-controller`. See `.agents/skills/career-pipeline/references/codex-desktop-subagent-adapter.md`.
 
 The `seed` source adapter is local and deterministic. It is useful for proving the pipeline can build public-source query plans and filter allowed URLs automatically, but it is not live recruitment-platform search and should not be treated as fresh evidence. Replace it with a real browser/search/API adapter before producing current job or company judgments.
 

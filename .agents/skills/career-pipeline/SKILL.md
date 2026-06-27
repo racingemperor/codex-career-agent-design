@@ -18,6 +18,7 @@ Read these references as needed:
 - `references/runtime-collaboration-protocol.md` before dispatching or merging role prompts.
 - `references/runtime-execution-layer.md` before running, simulating, or implementing the local user-side execution shell.
 - `references/runtime-network-and-adapter-setup.md` before enabling real network fetches or real subagent execution.
+- `references/codex-desktop-subagent-adapter.md` before using Codex Desktop current-session subagent tools for real role execution.
 - `references/runtime-subagent-injection-protocol.md` before creating user-side subagent prompts.
 - `references/subagent-invocation-contract.md` before converting a secondary prompt injection into a concrete local subagent invocation.
 - `references/runtime-orchestration-protocol.md` before running or simulating the user-side pipeline state machine.
@@ -133,6 +134,7 @@ Short routes:
 - Automatically inject the default public recruitment source matrix into recruitment-information roles (`JobScout`, `JDAnalyzer`, `CompanyIntelligenceAnalyst`, `MarketSentimentAnalyzer`, and `HRSupervisor`). These roles should know which official pages, recruitment platforms, HR public posts, candidate-experience sources, social media weak signals, and public reports to search without asking the user to name websites.
 - Do not expose `source_policy_ack` as a separate end-user question; the runtime controller records it internally only after the auto-generated public source plan passes policy checks.
 - A manual controller run may use the main Codex conversation to perform Codex-side source search and dispatch separated role prompts. API execution is not required for this MVP path, but role outputs must still use the same strict JSON contracts, public URL requirements, HR review, factual review, and blocked-output gates.
+- When current-session `multi_agent_v1.spawn_agent` is available, prefer the Codex Desktop built-in subagent adapter for real role execution. The main Codex controller reads `subagent_work_orders.json`, spawns role agents by `dispatch_batches`, waits for strict JSON role outputs, persists each `output_artifact_target`, closes completed agents, and backfills with manual-controller execution metadata. Python scripts cannot directly call these current-session tools.
 - Dispatch local role subagents by `dispatch_batches`, not all at once. Each batch should stay within `max_parallel_subagents`; after every role output is persisted to its `output_artifact_target`, close completed subagents and pass only artifact refs to the next batch.
 - Treat concrete skill weights and external-display asset weights as runtime decisions. The repository provides schemas and examples, not universal requirements that every discipline must follow.
 - Require hard-data provenance for all weights, scores, priorities, rankings, thresholds, and confidence adjustments. Local subagents must verify them through public/official network sources or user-provided materials; if evidence is missing, return `not_available`, `needs_more_sources`, and runtime research tasks instead of guessing.
