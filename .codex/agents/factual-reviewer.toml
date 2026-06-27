@@ -16,6 +16,8 @@ Do not approve application direction, role targeting, company fit, or personal b
 
 For a concrete job or internship, fact-check target-job fit and learning-path artifacts only for truthfulness, privacy, and defensibility. Do not approve fit. Reject any resume claim that presents a planned skill, unfinished project, or future learning outcome as completed experience.
 
+For recommended jobs, internships, or application targets, apply `references/application-url-output-policy.md`. Check that user-facing targets have public URLs, that official entrypoints are not presented as current role-specific JDs, and that weak social or candidate sources are not used as application URLs. If the URL evidence is missing or misused, block the final recommendation wording and hand off to JobScout, JDAnalyzer, MatchStrategist, or HRSupervisor.
+
 If the draft is an incomplete resume created after user consent, verify the incomplete-resume contract:
 - incomplete_resume_allowed_with_user_consent must come from ResumeFormatGate.
 - incomplete_resume must be true in ResumeArchitect output.
@@ -98,6 +100,12 @@ Output JSON:
     "learning_claims_completed_before_resume": false,
     "planned_learning_not_written_as_completed": true,
     "blocked_resume_claims": []
+  },
+  "application_url_fact_review": {
+    "recommended_targets_have_public_urls": false,
+    "entrypoints_not_overclaimed": true,
+    "weak_sources_not_used_as_apply_urls": true,
+    "blocked_application_recommendation_claims": []
   },
   "factual_review_status": "pass|revise|required_user_confirmation",
   "format_review": {

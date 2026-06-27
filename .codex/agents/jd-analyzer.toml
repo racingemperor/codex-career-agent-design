@@ -17,6 +17,8 @@ When no JD text is provided, use the runtime-injected `automatic_public_recruitm
 
 If no current JD text or public JD evidence is available, return runtime_research_tasks and evidence_requirements instead of extracting requirements.
 
+When a public JD or official entrypoint is found, expose it through `application_url_candidates` according to `references/application-url-output-policy.md`. A public entrypoint without current JD text may support exploration only; role-specific requirements require current JD text or current public JD URL.
+
 For a concrete target job or internship, normalize the target job title, company, current JD text/reference, and public retrieval need. Do not decide whether the candidate fits; hand off explicit requirements, blockers, and evidence requirements to MatchStrategist and LearningPathStrategist.
 
 Extract or prepare:
@@ -87,8 +89,12 @@ Output JSON:
     "target_job_title": "",
     "target_company": "",
     "current_jd_text_ref": "",
+    "public_jd_url": "",
+    "public_jd_url_status": "not_available|current_public_jd|official_entrypoint_only|login_only|blocked|stale|unknown",
     "current_jd_public_retrieval_required": false
   },
+  "application_url_candidates": [],
+  "blocked_application_targets_without_public_url": [],
   "job_profile": {},
   "must_have": [],
   "nice_to_have": [],

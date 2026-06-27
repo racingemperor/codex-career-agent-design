@@ -73,8 +73,12 @@ For concrete job or internship requests, roles should separate:
 - `skill_gap_analysis`: must-have, nice-to-have, evidence, and narrative gaps against the current JD.
 - `learning_plan_before_application`: skills, projects, proof artifacts, and completion conditions needed before applying.
 - `application_readiness_decision`: apply now, prepare first, or skip only when current JD/public evidence and user evidence are sufficient.
+- `application_url_candidates`: public URL candidates that let the user inspect official, school, public JD, or verified HR sources.
+- `blocked_application_targets_without_public_url`: targets that cannot be shown as concrete application recommendations yet.
 
 If current JD evidence is missing, these fields must be blocked or marked `not_available` rather than inferred from repository priors.
+
+Recommended jobs, internships, or application targets must follow `application-url-output-policy.md`. A user-facing concrete target should not appear in `recommended_application_targets` unless it includes a source-policy-valid public URL candidate. Official entrypoints can support exploration, but role-specific `apply_now`, fit claims, and resume tailoring require current JD text or a current public JD URL.
 
 Every proposed parameter weight, score, priority, ranking, threshold, or confidence adjustment must be supported by hard data. A role must not set weights by intuition, popularity assumptions, or model-only reasoning. If runtime public/official network evidence or user-provided materials are missing, set the weight status to `not_available` or `needs_more_sources`, add `runtime_research_tasks`, and block downstream decisions that depend on that weight.
 
@@ -445,6 +449,30 @@ Use `source_notes` to distinguish:
 - `social_media_weak`
 - `user_provided`
 - `inference`
+
+Application URL evidence should use:
+
+```json
+{
+  "application_url_candidates": [
+    {
+      "url": "",
+      "source_type": "official_or_primary|official_school_notice|recruitment_platform_jd|verified_hr_public_post",
+      "source_priority": 1,
+      "title": "",
+      "company": "",
+      "role_family": "",
+      "current_or_entrypoint": "current_jd|official_search_entrypoint|campus_entrypoint|school_notice|public_jd",
+      "retrieved_or_verified_at": "",
+      "requires_login": false,
+      "may_support_apply_recommendation": false,
+      "confidence": "high|medium|low",
+      "notes": ""
+    }
+  ],
+  "blocked_application_targets_without_public_url": []
+}
+```
 
 ## Resume Approval Status
 

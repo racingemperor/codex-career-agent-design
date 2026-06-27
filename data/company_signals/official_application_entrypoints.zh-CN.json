@@ -1,0 +1,463 @@
+{
+  "metadata": {
+    "version": "0.1.0",
+    "language": "zh-CN",
+    "updated_on": "2026-06-27",
+    "purpose": "Curated official application and campus entrypoint candidates for engineering early-career job search. These URLs help users inspect official channels, but they are not proof that a concrete role is currently open.",
+    "runtime_rule": "Before apply-now, role-specific tailoring, or concrete application priority, runtime subagents must verify the current JD or current public JD URL according to application-url-output-policy.md and source-policy.md.",
+    "privacy_rule": "Store public URLs and short metadata only. Do not store private resumes, private chats, recruiter backend pages, login-only pages, or non-public candidate profiles."
+  },
+  "entrypoint_schema": {
+    "company_id": "",
+    "company_name": "",
+    "focus_major_clusters": [],
+    "entrypoints": [
+      {
+        "url": "",
+        "source_type": "official_career_page|official_campus_recruiting_page|official_job_search_page|official_recruiting_pdf",
+        "current_or_entrypoint": "official_search_entrypoint|campus_entrypoint|official_recruiting_notice",
+        "may_support_apply_recommendation": false,
+        "requires_runtime_verification": true,
+        "notes": ""
+      }
+    ]
+  },
+  "companies": [
+    {
+      "company_id": "tencent",
+      "company_name": "腾讯",
+      "focus_major_clusters": ["computer_ai_software"],
+      "entrypoints": [
+        {
+          "url": "https://join.qq.com/",
+          "source_type": "official_campus_recruiting_page",
+          "current_or_entrypoint": "campus_entrypoint",
+          "may_support_apply_recommendation": false,
+          "requires_runtime_verification": true,
+          "notes": "Official campus entrypoint candidate. Verify current JD before role-specific recommendation."
+        }
+      ]
+    },
+    {
+      "company_id": "bytedance",
+      "company_name": "字节跳动",
+      "focus_major_clusters": ["computer_ai_software"],
+      "entrypoints": [
+        {
+          "url": "https://jobs.bytedance.com/campus",
+          "source_type": "official_campus_recruiting_page",
+          "current_or_entrypoint": "campus_entrypoint",
+          "may_support_apply_recommendation": false,
+          "requires_runtime_verification": true,
+          "notes": "Official campus entrypoint candidate."
+        },
+        {
+          "url": "https://seed.bytedance.com/zh/career",
+          "source_type": "official_career_page",
+          "current_or_entrypoint": "official_search_entrypoint",
+          "may_support_apply_recommendation": false,
+          "requires_runtime_verification": true,
+          "notes": "Official Seed career entrypoint candidate."
+        }
+      ]
+    },
+    {
+      "company_id": "dji",
+      "company_name": "大疆",
+      "focus_major_clusters": [
+        "mechanical_vehicle_manufacturing",
+        "automation_control_robotics",
+        "electronics_communication_ic",
+        "computer_ai_software"
+      ],
+      "entrypoints": [
+        {
+          "url": "https://careers.dji.com/zh-CN/campus",
+          "source_type": "official_campus_recruiting_page",
+          "current_or_entrypoint": "campus_entrypoint",
+          "may_support_apply_recommendation": false,
+          "requires_runtime_verification": true,
+          "notes": "Official campus entrypoint candidate."
+        },
+        {
+          "url": "https://we.dji.com/zh-CN/campus/opticsMatch/promotion",
+          "source_type": "official_campus_recruiting_page",
+          "current_or_entrypoint": "campus_entrypoint",
+          "may_support_apply_recommendation": false,
+          "requires_runtime_verification": true,
+          "notes": "Official DJI campus activity entrypoint candidate; verify relevance to target role."
+        }
+      ]
+    },
+    {
+      "company_id": "zhipu_ai",
+      "company_name": "智谱AI",
+      "focus_major_clusters": ["computer_ai_software"],
+      "entrypoints": [
+        {
+          "url": "https://www.zhipuai.cn/zh/joinus",
+          "source_type": "official_career_page",
+          "current_or_entrypoint": "official_search_entrypoint",
+          "may_support_apply_recommendation": false,
+          "requires_runtime_verification": true,
+          "notes": "Official career entrypoint candidate."
+        }
+      ]
+    },
+    {
+      "company_id": "catl",
+      "company_name": "宁德时代",
+      "focus_major_clusters": [
+        "energy_power_electrical",
+        "materials_semiconductor_new_energy",
+        "mechanical_vehicle_manufacturing",
+        "automation_control_robotics",
+        "computer_ai_software"
+      ],
+      "entrypoints": [
+        {
+          "url": "https://talent.catl.com/",
+          "source_type": "official_career_page",
+          "current_or_entrypoint": "official_search_entrypoint",
+          "may_support_apply_recommendation": false,
+          "requires_runtime_verification": true,
+          "notes": "Official career entrypoint candidate."
+        },
+        {
+          "url": "https://www.catl-career.com/",
+          "source_type": "official_career_page",
+          "current_or_entrypoint": "official_search_entrypoint",
+          "may_support_apply_recommendation": false,
+          "requires_runtime_verification": true,
+          "notes": "Official career entrypoint candidate from seed collection targets."
+        }
+      ]
+    },
+    {
+      "company_id": "huawei",
+      "company_name": "华为",
+      "focus_major_clusters": [
+        "computer_ai_software",
+        "electronics_communication_ic",
+        "automation_control_robotics",
+        "energy_power_electrical"
+      ],
+      "entrypoints": [
+        {
+          "url": "https://career.huawei.com/reccampportal/portal5/faq.html?tag=social",
+          "source_type": "official_career_page",
+          "current_or_entrypoint": "official_search_entrypoint",
+          "may_support_apply_recommendation": false,
+          "requires_runtime_verification": true,
+          "notes": "Official Huawei career-domain entrypoint candidate; runtime should navigate to current role pages when available."
+        }
+      ]
+    },
+    {
+      "company_id": "alibaba",
+      "company_name": "阿里巴巴",
+      "focus_major_clusters": ["computer_ai_software"],
+      "entrypoints": [
+        {
+          "url": "https://talent.alibaba.com/",
+          "source_type": "official_career_page",
+          "current_or_entrypoint": "official_search_entrypoint",
+          "may_support_apply_recommendation": false,
+          "requires_runtime_verification": true,
+          "notes": "Official career entrypoint candidate."
+        }
+      ]
+    },
+    {
+      "company_id": "baidu",
+      "company_name": "百度",
+      "focus_major_clusters": ["computer_ai_software", "automation_control_robotics"],
+      "entrypoints": [
+        {
+          "url": "https://talent.baidu.com/jobs/list",
+          "source_type": "official_job_search_page",
+          "current_or_entrypoint": "official_search_entrypoint",
+          "may_support_apply_recommendation": false,
+          "requires_runtime_verification": true,
+          "notes": "Official job-search entrypoint candidate."
+        }
+      ]
+    },
+    {
+      "company_id": "xiaomi",
+      "company_name": "小米",
+      "focus_major_clusters": [
+        "computer_ai_software",
+        "electronics_communication_ic",
+        "mechanical_vehicle_manufacturing",
+        "automation_control_robotics"
+      ],
+      "entrypoints": [
+        {
+          "url": "https://hr.xiaomi.com/campus/",
+          "source_type": "official_campus_recruiting_page",
+          "current_or_entrypoint": "campus_entrypoint",
+          "may_support_apply_recommendation": false,
+          "requires_runtime_verification": true,
+          "notes": "Official campus entrypoint candidate."
+        }
+      ]
+    },
+    {
+      "company_id": "meituan",
+      "company_name": "美团",
+      "focus_major_clusters": ["computer_ai_software"],
+      "entrypoints": [
+        {
+          "url": "https://zhaopin.meituan.com/web/campus",
+          "source_type": "official_campus_recruiting_page",
+          "current_or_entrypoint": "campus_entrypoint",
+          "may_support_apply_recommendation": false,
+          "requires_runtime_verification": true,
+          "notes": "Official campus entrypoint candidate."
+        },
+        {
+          "url": "https://zhaopin.meituan.com/web/position",
+          "source_type": "official_job_search_page",
+          "current_or_entrypoint": "official_search_entrypoint",
+          "may_support_apply_recommendation": false,
+          "requires_runtime_verification": true,
+          "notes": "Official job-search entrypoint candidate."
+        }
+      ]
+    },
+    {
+      "company_id": "jd",
+      "company_name": "京东",
+      "focus_major_clusters": ["computer_ai_software"],
+      "entrypoints": [
+        {
+          "url": "https://campus.jd.com/",
+          "source_type": "official_campus_recruiting_page",
+          "current_or_entrypoint": "campus_entrypoint",
+          "may_support_apply_recommendation": false,
+          "requires_runtime_verification": true,
+          "notes": "Official campus entrypoint candidate."
+        }
+      ]
+    },
+    {
+      "company_id": "kuaishou",
+      "company_name": "快手",
+      "focus_major_clusters": ["computer_ai_software"],
+      "entrypoints": [
+        {
+          "url": "https://campus.kuaishou.cn/",
+          "source_type": "official_campus_recruiting_page",
+          "current_or_entrypoint": "campus_entrypoint",
+          "may_support_apply_recommendation": false,
+          "requires_runtime_verification": true,
+          "notes": "Official campus entrypoint candidate."
+        }
+      ]
+    },
+    {
+      "company_id": "oppo",
+      "company_name": "OPPO",
+      "focus_major_clusters": ["electronics_communication_ic", "computer_ai_software"],
+      "entrypoints": [
+        {
+          "url": "https://careers.oppo.com/campus",
+          "source_type": "official_campus_recruiting_page",
+          "current_or_entrypoint": "campus_entrypoint",
+          "may_support_apply_recommendation": false,
+          "requires_runtime_verification": true,
+          "notes": "Official campus entrypoint candidate."
+        }
+      ]
+    },
+    {
+      "company_id": "vivo",
+      "company_name": "vivo",
+      "focus_major_clusters": ["electronics_communication_ic", "computer_ai_software"],
+      "entrypoints": [
+        {
+          "url": "https://hr.vivo.com/wt/vivo/web/index/campus",
+          "source_type": "official_campus_recruiting_page",
+          "current_or_entrypoint": "campus_entrypoint",
+          "may_support_apply_recommendation": false,
+          "requires_runtime_verification": true,
+          "notes": "Official campus entrypoint candidate."
+        }
+      ]
+    },
+    {
+      "company_id": "zte",
+      "company_name": "中兴通讯",
+      "focus_major_clusters": [
+        "electronics_communication_ic",
+        "computer_ai_software",
+        "energy_power_electrical"
+      ],
+      "entrypoints": [
+        {
+          "url": "https://job.zte.com.cn/cn/",
+          "source_type": "official_career_page",
+          "current_or_entrypoint": "official_search_entrypoint",
+          "may_support_apply_recommendation": false,
+          "requires_runtime_verification": true,
+          "notes": "Official career entrypoint candidate."
+        }
+      ]
+    },
+    {
+      "company_id": "bilibili",
+      "company_name": "哔哩哔哩",
+      "focus_major_clusters": ["computer_ai_software"],
+      "entrypoints": [
+        {
+          "url": "https://jobs.bilibili.com/",
+          "source_type": "official_career_page",
+          "current_or_entrypoint": "official_search_entrypoint",
+          "may_support_apply_recommendation": false,
+          "requires_runtime_verification": true,
+          "notes": "Official career entrypoint candidate."
+        }
+      ]
+    },
+    {
+      "company_id": "xiaohongshu",
+      "company_name": "小红书",
+      "focus_major_clusters": ["computer_ai_software"],
+      "entrypoints": [
+        {
+          "url": "https://job.xiaohongshu.com/campus",
+          "source_type": "official_campus_page",
+          "current_or_entrypoint": "campus_entrypoint",
+          "may_support_apply_recommendation": false,
+          "requires_runtime_verification": true,
+          "notes": "Official campus entrypoint candidate."
+        }
+      ]
+    },
+    {
+      "company_id": "deepseek",
+      "company_name": "深度求索",
+      "focus_major_clusters": ["computer_ai_software"],
+      "entrypoints": [
+        {
+          "url": "https://www.deepseek.com/",
+          "source_type": "official_career_page",
+          "current_or_entrypoint": "official_search_entrypoint",
+          "may_support_apply_recommendation": false,
+          "requires_runtime_verification": true,
+          "notes": "Official company-domain entrypoint candidate; runtime must verify whether recruiting pages or current JDs are available."
+        }
+      ]
+    },
+    {
+      "company_id": "minimax",
+      "company_name": "MiniMax",
+      "focus_major_clusters": ["computer_ai_software"],
+      "entrypoints": [
+        {
+          "url": "https://www.minimax.io/careers",
+          "source_type": "official_career_page",
+          "current_or_entrypoint": "official_search_entrypoint",
+          "may_support_apply_recommendation": false,
+          "requires_runtime_verification": true,
+          "notes": "Official career entrypoint candidate."
+        }
+      ]
+    },
+    {
+      "company_id": "moonshot_ai",
+      "company_name": "月之暗面",
+      "focus_major_clusters": ["computer_ai_software"],
+      "entrypoints": [
+        {
+          "url": "https://careers.kimi.com/",
+          "source_type": "official_career_page",
+          "current_or_entrypoint": "official_search_entrypoint",
+          "may_support_apply_recommendation": false,
+          "requires_runtime_verification": true,
+          "notes": "Official career entrypoint candidate."
+        }
+      ]
+    },
+    {
+      "company_id": "li_auto",
+      "company_name": "理想汽车",
+      "focus_major_clusters": [
+        "computer_ai_software",
+        "automation_control_robotics",
+        "electronics_communication_ic",
+        "mechanical_vehicle_manufacturing"
+      ],
+      "entrypoints": [
+        {
+          "url": "https://www.lixiang.com/employ/campus.html",
+          "source_type": "official_campus_recruiting_page",
+          "current_or_entrypoint": "campus_entrypoint",
+          "may_support_apply_recommendation": false,
+          "requires_runtime_verification": true,
+          "notes": "Official campus entrypoint candidate."
+        }
+      ]
+    },
+    {
+      "company_id": "xpeng",
+      "company_name": "小鹏汽车",
+      "focus_major_clusters": [
+        "computer_ai_software",
+        "automation_control_robotics",
+        "electronics_communication_ic",
+        "mechanical_vehicle_manufacturing"
+      ],
+      "entrypoints": [
+        {
+          "url": "https://www.xiaopeng.com/join.html",
+          "source_type": "official_career_page",
+          "current_or_entrypoint": "official_search_entrypoint",
+          "may_support_apply_recommendation": false,
+          "requires_runtime_verification": true,
+          "notes": "Official career entrypoint candidate."
+        }
+      ]
+    },
+    {
+      "company_id": "zeekr",
+      "company_name": "极氪",
+      "focus_major_clusters": [
+        "mechanical_vehicle_manufacturing",
+        "energy_power_electrical",
+        "computer_ai_software"
+      ],
+      "entrypoints": [
+        {
+          "url": "https://www.zeekrgroup.com/join-us",
+          "source_type": "official_career_page",
+          "current_or_entrypoint": "official_search_entrypoint",
+          "may_support_apply_recommendation": false,
+          "requires_runtime_verification": true,
+          "notes": "Official career entrypoint candidate."
+        }
+      ]
+    },
+    {
+      "company_id": "byd",
+      "company_name": "比亚迪",
+      "focus_major_clusters": [
+        "energy_power_electrical",
+        "mechanical_vehicle_manufacturing",
+        "materials_semiconductor_new_energy",
+        "computer_ai_software"
+      ],
+      "entrypoints": [
+        {
+          "url": "https://ess-cdn.byd.com/%E6%8B%9B%E8%81%98%2F%E9%97%A8%E6%88%B7%2F%E6%8B%9B%E8%81%98%E7%AE%80%E7%AB%A0%2F%E6%AF%94%E4%BA%9A%E8%BF%AA%E5%AE%9E%E4%B9%A0%E7%94%9F%E4%B8%93%E9%A1%B9%E6%8B%9B%E8%81%98%E7%AE%80%E7%AB%A0%2F%E6%AF%94%E4%BA%9A%E8%BF%AA%E5%AE%9E%E4%B9%A0%E7%94%9F%E4%B8%93%E9%A1%B9%E6%8B%9B%E8%81%98%E7%AE%80%E7%AB%A0.pdf",
+          "source_type": "official_recruiting_pdf",
+          "current_or_entrypoint": "official_recruiting_notice",
+          "may_support_apply_recommendation": false,
+          "requires_runtime_verification": true,
+          "notes": "Official recruiting PDF candidate from seed targets; verify season and current availability before using."
+        }
+      ]
+    }
+  ]
+}

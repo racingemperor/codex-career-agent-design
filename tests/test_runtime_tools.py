@@ -2227,3 +2227,90 @@ def test_source_policy_validator_rejects_weak_social_media_as_final_basis(tmp_pa
     assert result.returncode == 1
     assert "social_media_weak" in result.stderr
     assert "final" in result.stderr.lower()
+
+
+def test_skill_documents_require_public_application_urls():
+    skill_text = (
+        ROOT / ".agents" / "skills" / "career-pipeline" / "SKILL.md"
+    ).read_text(encoding="utf-8")
+    policy_text = (
+        ROOT
+        / ".agents"
+        / "skills"
+        / "career-pipeline"
+        / "references"
+        / "application-url-output-policy.md"
+    ).read_text(encoding="utf-8")
+    data_catalog = (
+        ROOT
+        / ".agents"
+        / "skills"
+        / "career-pipeline"
+        / "references"
+        / "data-catalog.md"
+    ).read_text(encoding="utf-8")
+
+    assert "application-url-output-policy.md" in skill_text
+    assert "recommended jobs, internships, or application targets" in skill_text
+    assert "application_url_candidates" in policy_text
+    assert "blocked_application_targets_without_public_url" in policy_text
+    assert "official_application_entrypoints.zh-CN.json" in data_catalog
+
+
+def test_role_prompts_gate_application_recommendations_on_public_urls():
+    job_scout = (ROOT / ".codex" / "agents" / "job-scout.toml").read_text(
+        encoding="utf-8"
+    )
+    match_strategist = (
+        ROOT / ".codex" / "agents" / "match-strategist.toml"
+    ).read_text(encoding="utf-8")
+    hr_supervisor = (ROOT / ".codex" / "agents" / "hr-supervisor.toml").read_text(
+        encoding="utf-8"
+    )
+    factual_reviewer = (
+        ROOT / ".codex" / "agents" / "factual-reviewer.toml"
+    ).read_text(encoding="utf-8")
+
+    assert "application_url_candidates" in job_scout
+    assert "blocked_application_targets_without_public_url" in job_scout
+    assert "recommended_application_targets" in match_strategist
+    assert "concrete application recommendation" in match_strategist
+    assert "public URL" in hr_supervisor
+    assert "application_url_review" in hr_supervisor
+    assert "application_url_fact_review" in factual_reviewer
+
+
+def test_real_user_deployment_flow_documents_subagent_sources_and_judgment_basis():
+    flow_text = (
+        ROOT
+        / ".agents"
+        / "skills"
+        / "career-pipeline"
+        / "references"
+        / "real-user-deployment-and-use-flow.md"
+    ).read_text(encoding="utf-8")
+    required_roles = [
+        "InputNormalizer",
+        "CareerOrchestrator",
+        "MajorClusterClassifier",
+        "ProfileExtractor",
+        "JDAnalyzer",
+        "JobScout",
+        "CompanyIntelligenceAnalyst",
+        "MarketSentimentAnalyzer",
+        "MatchStrategist",
+        "LearningPathStrategist",
+        "PersonalBrandingStrategist",
+        "HRSupervisor",
+        "ResumeFormatGate",
+        "ResumeArchitect",
+        "FactualReviewer",
+    ]
+
+    assert "Install And Enable" in flow_text
+    assert "Role-by-Role Runtime Work" in flow_text
+    assert "Data Sources" in flow_text
+    assert "Judgment Basis" in flow_text
+    assert "application_url_candidates" in flow_text
+    for role in required_roles:
+        assert role in flow_text

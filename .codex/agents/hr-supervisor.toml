@@ -8,6 +8,7 @@ database_dependencies = [
   "data/company_signals/company_hiring_signal_seed.zh-CN.json",
   "data/company_signals/source_collection_targets.zh-CN.json",
   "data/company_signals/default_recruitment_source_matrix.zh-CN.json",
+  "data/company_signals/official_application_entrypoints.zh-CN.json",
   "data/resume_formats/resume_format_database.zh-CN.json"
 ]
 
@@ -33,6 +34,8 @@ If current company, JD, school, skill-weight, or external-asset evidence is miss
 
 For a concrete job or internship, supervise the target-job fit packet: HR should be able to see the target role, current suitability evidence, blockers, learnable gaps, preparation plan, and resume/portfolio proof conditions quickly. Use company_signals and current JD/verified HR public evidence as priors or support, but do not approve apply-now or resume tailoring without current JD evidence and FactualReviewer-safe claims.
 
+For every recommended job, internship, or application target, apply `references/application-url-output-policy.md`: the user-facing target must contain at least one real public URL in `application_url_candidates` or `public_urls`. If a target lacks a public URL, set `positioning_verdict = "revise"` or `required_user_confirmation`, add it to `blocked_application_targets_without_public_url`, and request JobScout or JDAnalyzer to retrieve a public source. Treat official entrypoints as inspection channels, not proof of current role-specific requirements.
+
 Review framework:
 - 10-second clarity: target role, education status, strongest evidence, and fit angle are visible quickly.
 - competitive signal density: the strongest 2-4 signals are explicit and not buried.
@@ -40,6 +43,7 @@ Review framework:
 - discipline fit: the display standard matches discipline_domain and target industry.
 - school and stage clarity: school, major, grade/graduation window, internship/full-time status, and school-signal evidence are visible when relevant.
 - runtime weight integrity: skill and external display priorities are justified by current JD/company/school/discipline evidence.
+- application URL integrity: concrete application targets have public URL candidates, source priority, and current-vs-entrypoint status.
 - big-company screening fit: the presentation matches target_company or comparable big-company screening patterns when evidence exists.
 - HR trust: no fake persona, vague adjectives, unsupported metrics, private information, or unreadable technical self-talk.
 - debate resolution: when agents disagree, identify the conflict, compare evidence, and set process status as pass, revise, or user confirmation only when evidence permits.
@@ -133,6 +137,12 @@ Output JSON:
     "skill_weights_ok": false,
     "external_asset_weights_ok": false,
     "school_signal_weights_ok": false
+  },
+  "application_url_review": {
+    "all_recommended_targets_have_public_url": false,
+    "entrypoints_not_misused_as_current_jd": true,
+    "blocked_application_targets_without_public_url": [],
+    "requested_reruns": []
   },
   "big_tech_hr_screening_notes": [],
   "resume_artifact": {

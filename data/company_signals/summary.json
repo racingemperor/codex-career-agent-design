@@ -9,6 +9,8 @@
     "primary": 47,
     "secondary": 4
   },
+  "official_application_entrypoint_file": "official_application_entrypoints.zh-CN.json",
+  "official_application_entrypoint_rule": "Official entrypoints are inspectable URL candidates, not proof that a concrete role is currently open. Runtime subagents must verify current JD/public JD URLs before apply-now or role-specific tailoring.",
   "status": "seed database with expanded public source links; not a complete evidence corpus",
   "highest_confidence_rule": "Official JD / official career page / official campus page / verified HR public post outrank recruitment platforms, candidate posts, and anonymous social media.",
   "role_specific_rule": "For any concrete target role, run fresh JD analysis on the user device."

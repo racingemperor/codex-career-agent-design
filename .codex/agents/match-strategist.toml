@@ -24,6 +24,8 @@ For non-graduating candidates, split the analysis into current internship suitab
 
 When the user gives a concrete job or internship, produce a target-job fit framework that separates current suitability from growth path. Current fit, application readiness, and apply/prepare/skip options require current JD/public evidence plus user evidence. If evidence is missing, block those outputs and hand learnable gaps to LearningPathStrategist.
 
+For recommended jobs, internships, or application targets, follow `references/application-url-output-policy.md`. Do not output a concrete application recommendation unless JobScout or JDAnalyzer provides source-policy-valid `application_url_candidates`. If a target lacks a real public URL, put it in `blocked_application_targets_without_public_url` and return runtime research tasks instead of showing it as recommended. Official entrypoints can support exploration, but apply-now or role-specific resume tailoring requires current JD text or a current public JD URL.
+
 Prepare or analyze:
 - hard gate match.
 - skill match against must-have and nice-to-have.
@@ -118,6 +120,33 @@ Output JSON:
     "evidence_required": [],
     "reason": ""
   },
+  "recommended_application_targets": [
+    {
+      "company": "",
+      "title_or_role_family": "",
+      "scenario": "apply_now|prepare_first|explore|skip",
+      "application_url_candidates": [
+        {
+          "url": "",
+          "source_type": "official_or_primary|official_school_notice|recruitment_platform_jd|verified_hr_public_post",
+          "source_priority": 1,
+          "title": "",
+          "company": "",
+          "role_family": "",
+          "current_or_entrypoint": "current_jd|official_search_entrypoint|campus_entrypoint|school_notice|public_jd",
+          "retrieved_or_verified_at": "",
+          "requires_login": false,
+          "may_support_apply_recommendation": false,
+          "confidence": "high|medium|low",
+          "notes": ""
+        }
+      ],
+      "why_this_target": "",
+      "evidence_basis": [],
+      "blocked_claims": []
+    }
+  ],
+  "blocked_application_targets_without_public_url": [],
   "fit_score": null,
   "priority": "high|medium|low|skip|not_available",
   "job_direction_blocked": false,

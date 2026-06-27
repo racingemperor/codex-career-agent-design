@@ -18,6 +18,8 @@ Expected response today:
 
 The `seed` source adapter is local and deterministic. It is useful for proving the pipeline can build public-source query plans and filter allowed URLs automatically, but it is not live recruitment-platform search and should not be treated as fresh evidence. Replace it with a real browser/search/API adapter before producing current job or company judgments.
 
+Concrete recommended jobs, internships, or application targets must include real public URLs. The pipeline can use official entrypoints in `data/company_signals/official_application_entrypoints.zh-CN.json` for exploration, but apply-now decisions, role-specific fit claims, and tailored resume advice require current JD text or a current public JD URL gathered by the runtime source adapter. See `.agents/skills/career-pipeline/references/application-url-output-policy.md` and `.agents/skills/career-pipeline/references/real-user-deployment-and-use-flow.md`.
+
 For engineering-only MVP tests with external adapters, the runner can accept externally collected search results and an external command adapter:
 
 ```bash
