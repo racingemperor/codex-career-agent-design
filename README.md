@@ -18,6 +18,14 @@ Expected response today:
 
 The `seed` source adapter is local and deterministic. It is useful for proving the pipeline can build public-source query plans and filter allowed URLs automatically, but it is not live recruitment-platform search and should not be treated as fresh evidence. Replace it with a real browser/search/API adapter before producing current job or company judgments.
 
+For engineering-only MVP tests with external adapters, the runner can accept externally collected search results and an external command adapter:
+
+```bash
+python scripts/career_pipeline_run.py --task-type job_search --route job_search --input-text "computer science sophomore, Python, looking for AI internship" --run-root ../../../.career-pipeline-runs --source-adapter external-json --search-results-json <search_results.json> --subagent-adapter external-command --adapter-command <adapter-executable> --adapter-arg <adapter-script-or-config> --finalize
+```
+
+This path may return `success` only when the external command writes valid `done` or `done_with_warnings` role outputs for every required work order. Search results still need source-policy filtering and evidence backfill before they can support weights or final judgments.
+
 这是一个面向 Codex 平台的求职与简历设计 pipeline 方案草稿。
 
 目标不是先部署一个完整项目，而是先把 agent / skill 的边界、角色分工、数据来源、合规约束和后续技术路线写清楚。后续如果要落地，优先采用 **Codex 原生 Skill + Codex Custom Subagents + deterministic scripts**，而不是复刻 Claude Code / Cloud Code 风格的外部 dispatcher。

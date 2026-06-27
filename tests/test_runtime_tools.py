@@ -34,6 +34,7 @@ PUBLIC_SOURCE_DISCOVERER = (
 PUBLIC_SOURCE_SEARCHER = ROOT / ".agents" / "skills" / "career-pipeline" / "scripts" / "search_public_sources.py"
 SUBAGENT_ADAPTER_RUNNER = ROOT / ".agents" / "skills" / "career-pipeline" / "scripts" / "run_subagent_adapter.py"
 CAREER_PIPELINE_RUNNER = ROOT / ".agents" / "skills" / "career-pipeline" / "scripts" / "career_pipeline_run.py"
+FINALIZER = ROOT / ".agents" / "skills" / "career-pipeline" / "scripts" / "finalize_runtime_run.py"
 
 
 def run_python(script: Path, *args: str, cwd: Path | None = None) -> subprocess.CompletedProcess[str]:
@@ -665,6 +666,279 @@ def test_public_source_searcher_generates_seed_search_results_from_query_plan(tm
     assert generated["sources"]
 
 
+def test_public_source_searcher_accepts_external_json_adapter_results(tmp_path):
+    run_root = tmp_path / ".career-pipeline-runs"
+    simulate = run_python(
+        SIMULATOR,
+        "--task-type",
+        "target_job_fit",
+        "--input-text",
+        "Computer science senior. Assess fit for Tencent backend role. JD: Java and MySQL.",
+        "--run-root",
+        str(run_root),
+        "--route",
+        "target_job_fit",
+    )
+    assert simulate.returncode == 0, simulate.stderr
+    run_id = json.loads(simulate.stdout)["runner_response"]["run_id"]
+    run_dir = run_root / run_id
+    assert run_python(SOURCE_PLAN_BUILDER, "--run-dir", str(run_dir)).returncode == 0
+    assert run_python(PUBLIC_SOURCE_DISCOVERER, "--run-dir", str(run_dir), "--generate-query-plan-only").returncode == 0
+    external_results = tmp_path / "external-search-results.json"
+    external_results.write_text(
+        json.dumps(
+            {
+                "search_results": [
+                    {
+                        "task_id": "target-current-jd-verification",
+                        "url": "https://join.qq.com/post/backend-intern",
+                        "title": "Tencent backend intern",
+                        "snippet": "Java MySQL Redis",
+                        "source_type": "recruitment_platform_jd",
+                    }
+                ]
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    result = run_python(
+        PUBLIC_SOURCE_SEARCHER,
+        "--run-dir",
+        str(run_dir),
+        "--provider",
+        "external-json",
+        "--search-results-json",
+        str(external_results),
+    )
+
+    assert result.returncode == 0, result.stderr
+    response = json.loads(result.stdout)["public_source_search_response"]
+    assert response["exit_status"] == "success"
+    assert response["provider"] == "external-json"
+    assert response["real_time_search"] is True
+    results = json.loads((run_dir / response["search_results_ref"]).read_text(encoding="utf-8"))
+    assert results["search_results"][0]["url"] == "https://join.qq.com/post/backend-intern"
+    discover = run_python(
+        PUBLIC_SOURCE_DISCOVERER,
+        "--run-dir",
+        str(run_dir),
+        "--search-results-json",
+        str(run_dir / response["search_results_ref"]),
+    )
+    assert discover.returncode == 0, discover.stderr
+    assert json.loads(discover.stdout)["public_source_discovery_response"]["accepted_count"] == 1
+
+
+def write_external_adapter_script(path: Path) -> None:
+    path.write_text(
+        """
+import argparse
+import json
+
+parser = argparse.ArgumentParser()
+parser.add_argument("--work-order-json", required=True)
+parser.add_argument("--output-json", required=True)
+args = parser.parse_args()
+
+payload = json.load(open(args.work_order_json, encoding="utf-8"))
+order = payload["work_order"]
+invocation = payload["subagent_invocation"]
+output_ref = order["output_artifact_target"]
+target_agent = order["target_agent"]
+result = {
+    "invocation_ref": order["invocation_ref"],
+    "role": target_agent,
+    "task_summary": "External command adapter smoke output.",
+    "inputs_used": [order["prompt_bundle_ref"]],
+    "database_files_used": [],
+    "source_notes": [],
+    "runtime_scope": "evidence_collection",
+    "judgment_allowed": "evidence_bound_only",
+    "judgment_status": "evidence_bound_judgment",
+    "decision_owner": "local_subagent",
+    "runtime_preconditions": {
+        "has_current_jd": True,
+        "has_target_company": True,
+        "has_user_constraints": False,
+        "has_user_consent": False,
+        "job_direction_blocked": False
+    },
+    "evidence_basis": [],
+    "repository_prior_usage": [],
+    "weight_provenance": [
+        {
+            "parameter": "adapter_smoke_weight",
+            "proposed_weight": None,
+            "weight_status": "not_available",
+            "source_refs": [],
+            "source_types": [],
+            "retrieved_or_published_dates": [],
+            "sample_size_or_source_count": "0",
+            "evidence_strength": "missing",
+            "confidence": "low",
+            "cannot_decide_alone": True
+        }
+    ],
+    "role_output_packet": {
+        "invocation_id": invocation["invocation_id"],
+        "target_agent": target_agent,
+        "status": "done",
+        "role_output_ref": output_ref,
+        "evidence_packet_refs": [],
+        "runtime_weights_ref": "merge/runtime_weights.json",
+        "artifact_refs": [order["prompt_bundle_ref"]],
+        "blocked_outputs": [],
+        "runtime_research_tasks": [],
+        "needs_user_confirmation": [],
+        "handoff_to": [],
+        "errors": [],
+        "confidence": "medium"
+    },
+    "error_recovery_state": {
+        "status": "not_applicable",
+        "errors": [],
+        "recovery_actions": [],
+        "degraded_outputs": [],
+        "blocked_outputs": [],
+        "safe_outputs": ["role_output_packet"],
+        "next_action": "continue"
+    }
+}
+json.dump(result, open(args.output_json, "w", encoding="utf-8"), ensure_ascii=False, indent=2)
+""".lstrip(),
+        encoding="utf-8",
+    )
+
+
+def test_subagent_adapter_runner_executes_external_command_outputs(tmp_path):
+    run_root = tmp_path / ".career-pipeline-runs"
+    simulate = run_python(
+        SIMULATOR,
+        "--task-type",
+        "job_search",
+        "--input-text",
+        "Computer science sophomore, Python, looking for AI internship",
+        "--run-root",
+        str(run_root),
+        "--route",
+        "job_search",
+    )
+    assert simulate.returncode == 0, simulate.stderr
+    run_id = json.loads(simulate.stdout)["runner_response"]["run_id"]
+    run_dir = run_root / run_id
+    assert run_python(PLAN_BUILDER, "--run-dir", str(run_dir), "--build-prompt-bundles").returncode == 0
+    assert run_python(WORK_ORDER_BUILDER, "--run-dir", str(run_dir)).returncode == 0
+    adapter_script = tmp_path / "external_adapter.py"
+    write_external_adapter_script(adapter_script)
+
+    result = run_python(
+        SUBAGENT_ADAPTER_RUNNER,
+        "--run-dir",
+        str(run_dir),
+        "--adapter-command",
+        sys.executable,
+        "--adapter-arg",
+        str(adapter_script),
+    )
+
+    assert result.returncode == 0, result.stderr
+    response = json.loads(result.stdout)["subagent_adapter_response"]
+    assert response["exit_status"] == "success"
+    assert response["real_subagent_execution"] is True
+    assert response["adapter_mode"] == "external-command"
+    first_output = run_dir / response["output_refs"][0]
+    packet = json.loads(first_output.read_text(encoding="utf-8"))["role_output_packet"]
+    assert packet["status"] == "done"
+    assert run_python(VALIDATOR, "--role-output", str(first_output)).returncode == 0
+
+
+def test_finalizer_writes_final_package_when_role_outputs_are_done(tmp_path):
+    run_root = tmp_path / ".career-pipeline-runs"
+    simulate = run_python(
+        SIMULATOR,
+        "--task-type",
+        "job_search",
+        "--input-text",
+        "Computer science sophomore, Python, looking for AI internship",
+        "--run-root",
+        str(run_root),
+        "--route",
+        "job_search",
+    )
+    assert simulate.returncode == 0, simulate.stderr
+    run_id = json.loads(simulate.stdout)["runner_response"]["run_id"]
+    run_dir = run_root / run_id
+    assert run_python(PLAN_BUILDER, "--run-dir", str(run_dir), "--build-prompt-bundles").returncode == 0
+    assert run_python(SOURCE_PLAN_BUILDER, "--run-dir", str(run_dir)).returncode == 0
+    assert run_python(PUBLIC_SOURCE_DISCOVERER, "--run-dir", str(run_dir), "--generate-query-plan-only").returncode == 0
+    external_results = tmp_path / "external-search-results.json"
+    external_results.write_text(
+        json.dumps(
+            {
+                "search_results": [
+                    {
+                        "task_id": "recruitment-platform-public-jd",
+                        "url": "https://www.nowcoder.com/jobs/backend-intern",
+                        "title": "Backend intern public JD",
+                        "snippet": "Python Java internship",
+                        "source_type": "recruitment_platform_jd",
+                    }
+                ]
+            }
+        ),
+        encoding="utf-8",
+    )
+    source_search = run_python(
+        PUBLIC_SOURCE_SEARCHER,
+        "--run-dir",
+        str(run_dir),
+        "--provider",
+        "external-json",
+        "--search-results-json",
+        str(external_results),
+    )
+    assert source_search.returncode == 0, source_search.stderr
+    search_ref = json.loads(source_search.stdout)["public_source_search_response"]["search_results_ref"]
+    discover = run_python(
+        PUBLIC_SOURCE_DISCOVERER,
+        "--run-dir",
+        str(run_dir),
+        "--search-results-json",
+        str(run_dir / search_ref),
+    )
+    assert discover.returncode == 0, discover.stderr
+    assert run_python(WORK_ORDER_BUILDER, "--run-dir", str(run_dir)).returncode == 0
+    adapter_script = tmp_path / "external_adapter.py"
+    write_external_adapter_script(adapter_script)
+    adapter = run_python(
+        SUBAGENT_ADAPTER_RUNNER,
+        "--run-dir",
+        str(run_dir),
+        "--adapter-command",
+        sys.executable,
+        "--adapter-arg",
+        str(adapter_script),
+    )
+    assert adapter.returncode == 0, adapter.stderr
+
+    result = run_python(FINALIZER, "--run-dir", str(run_dir), "--real-subagent-execution")
+
+    assert result.returncode == 0, result.stderr
+    response = json.loads(result.stdout)["finalizer_response"]
+    assert response["exit_status"] == "success"
+    assert response["final_package_ref"] == "final/decision_package.json"
+    assert response["source_discovery_ready"] is True
+    final_package = json.loads((run_dir / response["final_package_ref"]).read_text(encoding="utf-8"))
+    assert final_package["decision_package"]["run_id"] == run_id
+    assert final_package["decision_package"]["real_subagent_execution"] is True
+    assert final_package["decision_package"]["source_discovery_ready"] is True
+    assert final_package["decision_package"]["role_output_refs"]
+    manifest = json.loads((run_dir / "manifest.json").read_text(encoding="utf-8"))
+    assert manifest["execution_manifest"]["current_stage"] == "final_package_ready"
+    assert manifest["run_state"]["stage"] == "final_package_ready"
+
+
 def test_subagent_adapter_runner_writes_schema_valid_mock_outputs(tmp_path):
     run_root = tmp_path / ".career-pipeline-runs"
     simulate = run_python(
@@ -728,6 +1002,61 @@ def test_one_command_runner_creates_blocked_user_side_run(tmp_path):
     assert (run_dir / "evidence" / "allowed_public_sources.generated.json").is_file()
     assert (run_dir / "invocations" / "subagent_work_orders.json").is_file()
     assert response["blocked_by"]
+
+
+def test_one_command_runner_finalizes_with_external_adapters(tmp_path):
+    run_root = tmp_path / ".career-pipeline-runs"
+    external_results = tmp_path / "external-search-results.json"
+    external_results.write_text(
+        json.dumps(
+            {
+                "search_results": [
+                    {
+                        "task_id": "recruitment-platform-public-jd",
+                        "url": "https://www.nowcoder.com/jobs/backend-intern",
+                        "title": "Backend intern public JD",
+                        "snippet": "Python Java internship",
+                        "source_type": "recruitment_platform_jd",
+                    }
+                ]
+            }
+        ),
+        encoding="utf-8",
+    )
+    adapter_script = tmp_path / "external_adapter.py"
+    write_external_adapter_script(adapter_script)
+
+    result = run_python(
+        CAREER_PIPELINE_RUNNER,
+        "--task-type",
+        "job_search",
+        "--route",
+        "job_search",
+        "--input-text",
+        "Computer science sophomore, Python, looking for AI internship",
+        "--run-root",
+        str(run_root),
+        "--source-adapter",
+        "external-json",
+        "--search-results-json",
+        str(external_results),
+        "--subagent-adapter",
+        "external-command",
+        "--adapter-command",
+        sys.executable,
+        "--adapter-arg",
+        str(adapter_script),
+        "--finalize",
+    )
+
+    assert result.returncode == 0, result.stderr
+    response = json.loads(result.stdout)["career_pipeline_run_response"]
+    assert response["exit_status"] == "success"
+    assert response["real_subagent_execution"] is True
+    assert response["source_discovery_ready"] is True
+    assert response["final_package_ref"] == "final/decision_package.json"
+    run_dir = run_root / response["run_id"]
+    assert (run_dir / response["final_package_ref"]).is_file()
 
 
 def test_simulator_routes_non_engineering_major_to_pending_domain(tmp_path):

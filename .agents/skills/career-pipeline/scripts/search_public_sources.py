@@ -131,20 +131,46 @@ def seed_results_for_query(query: dict[str, Any], company_targets: list[dict[str
 
 
 def search_sources(args: argparse.Namespace) -> dict[str, Any]:
-    if args.provider != "seed":
-        raise PublicSourceSearchError("only the deterministic `seed` provider is implemented in this repository")
     run_dir = args.run_dir
     discovery = load_discovery_log(run_dir, args.discovery_log_ref)
-    company_targets = load_source_targets()
     results: list[dict[str, Any]] = []
-    seen = set()
-    for query in discovery["search_queries"]:
-        for result in seed_results_for_query(query, company_targets):
-            key = (result.get("task_id"), result.get("url"))
-            if key in seen:
-                continue
-            seen.add(key)
+    metadata_note = ""
+    real_time_search = False
+    if args.provider == "seed":
+        company_targets = load_source_targets()
+        seen = set()
+        for query in discovery["search_queries"]:
+            for result in seed_results_for_query(query, company_targets):
+                key = (result.get("task_id"), result.get("url"))
+                if key in seen:
+                    continue
+                seen.add(key)
+                results.append(result)
+        metadata_note = "Deterministic seed provider. Replace with browser/search/API provider for live discovery."
+    elif args.provider == "external-json":
+        if not args.search_results_json:
+            raise PublicSourceSearchError("--search-results-json is required for provider `external-json`")
+        payload = load_json(args.search_results_json)
+        raw_results = payload.get("search_results")
+        if not isinstance(raw_results, list):
+            raise PublicSourceSearchError("external search_results must be a list")
+        for index, result in enumerate(raw_results):
+            if not isinstance(result, dict):
+                raise PublicSourceSearchError(f"search_results[{index}] must be an object")
+            if not result.get("task_id") or not result.get("url"):
+                raise PublicSourceSearchError(f"search_results[{index}] requires task_id and url")
+            result = dict(result)
+            result.setdefault("provider", "external-json")
             results.append(result)
+        real_time_search = True
+        metadata_note = (
+            "External search adapter results. These are URL candidates only until "
+            "discover_public_sources.py, fetch_public_sources.py, and backfill checks accept them."
+        )
+    else:
+        raise PublicSourceSearchError(
+            "unsupported provider; use `seed` or provide external results with `external-json`"
+        )
     output_path = run_dir / args.output
     write_json(
         output_path,
@@ -152,9 +178,12 @@ def search_sources(args: argparse.Namespace) -> dict[str, Any]:
             "metadata": {
                 "run_id": discovery["run_id"],
                 "provider": args.provider,
+                "provider_mode": args.provider.replace("-", "_"),
+                "real_time_search": real_time_search,
                 "user_instruction_required": False,
                 "source": SOURCE_COLLECTION_TARGETS_REF,
-                "note": "Deterministic seed provider. Replace with browser/search/API provider for live discovery.",
+                "query_plan_ref": args.discovery_log_ref,
+                "note": metadata_note,
             },
             "search_results": results,
         },
@@ -164,6 +193,7 @@ def search_sources(args: argparse.Namespace) -> dict[str, Any]:
             "exit_status": "success",
             "run_id": discovery["run_id"],
             "provider": args.provider,
+            "real_time_search": real_time_search,
             "user_instruction_required": False,
             "search_results_ref": rel(output_path, run_dir),
             "result_count": len(results),
@@ -175,6 +205,7 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="Run a public-source search adapter for generated query plans.")
     parser.add_argument("--run-dir", required=True, type=Path)
     parser.add_argument("--provider", default="seed")
+    parser.add_argument("--search-results-json", type=Path)
     parser.add_argument("--discovery-log-ref", default="evidence/public_source_discovery_log.json")
     parser.add_argument("--output", default="evidence/search_results.generated.json")
     args = parser.parse_args(argv)
