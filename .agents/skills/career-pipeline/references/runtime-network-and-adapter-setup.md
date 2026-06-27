@@ -198,7 +198,17 @@ python scripts/execute_subagent_plan.py \
 
 Use one of these adapter patterns:
 
-1. Codex Desktop manual controller adapter.
+1. Manual Controller MVP.
+   - The main Codex conversation acts as the controller.
+   - It performs Codex-side source search from the generated source plan and writes or assembles `search_results.json`.
+   - It records `source_policy_ack` internally after the source plan passes policy checks.
+   - It reads `subagent_work_orders.json` and each prompt bundle.
+   - It dispatches each role as a true subagent, separate conversation, or strictly separated role pass.
+   - It requires every role to return strict JSON with `role_output_packet` and `error_recovery_state`.
+   - API is not required, but source URLs, role output contracts, HR review, factual review, and blocked/final gates still apply.
+   - Use `references/manual-controller-runtime-flow.md` for the detailed procedure.
+
+2. Codex Desktop manual controller adapter.
    - The main Codex thread reads `subagent_work_orders.json`.
    - It reads each `prompt_bundle_ref`.
    - It calls the current-session `spawn_agent` tool for each bounded role task.
@@ -206,14 +216,14 @@ Use one of these adapter patterns:
    - It writes or supplies those JSON files for backfill.
    - This is valid for interactive testing, but normal Python scripts cannot call the conversation's `spawn_agent` tool directly.
 
-2. Codex CLI adapter.
+3. Codex CLI adapter.
    - A runner reads each work order.
    - It invokes `codex exec` with the prompt bundle content.
    - It stores each final answer as a role output JSON.
    - It backfills validated outputs into the run.
    - Use this for local automation when Codex CLI access and auth are configured.
 
-3. API or Agents SDK adapter.
+4. API or Agents SDK adapter.
    - An external runner calls an agent API with each role prompt bundle.
    - It validates the model output against the role output schema.
    - It backfills accepted packets.

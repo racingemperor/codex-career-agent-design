@@ -28,6 +28,7 @@ Read these references as needed:
 - `references/role-output-contracts.md` before merging subagent outputs.
 - `references/application-url-output-policy.md` before returning recommended jobs, internships, application targets, or target-job fit outputs.
 - `references/real-user-deployment-and-use-flow.md` before explaining how a real user installs, invokes, and runs the pipeline end to end.
+- `references/manual-controller-runtime-flow.md` before using the main Codex conversation as a manual controller for Codex-side source search, secondary prompt injection, and non-API subagent execution.
 
 ## Local Contract Scripts
 
@@ -130,6 +131,7 @@ Short routes:
 - Ask the user for missing user-owned facts once in a compact batch. Do not ask the user for data that local subagents can research from allowed public sources.
 - Automatically inject the default public recruitment source matrix into recruitment-information roles (`JobScout`, `JDAnalyzer`, `CompanyIntelligenceAnalyst`, `MarketSentimentAnalyzer`, and `HRSupervisor`). These roles should know which official pages, recruitment platforms, HR public posts, candidate-experience sources, social media weak signals, and public reports to search without asking the user to name websites.
 - Do not expose `source_policy_ack` as a separate end-user question; the runtime controller records it internally only after the auto-generated public source plan passes policy checks.
+- A manual controller run may use the main Codex conversation to perform Codex-side source search and dispatch separated role prompts. API execution is not required for this MVP path, but role outputs must still use the same strict JSON contracts, public URL requirements, HR review, factual review, and blocked-output gates.
 - Treat concrete skill weights and external-display asset weights as runtime decisions. The repository provides schemas and examples, not universal requirements that every discipline must follow.
 - Require hard-data provenance for all weights, scores, priorities, rankings, thresholds, and confidence adjustments. Local subagents must verify them through public/official network sources or user-provided materials; if evidence is missing, return `not_available`, `needs_more_sources`, and runtime research tasks instead of guessing.
 - For non-graduating candidates, split current internship analysis from future full-time preparation.

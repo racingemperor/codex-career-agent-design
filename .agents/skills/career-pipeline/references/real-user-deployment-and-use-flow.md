@@ -18,7 +18,7 @@ cd .agents/skills/career-pipeline
 python scripts/career_pipeline_run.py --task-type target_job_fit --route target_job_fit --input-text "computer science senior, assess fit for Tencent backend role. JD: Java and MySQL" --run-root ../../../.career-pipeline-runs --source-adapter seed --subagent-adapter mock-blocked
 ```
 
-6. For real career output, configure a real source adapter and a real subagent adapter. The seed source adapter is not live web search. The mock-blocked subagent adapter is not real subagent execution.
+6. For real career output, either use the Manual Controller MVP in `manual-controller-runtime-flow.md` or configure a real source adapter and a real subagent adapter. The seed source adapter is not live web search. The mock-blocked subagent adapter is not real subagent execution.
 7. Runtime artifacts are written under `.career-pipeline-runs/<run_id>/` and should not be committed.
 
 ## User-Facing Invocation
@@ -427,4 +427,3 @@ The final package should include:
 - next actions.
 
 If a required source, URL, subagent, or user fact is missing, return a blocked or degraded package instead of guessing.
-

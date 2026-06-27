@@ -2314,3 +2314,35 @@ def test_real_user_deployment_flow_documents_subagent_sources_and_judgment_basis
     assert "application_url_candidates" in flow_text
     for role in required_roles:
         assert role in flow_text
+
+
+def test_manual_controller_flow_documents_codex_side_search_and_subagents():
+    flow_text = (
+        ROOT
+        / ".agents"
+        / "skills"
+        / "career-pipeline"
+        / "references"
+        / "manual-controller-runtime-flow.md"
+    ).read_text(encoding="utf-8")
+    network_text = (
+        ROOT
+        / ".agents"
+        / "skills"
+        / "career-pipeline"
+        / "references"
+        / "runtime-network-and-adapter-setup.md"
+    ).read_text(encoding="utf-8")
+    skill_text = (
+        ROOT / ".agents" / "skills" / "career-pipeline" / "SKILL.md"
+    ).read_text(encoding="utf-8")
+
+    assert "manual-controller-runtime-flow.md" in skill_text
+    assert "Codex-side source search" in flow_text
+    assert "API is not required" in flow_text
+    assert "main conversation controller" in flow_text
+    assert "search_results.json" in flow_text
+    assert "subagent_work_orders.json" in flow_text
+    assert "source_policy_ack" in flow_text
+    assert "public URL" in flow_text
+    assert "Manual Controller MVP" in network_text
