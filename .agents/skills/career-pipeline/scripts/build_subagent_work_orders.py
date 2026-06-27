@@ -53,6 +53,11 @@ def build_orders(run_dir: Path, plan_ref: str, output_ref: str) -> dict[str, Any
             {
                 "order_id": f"{plan['run_id']}-{item['queue_index']}-{item['target_agent']}",
                 "target_agent": item["target_agent"],
+                "batch_id": item.get("batch_id", ""),
+                "depends_on_batches": item.get("depends_on_batches", []),
+                "depends_on_agents": item.get("depends_on_agents", []),
+                "depends_on_artifact_refs": item.get("depends_on_artifact_refs", []),
+                "close_after_artifact_persisted": item.get("close_after_artifact_persisted") is True,
                 "invocation_ref": item["invocation_ref"],
                 "prompt_bundle_ref": prompt_bundle_ref,
                 "output_artifact_target": item["output_artifact_target"],
@@ -62,9 +67,11 @@ def build_orders(run_dir: Path, plan_ref: str, output_ref: str) -> dict[str, Any
                 "privacy_class": item["privacy_class"],
                 "dispatch_status": "ready_for_external_adapter",
                 "execution_instruction": (
-                    "Pass the prompt_bundle_ref content to a real Codex subagent only after "
-                    "human approval and source-policy acknowledgement. Return a role output "
-                    "matching expected_backfill_contract."
+                    "Dispatch according to batch_id and depends_on_artifact_refs. Pass the "
+                    "prompt_bundle_ref content to a real Codex subagent only after human approval "
+                    "and source-policy acknowledgement. Return a role output matching "
+                    "expected_backfill_contract, persist_role_output_before_close, then close the "
+                    "completed subagent when close_after_artifact_persisted is true."
                 ),
                 "expected_backfill_contract": {
                     "required_top_level_fields": [
@@ -88,10 +95,16 @@ def build_orders(run_dir: Path, plan_ref: str, output_ref: str) -> dict[str, Any
             "created_from_plan_ref": plan_ref,
             "adapter_status": "not_configured",
             "real_execution_ready": False,
+            "dispatch_strategy": plan.get("dispatch_strategy", "batched_artifact_handoff"),
+            "dispatch_batches": plan.get("dispatch_batches", []),
+            "max_parallel_subagents": plan.get("max_parallel_subagents", 4),
+            "artifact_handoff_required": plan.get("artifact_handoff_required") is True,
+            "close_completed_subagents": plan.get("close_completed_subagents") is True,
             "orders": orders,
             "notes": [
                 "This file is a handoff contract, not proof of execution.",
                 "Network and source-policy gates stay closed until an adapter is configured.",
+                "Run one dispatch batch at a time, persist role outputs as artifacts, then close completed subagents before opening the next batch.",
             ],
         }
     }

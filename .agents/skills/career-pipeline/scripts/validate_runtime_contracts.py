@@ -80,9 +80,14 @@ ALLOWED_INVOCATION_STATUSES = {
 PLAN_QUEUE_REQUIRED_FIELDS = [
     "queue_index",
     "target_agent",
+    "batch_id",
+    "depends_on_batches",
+    "depends_on_agents",
+    "depends_on_artifact_refs",
     "invocation_ref",
     "input_refs",
     "output_artifact_target",
+    "close_after_artifact_persisted",
     "dispatch_mode",
     "status",
     "allowed_network",
@@ -391,6 +396,51 @@ def validate_subagent_plan(payload: dict[str, Any]) -> None:
     require_non_empty(plan.get("run_id"), "run_id", "subagent_invocation_plan")
     if plan.get("plan_status") != "ready":
         raise ValidationError("subagent_invocation_plan: `plan_status` must be `ready`")
+    if plan.get("dispatch_strategy") != "batched_artifact_handoff":
+        raise ValidationError("subagent_invocation_plan: dispatch_strategy must be batched_artifact_handoff")
+    if plan.get("max_parallel_subagents") not in {1, 2, 3, 4}:
+        raise ValidationError("subagent_invocation_plan: max_parallel_subagents must be between 1 and 4")
+    if plan.get("artifact_handoff_required") is not True:
+        raise ValidationError("subagent_invocation_plan: artifact_handoff_required must be true")
+    if plan.get("close_completed_subagents") is not True:
+        raise ValidationError("subagent_invocation_plan: close_completed_subagents must be true")
+    batches = plan.get("dispatch_batches")
+    if not isinstance(batches, list) or not batches:
+        raise ValidationError("subagent_invocation_plan: dispatch_batches must be a non-empty list")
+    batch_ids = []
+    for index, batch in enumerate(batches):
+        where = f"dispatch_batches[{index}]"
+        if not isinstance(batch, dict):
+            raise ValidationError(f"{where}: batch must be an object")
+        for field in [
+            "batch_id",
+            "batch_index",
+            "target_agents",
+            "depends_on_batches",
+            "depends_on_artifact_refs",
+            "produces_artifact_refs",
+            "max_parallel_subagents",
+            "close_completed_subagents",
+            "artifact_handoff_required",
+        ]:
+            if field not in batch:
+                raise ValidationError(f"{where}: missing required field `{field}`")
+        if batch["batch_index"] != index:
+            raise ValidationError(f"{where}: batch_index must match list order")
+        require_non_empty(batch["batch_id"], "batch_id", where)
+        if batch["batch_id"] in batch_ids:
+            raise ValidationError(f"{where}: duplicate batch_id `{batch['batch_id']}`")
+        batch_ids.append(batch["batch_id"])
+        require_list(batch["target_agents"], "target_agents", where)
+        require_list(batch["depends_on_batches"], "depends_on_batches", where)
+        require_list(batch["depends_on_artifact_refs"], "depends_on_artifact_refs", where)
+        require_list(batch["produces_artifact_refs"], "produces_artifact_refs", where)
+        if batch["max_parallel_subagents"] not in {1, 2, 3, 4}:
+            raise ValidationError(f"{where}: max_parallel_subagents must be between 1 and 4")
+        if batch["close_completed_subagents"] is not True:
+            raise ValidationError(f"{where}: close_completed_subagents must be true")
+        if batch["artifact_handoff_required"] is not True:
+            raise ValidationError(f"{where}: artifact_handoff_required must be true")
     queue = plan.get("dispatch_queue")
     if not isinstance(queue, list) or not queue:
         raise ValidationError("subagent_invocation_plan: `dispatch_queue` must be a non-empty list")
@@ -402,7 +452,13 @@ def validate_subagent_plan(payload: dict[str, Any]) -> None:
         for field in PLAN_QUEUE_REQUIRED_FIELDS:
             if field not in item:
                 raise ValidationError(f"{where}: missing required field `{field}`")
-            require_non_empty(item[field], field, where)
+            if field not in {
+                "depends_on_batches",
+                "depends_on_agents",
+                "depends_on_artifact_refs",
+                "close_after_artifact_persisted",
+            }:
+                require_non_empty(item[field], field, where)
         if "prompt_bundle_ref" in item and item["prompt_bundle_ref"]:
             if item["prompt_bundle_ref"].replace("\\", "/").startswith("input/raw_refs"):
                 raise ValidationError(f"{where}: prompt_bundle_ref must not expose raw input")
@@ -416,8 +472,15 @@ def validate_subagent_plan(payload: dict[str, Any]) -> None:
             raise ValidationError(f"{where}: plan-only dispatch must set `allowed_network` to false")
         if item["requires_human_approval"] is not True:
             raise ValidationError(f"{where}: plan-only dispatch must require human approval")
+        if item["batch_id"] not in batch_ids:
+            raise ValidationError(f"{where}: batch_id must reference dispatch_batches")
+        if item["close_after_artifact_persisted"] is not True:
+            raise ValidationError(f"{where}: close_after_artifact_persisted must be true")
         require_list(item["input_refs"], "input_refs", where)
         require_list(item["blocked_until"], "blocked_until", where)
+        require_list(item["depends_on_batches"], "depends_on_batches", where)
+        require_list(item["depends_on_agents"], "depends_on_agents", where)
+        require_list(item["depends_on_artifact_refs"], "depends_on_artifact_refs", where)
         if any(ref.replace("\\", "/").startswith("input/raw_refs") for ref in item["input_refs"]):
             raise ValidationError(f"{where}: raw input refs must not be exposed to subagent plans")
 

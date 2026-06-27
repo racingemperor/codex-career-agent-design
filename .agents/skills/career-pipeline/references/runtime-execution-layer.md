@@ -29,7 +29,7 @@ create run_id and run directory
   -> build a public-source research plan before any network-enabled research
   -> discover allowed public source URLs from a search adapter
   -> fetch and backfill allowed public evidence when network is enabled
-  -> dispatch required role subagents
+  -> dispatch required role subagents by batch, persisting artifacts and closing completed subagents between batches
   -> validate role outputs against role-output-contracts
   -> merge evidence, blocked outputs, runtime weights, and debate fields
   -> run debate routes when conflicts remain
@@ -182,13 +182,13 @@ For Codex network configuration, source-policy acknowledgement, and real adapter
 
 - `career_pipeline_run.py`: one-command deterministic user-side runner. It chains simulation, prompt-bundle generation, public-source planning, source search, allowed-source discovery, work-order export, subagent adapter execution, and optional finalization. It returns `blocked` for the default seed/mock path and returns `success` only when `--finalize` runs after real adapter outputs validate.
 - `simulate_runtime_run.py`: creates a private no-network blocked run with normalized input, runtime context, secondary injections, invocation packets, blocked package, and simulated blocked role outputs.
-- `build_subagent_plan.py`: turns invocation packets into a plan-only dispatch queue. Plan-only queues are not proof that subagents ran.
+- `build_subagent_plan.py`: turns invocation packets into a plan-only dispatch queue with `dispatch_strategy = "batched_artifact_handoff"`, `dispatch_batches`, `max_parallel_subagents`, dependency artifact refs, and close-after-output instructions. Plan-only queues are not proof that subagents ran.
 - `build_subagent_prompt_bundle.py`: creates one role-specific derived prompt bundle with the static role prompt, runtime context packet, secondary prompt injection, allowed user facts, source policy, research tasks, hard-data weight tasks, and required output contract. Raw input refs must not appear in the bundle.
 - `build_public_source_plan.py`: creates a source-policy-bound research plan for official/primary pages, public recruitment-platform JDs, verified HR public posts, candidate experience, and weak social signals. It does not browse, log in, scrape, or cache sources.
 - `discover_public_sources.py`: converts search-adapter results into `evidence/allowed_public_sources.generated.json` and `evidence/public_source_discovery_log.json`. It generates search queries from the source plan, rejects login/private/backend/non-public hints, deduplicates URLs, and keeps social media as weak evidence.
 - `search_public_sources.py`: adapter entrypoint for executing generated source queries. The built-in `seed` provider is local and deterministic; it emits candidate URLs from repository source-collection targets and generic public-source entrypoints, not live web results. The `external-json` provider accepts externally produced browser/search/API results and marks them as real-time URL candidates, not evidence packets.
 - `fetch_public_sources.py`: fetches allowed public `http(s)` sources or user-provided `file://` snapshots into evidence packets. It refuses forbidden source types, login-only pages, and weak social evidence as final-decision proof.
-- `build_subagent_work_orders.py`: exports adapter-ready work orders with prompt bundle refs, human/source-policy gates, expected output contracts, and backfill requirements. Work orders are not proof of real subagent execution.
+- `build_subagent_work_orders.py`: exports adapter-ready work orders with prompt bundle refs, batch ids, dependency artifact refs, human/source-policy gates, expected output contracts, close-after-output instructions, and backfill requirements. Work orders are not proof of real subagent execution.
 - `run_subagent_adapter.py`: subagent adapter runner entrypoint. `--mock-blocked` writes schema-valid blocked role output packets so the pipeline can test handoff and backfill contracts while preserving `real_subagent_execution = false`. `--adapter-command` invokes an external command per work order, validates returned role outputs, and sets `real_subagent_execution = true` only when all required role outputs are `done` or `done_with_warnings`.
 - `finalize_runtime_run.py`: final package assembler. It rejects mock, blocked, failed, malformed, or missing role outputs and writes `final/decision_package.json` only after real adapter metadata, role output statuses, and final gates pass.
 - `execute_subagent_plan.py`: defaults to dry-run inspection, refuses real execution without human approval, refuses network execution without source-policy acknowledgement, writes redacted execution events, and can backfill externally produced role outputs only after schema checks.

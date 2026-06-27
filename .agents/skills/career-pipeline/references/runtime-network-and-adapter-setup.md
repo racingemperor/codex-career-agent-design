@@ -187,7 +187,10 @@ The adapter reads:
 - `invocations/subagent_work_orders.json`
 - each order's `prompt_bundle_ref`
 - each order's `expected_backfill_contract`
+- each order's `batch_id`, `depends_on_artifact_refs`, and `close_after_artifact_persisted`
 - the run's source and privacy constraints
+
+Adapters must use `dispatch_strategy = "batched_artifact_handoff"` from the work orders. Run one `dispatch_batches` entry at a time, keep concurrency under `max_parallel_subagents`, wait for every role output in the batch to be persisted to its `output_artifact_target`, then follow `close_completed_subagents = true` and close completed subagents before the next batch. Later batches should load prior context from artifact refs, not from live subagent chat state.
 
 The adapter must return one JSON file per role with:
 
@@ -238,7 +241,8 @@ Use one of these adapter patterns:
    - It performs Codex-side source search from the generated source plan and writes or assembles `search_results.json`.
    - It records `source_policy_ack` internally after the source plan passes policy checks.
    - It reads `subagent_work_orders.json` and each prompt bundle.
-   - It dispatches each role as a true subagent, separate conversation, or strictly separated role pass.
+   - It dispatches each role as a true subagent, separate conversation, or strictly separated role pass by `dispatch_batches`.
+   - It closes completed subagents after their role output artifact is persisted.
    - It requires every role to return strict JSON with `role_output_packet` and `error_recovery_state`.
    - API is not required, but source URLs, role output contracts, HR review, factual review, and blocked/final gates still apply.
    - Use `references/manual-controller-runtime-flow.md` for the detailed procedure.
@@ -246,9 +250,10 @@ Use one of these adapter patterns:
 2. Codex Desktop manual controller adapter.
    - The main Codex thread reads `subagent_work_orders.json`.
    - It reads each `prompt_bundle_ref`.
-   - It calls the current-session `spawn_agent` tool for each bounded role task.
+   - It calls the current-session `spawn_agent` tool for each bounded role task, batch by batch.
    - It asks each subagent to return a strict role output JSON.
    - It writes or supplies those JSON files for backfill.
+   - It closes completed subagents before opening the next batch.
    - This is valid for interactive testing, but normal Python scripts cannot call the conversation's `spawn_agent` tool directly.
 
 3. Codex CLI adapter.

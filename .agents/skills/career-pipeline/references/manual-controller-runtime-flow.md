@@ -34,8 +34,9 @@ It must:
 - perform Codex-side source search for source-plan tasks.
 - write or request `search_results.json`.
 - run source filtering/fetch/backfill scripts when available.
-- dispatch each role as a separate subagent, new conversation, or strictly separated role pass.
+- dispatch each role as a separate subagent, new conversation, or strictly separated role pass according to `dispatch_batches`.
 - require strict role output JSON with `role_output_packet` and `error_recovery_state`.
+- persist every role output artifact before closing a subagent, then close completed subagents before opening the next batch.
 - merge only safe fields.
 - run debate, HR review, and factual review before final output.
 - block final outputs when required evidence, URLs, user facts, or role outputs are missing.
@@ -184,14 +185,17 @@ InputNormalizer
   -> HRSupervisor
 ```
 
-Parallel execution is allowed after the context packet and secondary prompt injections exist:
+Use batched dispatch after the context packet, secondary prompt injections, prompt bundles, and work orders exist. `build_subagent_plan.py` writes `dispatch_strategy = "batched_artifact_handoff"`, `dispatch_batches`, `max_parallel_subagents`, `artifact_handoff_required`, and `close_completed_subagents`.
 
-- `MajorClusterClassifier` and `ProfileExtractor` can run in parallel.
-- `JDAnalyzer`, `JobScout`, `CompanyIntelligenceAnalyst`, and `MarketSentimentAnalyzer` can run after source tasks are ready.
-- `MatchStrategist` waits for profile, JD/job, company, and market signals.
-- `LearningPathStrategist` and `PersonalBrandingStrategist` wait for match gaps and evidence needs.
-- `ResumeArchitect` waits for `ResumeFormatGate`.
-- final `HRSupervisor` waits for `FactualReviewer` when a resume or recommendation claim is produced.
+Default batch pattern:
+
+- `profile_and_taxonomy`: `MajorClusterClassifier`, `ProfileExtractor`.
+- `public_role_research`: `JDAnalyzer`, `JobScout`, `CompanyIntelligenceAnalyst`, `MarketSentimentAnalyzer` when present.
+- `strategy_and_learning`: `MatchStrategist`, `LearningPathStrategist`.
+- `branding_and_resume`: `PersonalBrandingStrategist`, `ResumeFormatGate`, `ResumeArchitect` when present.
+- `hr_and_factual_gates`: `HRSupervisor`, `FactualReviewer`.
+
+Run only one batch at a time. Within a batch, do not exceed `max_parallel_subagents` from the plan. For every completed role, persist `agents/<role>/output.json`, append the execution event, and close completed subagents before the next batch starts. Later batches must read `depends_on_artifact_refs`; they must not rely on closed subagent chat memory.
 
 ## Debate And Merge
 

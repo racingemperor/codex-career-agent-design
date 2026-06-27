@@ -250,6 +250,8 @@ def test_work_order_builder_exports_subagent_ready_orders(tmp_path):
         "role_output_packet",
         "error_recovery_state",
     ]
+    assert "batch_id" in first
+    assert first["close_after_artifact_persisted"] is True
 
 
 def test_public_evidence_backfill_accepts_safe_public_evidence(tmp_path):
@@ -1714,33 +1716,152 @@ def test_plan_builder_creates_plan_only_dispatch_queue(tmp_path):
     assert all(item["dispatch_mode"] == "plan_only" for item in queue)
     assert all(item["status"] == "planned" for item in queue)
     assert not any("input/raw_refs.json" in item["input_refs"] for item in queue)
+    assert plan["subagent_invocation_plan"]["max_parallel_subagents"] == 4
+    assert plan["subagent_invocation_plan"]["artifact_handoff_required"] is True
+    assert plan["subagent_invocation_plan"]["close_completed_subagents"] is True
+    assert [batch["batch_id"] for batch in plan["subagent_invocation_plan"]["dispatch_batches"]] == [
+        "profile_and_taxonomy",
+        "public_role_research",
+        "strategy_and_learning",
+    ]
+    assert all(item["batch_id"] for item in queue)
+    assert all(item["close_after_artifact_persisted"] is True for item in queue)
 
     validation = run_python(VALIDATOR, "--subagent-plan", str(plan_path))
     assert validation.returncode == 0, validation.stderr
 
 
-def test_validator_rejects_subagent_plan_that_is_not_plan_only(tmp_path):
-    plan = {
+def test_target_job_fit_plan_batches_agents_for_limited_subagent_concurrency(tmp_path):
+    run_root = tmp_path / ".career-pipeline-runs"
+    simulate = run_python(
+        SIMULATOR,
+        "--task-type",
+        "target_job_fit",
+        "--input-text",
+        (
+            "Computer science junior, Python and Java, wants ByteDance LLM backend internship. "
+            "JD: backend, RAG, Redis, message queue, Agent."
+        ),
+        "--run-root",
+        str(run_root),
+        "--route",
+        "target_job_fit",
+    )
+    assert simulate.returncode == 0, simulate.stderr
+    run_id = json.loads(simulate.stdout)["runner_response"]["run_id"]
+    run_dir = run_root / run_id
+
+    result = run_python(PLAN_BUILDER, "--run-dir", str(run_dir), "--build-prompt-bundles")
+
+    assert result.returncode == 0, result.stderr
+    plan_ref = json.loads(result.stdout)["planner_response"]["subagent_plan_ref"]
+    plan = json.loads((run_dir / plan_ref).read_text(encoding="utf-8"))["subagent_invocation_plan"]
+    batches = {batch["batch_id"]: batch for batch in plan["dispatch_batches"]}
+    assert list(batches) == [
+        "profile_and_taxonomy",
+        "public_role_research",
+        "strategy_and_learning",
+        "hr_and_factual_gates",
+    ]
+    assert batches["profile_and_taxonomy"]["target_agents"] == [
+        "major-cluster-classifier",
+        "profile-extractor",
+    ]
+    assert batches["public_role_research"]["target_agents"] == [
+        "jd-analyzer",
+        "company-intelligence-analyst",
+        "job-scout",
+    ]
+    assert batches["strategy_and_learning"]["depends_on_batches"] == [
+        "profile_and_taxonomy",
+        "public_role_research",
+    ]
+    assert batches["hr_and_factual_gates"]["target_agents"] == [
+        "hr-supervisor",
+        "factual-reviewer",
+    ]
+    assert all(batch["max_parallel_subagents"] <= 4 for batch in batches.values())
+
+    queue_by_agent = {item["target_agent"]: item for item in plan["dispatch_queue"]}
+    assert queue_by_agent["match-strategist"]["depends_on_batches"] == [
+        "profile_and_taxonomy",
+        "public_role_research",
+    ]
+    assert "agents/profile-extractor/output.json" in queue_by_agent["match-strategist"]["depends_on_artifact_refs"]
+    assert "agents/jd-analyzer/output.json" in queue_by_agent["match-strategist"]["depends_on_artifact_refs"]
+    assert queue_by_agent["hr-supervisor"]["depends_on_batches"] == [
+        "strategy_and_learning",
+    ]
+    assert all(item["close_after_artifact_persisted"] is True for item in plan["dispatch_queue"])
+
+    work_orders = run_python(WORK_ORDER_BUILDER, "--run-dir", str(run_dir))
+    assert work_orders.returncode == 0, work_orders.stderr
+    orders_ref = json.loads(work_orders.stdout)["work_order_response"]["work_orders_ref"]
+    orders = json.loads((run_dir / orders_ref).read_text(encoding="utf-8"))["subagent_work_orders"]
+    assert orders["dispatch_strategy"] == "batched_artifact_handoff"
+    assert orders["max_parallel_subagents"] == 4
+    first_order = orders["orders"][0]
+    assert first_order["batch_id"] == "profile_and_taxonomy"
+    assert first_order["close_after_artifact_persisted"] is True
+    assert "persist_role_output_before_close" in first_order["execution_instruction"]
+
+
+def minimal_batched_subagent_plan(queue_overrides: dict[str, object]) -> dict:
+    queue_item = {
+        "queue_index": 0,
+        "target_agent": "job-scout",
+        "batch_id": "public_role_research",
+        "depends_on_batches": [],
+        "depends_on_agents": [],
+        "depends_on_artifact_refs": [],
+        "invocation_ref": "invocations/job-scout.invocation.json",
+        "input_refs": ["input/normalized/runtime_context_packet.json"],
+        "output_artifact_target": "agents/job-scout/output.json",
+        "close_after_artifact_persisted": True,
+        "dispatch_mode": "plan_only",
+        "status": "planned",
+        "allowed_network": False,
+        "requires_human_approval": True,
+        "privacy_class": "derived",
+        "blocked_until": ["human_confirms_real_subagent_execution"],
+    }
+    queue_item.update(queue_overrides)
+    return {
         "subagent_invocation_plan": {
             "run_id": "run-test",
             "plan_status": "ready",
-            "dispatch_queue": [
+            "created_from_manifest_ref": "manifest.json",
+            "dispatch_strategy": "batched_artifact_handoff",
+            "max_parallel_subagents": 4,
+            "artifact_handoff_required": True,
+            "close_completed_subagents": True,
+            "dispatch_batches": [
                 {
-                    "queue_index": 0,
-                    "target_agent": "job-scout",
-                    "invocation_ref": "invocations/job-scout.invocation.json",
-                    "input_refs": ["input/normalized/runtime_context_packet.json"],
-                    "output_artifact_target": "agents/job-scout/output.json",
-                    "dispatch_mode": "execute",
-                    "status": "running",
-                    "allowed_network": True,
-                    "requires_human_approval": False,
-                    "privacy_class": "derived",
-                    "blocked_until": ["human_confirms_real_subagent_execution"],
+                    "batch_id": "public_role_research",
+                    "batch_index": 0,
+                    "target_agents": ["job-scout"],
+                    "depends_on_batches": [],
+                    "depends_on_artifact_refs": [],
+                    "produces_artifact_refs": ["agents/job-scout/output.json"],
+                    "max_parallel_subagents": 1,
+                    "close_completed_subagents": True,
+                    "artifact_handoff_required": True,
                 }
             ],
+            "dispatch_queue": [queue_item],
         }
     }
+
+
+def test_validator_rejects_subagent_plan_that_is_not_plan_only(tmp_path):
+    plan = minimal_batched_subagent_plan(
+        {
+            "dispatch_mode": "execute",
+            "status": "running",
+            "allowed_network": True,
+            "requires_human_approval": False,
+        }
+    )
     plan_path = tmp_path / "bad-plan.json"
     plan_path.write_text(json.dumps(plan), encoding="utf-8")
 
@@ -1751,30 +1872,14 @@ def test_validator_rejects_subagent_plan_that_is_not_plan_only(tmp_path):
 
 
 def test_validator_rejects_subagent_plan_that_exposes_raw_input(tmp_path):
-    plan = {
-        "subagent_invocation_plan": {
-            "run_id": "run-test",
-            "plan_status": "ready",
-            "dispatch_queue": [
-                {
-                    "queue_index": 0,
-                    "target_agent": "job-scout",
-                    "invocation_ref": "invocations/job-scout.invocation.json",
-                    "input_refs": [
-                        "input/raw_refs.json",
-                        "input/normalized/runtime_context_packet.json",
-                    ],
-                    "output_artifact_target": "agents/job-scout/output.json",
-                    "dispatch_mode": "plan_only",
-                    "status": "planned",
-                    "allowed_network": False,
-                    "requires_human_approval": True,
-                    "privacy_class": "derived",
-                    "blocked_until": ["human_confirms_real_subagent_execution"],
-                }
+    plan = minimal_batched_subagent_plan(
+        {
+            "input_refs": [
+                "input/raw_refs.json",
+                "input/normalized/runtime_context_packet.json",
             ],
         }
-    }
+    )
     plan_path = tmp_path / "raw-plan.json"
     plan_path.write_text(json.dumps(plan), encoding="utf-8")
 
@@ -2644,3 +2749,8 @@ def test_manual_controller_flow_documents_codex_side_search_and_subagents():
     assert "source_policy_ack" in flow_text
     assert "public URL" in flow_text
     assert "Manual Controller MVP" in network_text
+    assert "batched_artifact_handoff" in flow_text
+    assert "dispatch_batches" in flow_text
+    assert "close completed subagents" in flow_text
+    assert "close_completed_subagents" in network_text
+    assert "artifact_handoff_required" in skill_text

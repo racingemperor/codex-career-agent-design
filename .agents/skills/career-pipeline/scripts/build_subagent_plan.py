@@ -54,6 +54,151 @@ def unique_fields(fields: list[str]) -> list[str]:
     return result
 
 
+BATCH_ORDER = [
+    "profile_and_taxonomy",
+    "public_role_research",
+    "strategy_and_learning",
+    "branding_and_resume",
+    "hr_and_factual_gates",
+]
+
+BATCH_DEFINITIONS = {
+    "profile_and_taxonomy": {
+        "description": "Normalize the candidate's discipline, major cluster, and user-owned profile facts.",
+        "depends_on_batches": [],
+    },
+    "public_role_research": {
+        "description": "Collect current JD, company, market, HR, and public-source evidence.",
+        "depends_on_batches": ["profile_and_taxonomy"],
+    },
+    "strategy_and_learning": {
+        "description": "Merge user profile and public role evidence into fit, gap, and learning-path strategy.",
+        "depends_on_batches": ["profile_and_taxonomy", "public_role_research"],
+    },
+    "branding_and_resume": {
+        "description": "Prepare personal branding, resume format, and resume drafting artifacts.",
+        "depends_on_batches": ["profile_and_taxonomy", "strategy_and_learning"],
+    },
+    "hr_and_factual_gates": {
+        "description": "Run HR readability, factual, privacy, and final presentation gates.",
+        "depends_on_batches": ["strategy_and_learning"],
+    },
+}
+
+AGENT_BATCH = {
+    "major-cluster-classifier": "profile_and_taxonomy",
+    "profile-extractor": "profile_and_taxonomy",
+    "jd-analyzer": "public_role_research",
+    "job-scout": "public_role_research",
+    "company-intelligence-analyst": "public_role_research",
+    "market-sentiment-analyzer": "public_role_research",
+    "match-strategist": "strategy_and_learning",
+    "learning-path-strategist": "strategy_and_learning",
+    "personal-branding-strategist": "branding_and_resume",
+    "resume-format-gate": "branding_and_resume",
+    "resume-architect": "branding_and_resume",
+    "hr-supervisor": "hr_and_factual_gates",
+    "factual-reviewer": "hr_and_factual_gates",
+}
+
+AGENT_DEPENDENCIES = {
+    "match-strategist": [
+        "major-cluster-classifier",
+        "profile-extractor",
+        "jd-analyzer",
+        "job-scout",
+        "company-intelligence-analyst",
+        "market-sentiment-analyzer",
+    ],
+    "learning-path-strategist": ["match-strategist"],
+    "personal-branding-strategist": ["profile-extractor", "match-strategist", "learning-path-strategist"],
+    "resume-format-gate": ["profile-extractor"],
+    "resume-architect": ["resume-format-gate"],
+    "factual-reviewer": [
+        "resume-architect",
+        "match-strategist",
+        "learning-path-strategist",
+        "hr-supervisor",
+    ],
+    "hr-supervisor": [
+        "match-strategist",
+        "learning-path-strategist",
+        "personal-branding-strategist",
+        "resume-architect",
+        "factual-reviewer",
+    ],
+}
+
+MAX_PARALLEL_SUBAGENTS = 4
+
+
+def batch_for_agent(target_agent: str) -> str:
+    return AGENT_BATCH.get(target_agent, "strategy_and_learning")
+
+
+def output_refs_for_batches(queue: list[dict[str, Any]], batch_ids: list[str]) -> list[str]:
+    refs = []
+    for item in queue:
+        if item.get("batch_id") in batch_ids:
+            ref = item.get("output_artifact_target")
+            if ref and ref not in refs:
+                refs.append(ref)
+    return refs
+
+
+def output_refs_for_agents(queue: list[dict[str, Any]], target_agents: list[str]) -> list[str]:
+    refs = []
+    targets = set(target_agents)
+    for item in queue:
+        if item.get("target_agent") in targets:
+            ref = item.get("output_artifact_target")
+            if ref and ref not in refs:
+                refs.append(ref)
+    return refs
+
+
+def dependency_batches_for_agent(
+    target_agent: str,
+    available_dependency_agents: set[str],
+    present_batches: set[str],
+) -> list[str]:
+    batch_id = batch_for_agent(target_agent)
+    candidate_batches = list(BATCH_DEFINITIONS[batch_id]["depends_on_batches"])
+    for dependency_agent in AGENT_DEPENDENCIES.get(target_agent, []):
+        if dependency_agent in available_dependency_agents:
+            dependency_batch = batch_for_agent(dependency_agent)
+            if dependency_batch != batch_id and dependency_batch not in candidate_batches:
+                candidate_batches.append(dependency_batch)
+    return [batch for batch in BATCH_ORDER if batch in candidate_batches and batch in present_batches]
+
+
+def build_dispatch_batches(queue: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    batches = []
+    for batch_id in BATCH_ORDER:
+        items = [item for item in queue if item.get("batch_id") == batch_id]
+        if not items:
+            continue
+        definition = BATCH_DEFINITIONS[batch_id]
+        depends_on_batches = [
+            dep for dep in definition["depends_on_batches"] if any(item.get("batch_id") == dep for item in queue)
+        ]
+        batches.append(
+            {
+                "batch_id": batch_id,
+                "batch_index": len(batches),
+                "target_agents": [item["target_agent"] for item in items],
+                "depends_on_batches": depends_on_batches,
+                "depends_on_artifact_refs": output_refs_for_batches(queue, depends_on_batches),
+                "produces_artifact_refs": [item["output_artifact_target"] for item in items],
+                "max_parallel_subagents": min(MAX_PARALLEL_SUBAGENTS, len(items)),
+                "close_completed_subagents": True,
+                "artifact_handoff_required": True,
+                "description": definition["description"],
+            }
+        )
+    return batches
+
+
 def build_prompt_bundle(run_dir: Path, invocation_ref: str, invocation: dict[str, Any]) -> str:
     context_ref = invocation["runtime_context_packet_ref"]
     injection_ref = invocation["secondary_prompt_injection_ref"]
@@ -165,22 +310,44 @@ def build_plan(run_dir: Path, build_prompt_bundles: bool = False) -> dict[str, A
         raise ValueError("manifest.json: missing subagent_invocation_refs")
 
     queue = []
-    for index, invocation_ref in enumerate(invocation_refs):
-        invocation = read_invocation(run_dir, invocation_ref)
+    invocations = [(ref, read_invocation(run_dir, ref)) for ref in invocation_refs]
+    present_agents = {invocation["target_agent"] for _, invocation in invocations}
+    present_batches = {batch_for_agent(agent) for agent in present_agents}
+    for index, (invocation_ref, invocation) in enumerate(invocations):
         input_packet_ref = invocation["input_packet_ref"]
         allowed_user_facts_ref = invocation["allowed_user_facts_ref"]
         context_ref = invocation["runtime_context_packet_ref"]
         prompt_bundle_ref = ""
         if build_prompt_bundles:
             prompt_bundle_ref = build_prompt_bundle(run_dir, invocation_ref, invocation)
+        batch_id = batch_for_agent(invocation["target_agent"])
+        available_dependency_agents = {item["target_agent"] for item in queue}
+        depends_on_batches = dependency_batches_for_agent(
+            invocation["target_agent"],
+            available_dependency_agents,
+            present_batches,
+        )
+        depends_on_agents = [
+            agent
+            for agent in AGENT_DEPENDENCIES.get(invocation["target_agent"], [])
+            if agent in available_dependency_agents
+        ]
+        batch_artifact_refs = output_refs_for_batches(queue, depends_on_batches)
+        agent_artifact_refs = output_refs_for_agents(queue, depends_on_agents)
+        depends_on_artifact_refs = list(dict.fromkeys(batch_artifact_refs + agent_artifact_refs))
         queue.append(
             {
                 "queue_index": index,
                 "target_agent": invocation["target_agent"],
+                "batch_id": batch_id,
+                "depends_on_batches": depends_on_batches,
+                "depends_on_agents": depends_on_agents,
+                "depends_on_artifact_refs": depends_on_artifact_refs,
                 "invocation_ref": invocation_ref,
                 "prompt_bundle_ref": prompt_bundle_ref,
                 "input_refs": [context_ref, input_packet_ref, allowed_user_facts_ref],
                 "output_artifact_target": invocation["output_artifact_target"],
+                "close_after_artifact_persisted": True,
                 "dispatch_mode": "plan_only",
                 "status": "planned",
                 "allowed_network": False,
@@ -194,13 +361,22 @@ def build_plan(run_dir: Path, build_prompt_bundles: bool = False) -> dict[str, A
             }
         )
 
+    dispatch_batches = build_dispatch_batches(queue)
     return {
         "subagent_invocation_plan": {
             "run_id": manifest["run_id"],
             "plan_status": "ready",
             "created_from_manifest_ref": "manifest.json",
+            "dispatch_strategy": "batched_artifact_handoff",
+            "max_parallel_subagents": MAX_PARALLEL_SUBAGENTS,
+            "artifact_handoff_required": True,
+            "close_completed_subagents": True,
+            "dispatch_batches": dispatch_batches,
             "dispatch_queue": queue,
-            "execution_note": "Plan only: this file is not proof that subagents ran.",
+            "execution_note": (
+                "Plan only: this file is not proof that subagents ran. Dispatch by batch, "
+                "persist each role output artifact, then close completed subagents before the next batch."
+            ),
         }
     }
 
