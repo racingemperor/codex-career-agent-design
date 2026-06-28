@@ -369,6 +369,88 @@ def test_project_candidate_discovery_filters_shallow_projects_and_keeps_mid_star
     assert (out_dir / response["shortlist_md"]).is_file()
 
 
+def test_project_tools_accept_utf8_bom_json_from_windows_clients(tmp_path):
+    candidates_path = tmp_path / "project_candidates_bom.json"
+    candidates_path.write_text(
+        "\ufeff"
+        + json.dumps(
+            {
+                "candidates": [
+                    {
+                        "name": "ticket-flow-service",
+                        "repo_url": "https://github.com/example/ticket-flow-service",
+                        "bucket": "工单客服",
+                        "stars": 1800,
+                        "last_pushed_at": "2026-05-01",
+                        "language": "Java",
+                        "topics": ["spring-boot", "helpdesk", "mysql", "redis"],
+                        "description": "Helpdesk ticket workflow with Spring Boot, MySQL, Redis, Docker.",
+                        "readme_probe": "Ticket status flow, REST API, database migration, Docker compose, tests.",
+                    }
+                ]
+            },
+            ensure_ascii=False,
+        ),
+        encoding="utf-8",
+    )
+    discovery_dir = tmp_path / "discovery"
+
+    discovery = run_python(
+        PROJECT_CANDIDATE_DISCOVERER,
+        "--candidates-json",
+        str(candidates_path),
+        "--target-role",
+        "backend internship",
+        "--jd-text",
+        "Java Spring Boot MySQL Redis ticket workflow",
+        "--mode",
+        "mixed",
+        "--out-dir",
+        str(discovery_dir),
+    )
+
+    assert discovery.returncode == 0, discovery.stderr
+
+    repo = make_tiny_project_repo(tmp_path)
+    audit_dir = tmp_path / "audit"
+    audit_result = run_python(
+        PROJECT_REPO_AUDITOR,
+        "--repo",
+        str(repo),
+        "--name",
+        "tiny-ticket-project",
+        "--out-dir",
+        str(audit_dir),
+    )
+    assert audit_result.returncode == 0, audit_result.stderr
+    recommendation_path = tmp_path / "recommendation_bom.json"
+    recommendation_path.write_text(
+        "\ufeff"
+        + json.dumps(
+            {
+                "project_name": "tiny-ticket-project",
+                "target_role_family": "backend internship",
+                "planned_modifications": ["add ticket search API"],
+                "completed_modifications": ["read source structure"],
+                "proof_artifacts": ["local source audit"],
+            },
+            ensure_ascii=False,
+        ),
+        encoding="utf-8",
+    )
+    pack = run_python(
+        PROJECT_INTERVIEW_PACK_BUILDER,
+        "--audit-json",
+        str(audit_dir / "project_repo_audit.json"),
+        "--recommendation-json",
+        str(recommendation_path),
+        "--out-dir",
+        str(tmp_path / "pack"),
+    )
+
+    assert pack.returncode == 0, pack.stderr
+
+
 def make_tiny_project_repo(root: Path) -> Path:
     repo = root / "tiny_ticket_project"
     (repo / "routes").mkdir(parents=True)
