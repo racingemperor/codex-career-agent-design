@@ -47,6 +47,15 @@ SUBAGENT_ADAPTER_RUNNER = ROOT / ".agents" / "skills" / "career-pipeline" / "scr
 CAREER_PIPELINE_RUNNER = ROOT / ".agents" / "skills" / "career-pipeline" / "scripts" / "career_pipeline_run.py"
 PRODUCT_FLOW_RUNNER = ROOT / ".agents" / "skills" / "career-pipeline" / "scripts" / "run_product_flow.py"
 FINALIZER = ROOT / ".agents" / "skills" / "career-pipeline" / "scripts" / "finalize_runtime_run.py"
+RESUME_RENDERER = ROOT / ".agents" / "skills" / "career-pipeline" / "scripts" / "render_resume_artifacts.py"
+INCOMPLETE_USER_MANUAL_OUTPUTS = (
+    ROOT
+    / ".agents"
+    / "skills"
+    / "career-pipeline"
+    / "scripts"
+    / "build_incomplete_user_manual_outputs.py"
+)
 PROJECT_CANDIDATE_DISCOVERER = (
     ROOT / ".agents" / "skills" / "career-pipeline" / "scripts" / "discover_project_candidates.py"
 )
@@ -82,6 +91,8 @@ def test_skill_md_names_skill_relative_script_commands():
     assert "cd .agents/skills/career-pipeline" in text
     assert "python scripts/run_product_flow.py" in text
     assert "python scripts/collect_public_source_results.py" in text
+    assert "python scripts/build_incomplete_user_manual_outputs.py" in text
+    assert "python scripts/render_resume_artifacts.py --decision-package" in text
     assert "python scripts/simulate_runtime_run.py" in text
     assert "python scripts/discover_public_sources.py" in text
     assert "Do not run these commands from the repository root as `scripts/*.py`" in text
@@ -4094,6 +4105,221 @@ def test_resume_prompts_require_general_resume_and_delivery_artifacts_without_ta
         assert "image" in text or "图片" in text
     assert "resume generation gate" in interaction_flow
     assert "Lack of target blocks company-specific tailoring, not the general resume" in interaction_flow
+
+
+def test_resume_renderer_exports_docx_pdf_png_from_markdown(tmp_path):
+    draft_path = tmp_path / "resume.md"
+    draft_path.write_text(
+        "\n".join(
+            [
+                "# 计算机类大三学生",
+                "",
+                "## 学校信息",
+                "- 专业：计算机类",
+                "- 年级：大三",
+                "",
+                "## 掌握技能",
+                "- Python：课程作业和脚本基础",
+                "",
+                "## 项目竞赛经历",
+                "- 课程项目：已完成课程作业，具体职责和结果待补充。",
+                "",
+                "## 个人性格和潜力",
+                "- 对工程实践和实习方向有探索意愿。",
+            ]
+        ),
+        encoding="utf-8",
+    )
+    out_dir = tmp_path / "rendered"
+
+    result = run_python(
+        RESUME_RENDERER,
+        "--draft-md",
+        str(draft_path),
+        "--out-dir",
+        str(out_dir),
+        "--basename",
+        "general_resume",
+    )
+
+    assert result.returncode == 0, result.stderr
+    response = json.loads(result.stdout)["resume_render_response"]
+    assert response["exit_status"] == "success"
+    artifact_refs = {item["format"]: Path(item["artifact_ref"]) for item in response["resume_delivery_artifacts"]}
+    assert set(artifact_refs) == {"docx", "pdf", "image"}
+    for path in artifact_refs.values():
+        assert path.is_file()
+        assert path.stat().st_size > 100
+    assert artifact_refs["docx"].suffix == ".docx"
+    assert artifact_refs["pdf"].suffix == ".pdf"
+    assert artifact_refs["image"].suffix == ".png"
+    assert response["page_count"] >= 1
+
+
+def test_resume_renderer_extracts_resume_from_decision_package(tmp_path):
+    decision_package_path = tmp_path / "decision_package.json"
+    decision_package_path.write_text(
+        json.dumps(
+            {
+                "decision_package": {
+                    "user_facing_package": {
+                        "resume_draft": {
+                            "final_resume_draft": "\n".join(
+                                [
+                                    "# Software Engineering Junior",
+                                    "",
+                                    "## School Information",
+                                    "- Major: Software Engineering",
+                                    "- Grade: Junior",
+                                    "",
+                                    "## Skills",
+                                    "- Python: basic scripting and coursework.",
+                                    "",
+                                    "## Projects",
+                                    "- Course project: details and ownership pending user supplement.",
+                                ]
+                            )
+                        }
+                    }
+                }
+            },
+            ensure_ascii=False,
+        ),
+        encoding="utf-8",
+    )
+    out_dir = tmp_path / "rendered"
+
+    result = run_python(
+        RESUME_RENDERER,
+        "--decision-package",
+        str(decision_package_path),
+        "--out-dir",
+        str(out_dir),
+        "--basename",
+        "general_resume",
+    )
+
+    assert result.returncode == 0, result.stderr
+    response = json.loads(result.stdout)["resume_render_response"]
+    assert response["source_decision_package_ref"] == str(decision_package_path)
+    assert Path(response["source_draft_ref"]).is_file()
+    assert (out_dir / "resume_draft.md").read_text(encoding="utf-8").startswith("# Software")
+    artifact_refs = {item["format"]: Path(item["artifact_ref"]) for item in response["resume_delivery_artifacts"]}
+    assert set(artifact_refs) == {"docx", "pdf", "image"}
+    assert all(path.is_file() for path in artifact_refs.values())
+
+
+def test_incomplete_user_product_flow_reaches_general_resume_artifacts(tmp_path):
+    run_root = tmp_path / ".career-pipeline-runs"
+    product = run_python(
+        PRODUCT_FLOW_RUNNER,
+        "--task-type",
+        "job_search",
+        "--route",
+        "job_search",
+        "--input-text",
+        "我是计算机相关专业大三，会一点 Python，想找实习但不知道投什么。",
+        "--run-root",
+        str(run_root),
+    )
+    assert product.returncode == 0, product.stderr
+    run_id = json.loads(product.stdout)["product_flow_response"]["run_id"]
+    run_dir = run_root / run_id
+
+    notes_path = tmp_path / "public-source-notes.md"
+    notes_path.write_text(
+        "\n".join(
+            [
+                "- task_id: official-company-career",
+                "  url: https://jobs.bytedance.com/campus",
+                "  title: ByteDance campus recruiting public entry",
+                "  source_type_hint: official_or_primary",
+                "  snippet: Campus recruiting and internship search entrypoint.",
+                "",
+                "- task_id: recruitment-platform-public-jd",
+                "  url: https://www.nowcoder.com/jobs",
+                "  title: Nowcoder public jobs entry",
+                "  source_type_hint: recruitment_platform_jd",
+                "  snippet: Public jobs search entry for interns and campus candidates.",
+            ]
+        ),
+        encoding="utf-8",
+    )
+    collected = run_python(
+        PUBLIC_SOURCE_RESULT_COLLECTOR,
+        "--run-dir",
+        str(run_dir),
+        "--notes-md",
+        str(notes_path),
+        "--output",
+        "evidence/search_results.generated.json",
+    )
+    assert collected.returncode == 0, collected.stderr
+    discovered = run_python(
+        PUBLIC_SOURCE_DISCOVERER,
+        "--run-dir",
+        str(run_dir),
+        "--search-results-json",
+        str(run_dir / "evidence" / "search_results.generated.json"),
+    )
+    assert discovered.returncode == 0, discovered.stderr
+
+    manual_outputs = run_python(
+        INCOMPLETE_USER_MANUAL_OUTPUTS,
+        "--run-dir",
+        str(run_dir),
+        "--out-dir",
+        str(tmp_path / "manual-outputs"),
+    )
+    assert manual_outputs.returncode == 0, manual_outputs.stderr
+    output_refs = json.loads(manual_outputs.stdout)["manual_output_builder_response"]["output_paths"]
+    backfill_args: list[str] = []
+    for target_agent, output_path in output_refs.items():
+        backfill_args.extend(["--backfill-output", f"{target_agent}={output_path}"])
+    backfill = run_python(
+        PLAN_EXECUTOR,
+        "--run-dir",
+        str(run_dir),
+        "--manual-controller-execution",
+        *backfill_args,
+    )
+    assert backfill.returncode == 0, backfill.stderr
+
+    finalized = run_python(
+        FINALIZER,
+        "--run-dir",
+        str(run_dir),
+        "--real-subagent-execution",
+        "--execution-mode",
+        "manual-controller",
+    )
+    assert finalized.returncode == 0, finalized.stderr
+    final_ref = json.loads(finalized.stdout)["finalizer_response"]["final_package_ref"]
+    package = json.loads((run_dir / final_ref).read_text(encoding="utf-8"))["decision_package"]
+    user_package = package["user_facing_package"]
+    assert user_package["resume_draft"]["resume_version"] == "campus_general_cn_one_page"
+    assert user_package["resume_draft"]["incomplete_resume"] is True
+    assert user_package["recommended_targets"]
+    assert all(target["public_urls"] for target in user_package["recommended_targets"])
+    assert "fit_score" in package["blocked_outputs"]
+
+    rendered = run_python(
+        RESUME_RENDERER,
+        "--decision-package",
+        str(run_dir / final_ref),
+        "--out-dir",
+        str(run_dir / "final" / "resume_artifacts"),
+        "--basename",
+        "general_resume",
+    )
+    assert rendered.returncode == 0, rendered.stderr
+    render_response = json.loads(rendered.stdout)["resume_render_response"]
+    artifact_refs = {
+        item["format"]: Path(item["artifact_ref"]) for item in render_response["resume_delivery_artifacts"]
+    }
+    assert set(artifact_refs) == {"docx", "pdf", "image"}
+    assert all(path.is_file() and path.stat().st_size > 100 for path in artifact_refs.values())
+    assert (run_dir / "final" / "resume_artifacts" / "resume_draft.md").is_file()
 
 
 def test_simulator_supports_target_job_fit_route_with_target_context(tmp_path):

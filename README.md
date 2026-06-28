@@ -247,6 +247,22 @@ The collector maps `source_type_hint` into the normal `source_type` field and st
 
 Official recruiting homepages, campus entrypoints, job-search pages, and report search entrypoints can be shown as useful public URLs, but they are exploration entrypoints. They must not be treated as concrete JD evidence, role requirements, final application priority, or resume-tailoring proof unless the fetched public text contains duties, qualifications, skill requirements, or other claim-specific evidence.
 
+After a final decision package contains a factual-reviewed resume draft, export the resume files locally:
+
+```bash
+python scripts/render_resume_artifacts.py --decision-package ../../../.career-pipeline-runs/<run_id>/final/decision_package.json --out-dir ../../../.career-pipeline-runs/<run_id>/final/resume_artifacts --basename general_resume
+```
+
+This produces an editable Word DOCX, printable PDF, first-page PNG preview, and `resume_draft.md` copy in the artifact directory. The renderer can also accept a direct Markdown draft through `--draft-md`.
+
+For incomplete-user delivery validation, the repository includes a bounded Manual Controller helper:
+
+```bash
+python scripts/build_incomplete_user_manual_outputs.py --run-dir ../../../.career-pipeline-runs/<run_id> --out-dir ../../../.career-pipeline-runs/<run_id>/manual-controller-outputs
+```
+
+Use it only to verify that a vague first message can flow into safe exploration guidance, a broad campus/internship resume draft, and DOCX/PDF/PNG artifacts. It is not a live subagent adapter and should not be treated as proof of exact fit scores, final application priority, or company-specific tailoring.
+
 ## Contract Smoke Run
 
 This command checks local wiring only. It does not call real subagents and does not browse live recruitment sites:
@@ -331,6 +347,8 @@ Implemented:
 - Manual Controller MVP and Codex Desktop adapter documentation.
 - General resume generation gate for users without a concrete target role.
 - Resume delivery contract for Word DOCX, PDF, and one-page image artifacts after factual and HR review.
+- Local resume renderer for DOCX, PDF, and PNG exports from Markdown or `final/decision_package.json`.
+- Incomplete-user delivery validation path from plain chat to broad general resume artifacts.
 
 Not yet packaged:
 
@@ -342,7 +360,7 @@ Not yet packaged:
 
 - Productize the repo-scoped Skill into a Codex plugin after the user-side workflow stabilizes.
 - Add stronger real-source adapters for public JD and official career-page discovery.
-- Add stronger DOCX/PDF/image renderer automation and visual QA for final resume files.
+- Strengthen DOCX/PDF/image visual QA and template styling for final resume files.
 - Expand beyond engineering into science, humanities, social science, business, arts/design, medicine, agriculture, law/public affairs, and interdisciplinary users.
 - Add interview preparation from the final resume and target JD.
 

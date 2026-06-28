@@ -55,10 +55,13 @@ python scripts/discover_project_candidates.py --candidates-json <project_candida
 python scripts/audit_project_repository.py --repo <local_project_repo> --name <project-name> --out-dir ../../../.career-pipeline-runs/<run_id>/projects/<project-name>/audit
 python scripts/build_project_interview_pack.py --audit-json ../../../.career-pipeline-runs/<run_id>/projects/<project-name>/audit/project_repo_audit.json --recommendation-json <project_recommendation.json> --out-dir ../../../.career-pipeline-runs/<run_id>/projects/<project-name>/pack
 python scripts/build_subagent_work_orders.py --run-dir ../../../.career-pipeline-runs/<run_id>
+python scripts/build_incomplete_user_manual_outputs.py --run-dir ../../../.career-pipeline-runs/<run_id> --out-dir ../../../.career-pipeline-runs/<run_id>/manual-controller-outputs
 python scripts/run_subagent_adapter.py --run-dir ../../../.career-pipeline-runs/<run_id> --mock-blocked
 python scripts/run_subagent_adapter.py --run-dir ../../../.career-pipeline-runs/<run_id> --adapter-command <adapter-executable> --adapter-arg <adapter-script-or-config>
 python scripts/finalize_runtime_run.py --run-dir ../../../.career-pipeline-runs/<run_id> --real-subagent-execution
 python scripts/finalize_runtime_run.py --run-dir ../../../.career-pipeline-runs/<run_id> --real-subagent-execution --execution-mode manual-controller
+python scripts/render_resume_artifacts.py --decision-package ../../../.career-pipeline-runs/<run_id>/final/decision_package.json --out-dir ../../../.career-pipeline-runs/<run_id>/final/resume_artifacts --basename general_resume
+python scripts/render_resume_artifacts.py --draft-md ../../../.career-pipeline-runs/<run_id>/final/resume_draft.md --out-dir ../../../.career-pipeline-runs/<run_id>/final/resume_artifacts --basename general_resume
 python scripts/execute_subagent_plan.py --run-dir ../../../.career-pipeline-runs/<run_id> --dry-run
 ```
 
@@ -80,8 +83,10 @@ Do not run these commands from the repository root as `scripts/*.py`; the `scrip
 - `scripts/audit_project_repository.py` audits a locally cloned project repository for README, dependencies, Docker/deploy files, tests, API/backend, database/state, async jobs, AI/agent, and source evidence points. Resume project claims should not be treated as source-verified until this audit or an equivalent local-source audit exists.
 - `scripts/build_project_interview_pack.py` turns a project audit plus recommendation JSON into a Markdown project interview pack with project positioning, existing capability, suggested modifications, resume-ready claims, STAR bullets, interviewer follow-ups, core-code explanation paths, and proof artifacts.
 - `scripts/build_subagent_work_orders.py` exports adapter-ready work orders from a plan with prompt bundle refs, batch ids, dependency artifact refs, close-after-output instructions, and backfill contracts. This is a handoff contract, not proof that subagents ran.
+- `scripts/build_incomplete_user_manual_outputs.py` builds conservative Manual Controller role-output fixtures for validating the incomplete-user general-resume delivery path. It is not a live subagent adapter and must not be used as proof of real role judgment beyond this bounded validation scenario.
 - `scripts/run_subagent_adapter.py` is the adapter runner entrypoint. `--mock-blocked` writes schema-valid blocked role outputs and always sets `real_subagent_execution = false`; `--adapter-command` runs an external command adapter per work order and sets `real_subagent_execution = true` only when every role output validates and finishes as `done` or `done_with_warnings`.
 - `scripts/finalize_runtime_run.py` assembles `final/decision_package.json` only after required role outputs are present, non-blocked, validated, and produced by a real adapter or an explicitly marked Manual Controller MVP run.
+- `scripts/render_resume_artifacts.py` exports a validated resume Markdown draft or `final/decision_package.json` resume draft into Word DOCX, PDF, and first-page PNG artifacts. It also writes `final/resume_artifacts/resume_draft.md` when rendering from a decision package so users do not need to hand-edit JSON.
 - `scripts/execute_subagent_plan.py` inspects a plan-only queue, enforces human/source-policy gates before real execution, writes redacted execution events, and can backfill externally produced role outputs after schema checks. Use `--manual-controller-execution` only when the main Codex controller actually dispatched separated role subagents or separated role passes; it stamps backfilled outputs with manual-controller real-execution metadata for finalizer review.
 - `scripts/continue_runtime_run.py` updates the same run with one compact batch of user-owned facts, refreshes the runtime context packet, and returns the run to `injection_ready`.
 
