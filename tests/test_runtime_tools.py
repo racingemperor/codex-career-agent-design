@@ -165,7 +165,7 @@ def test_real_user_flow_prefers_codex_desktop_adapter_when_available():
     assert "subagent_work_orders.json" in flow_text
     assert "execute_subagent_plan.py --manual-controller-execution" in flow_text
     assert "finalize_runtime_run.py --execution-mode manual-controller" in flow_text
-    assert "Codex Desktop built-in subagent adapter" in readme_text
+    assert "Codex Desktop 内置 subagent adapter" in readme_text
     assert "mock-blocked" in readme_text
 
 
@@ -185,16 +185,16 @@ def test_readme_documents_product_flow_and_public_source_collection_helpers():
 
     assert "scripts/run_product_flow.py" in readme_text
     assert "scripts/collect_public_source_results.py" in readme_text
-    assert "without hand-writing JSON" in readme_text
+    assert "不需要手写 JSON" in readme_text
     assert "main Codex controller has already gathered public URLs" in network_text
     assert "browser search or visible web results" in network_text
     assert "title=" in network_text
     assert "snippet=" in network_text
-    assert "YAML-like" in readme_text
+    assert "类似 YAML" in readme_text
     assert "source_type_hint" in readme_text
     assert "YAML-like" in network_text
     assert "source_type_hint" in network_text
-    assert "exploration entrypoints" in readme_text
+    assert "探索入口" in readme_text
     assert "generic_entrypoint_only" in network_text
 
 
@@ -4962,8 +4962,8 @@ def test_standard_real_user_flow_is_documented_without_internal_terms():
             assert phrase in text
         assert "用户不需要了解 subagent、JSON、runner" in text
 
-    assert "plain chat" in readme
-    assert "They should not need to understand subagents, JSON, runners" in readme
+    assert "自然聊天" in readme
+    assert "用户不需要理解 subagent、JSON、runner 或 adapter" in readme
 
 
 def test_incomplete_user_flow_pressure_case_is_documented_as_standard_case():
