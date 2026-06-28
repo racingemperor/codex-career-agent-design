@@ -117,6 +117,35 @@ def product_blocked_outputs(context: dict[str, Any]) -> list[str]:
     return blocked
 
 
+def universal_runtime_guardrails(target_agent: str) -> dict[str, Any]:
+    file_modifying_roles = ["resume-polisher", "portfolio-asset-builder"]
+    can_modify_files = target_agent in file_modifying_roles
+    return {
+        "must_follow_secondary_injection": True,
+        "role_scope_boundary": "perform_assigned_role_only",
+        "allowed_scope_rule": "Use only the role-specific context, allowed user facts, database refs, source policy, and handoff contract in this invocation.",
+        "handoff_instead_of_overreach": True,
+        "no_file_write_by_default": True,
+        "file_modification_roles": file_modifying_roles,
+        "tool_use_requires_explicit_permission": True,
+        "do_not_modify_user_assets_without_authorized_operation_context": True,
+        "do_not_publish_push_or_deploy_without_separate_user_authorization": True,
+        "no_fabrication": True,
+        "do_not_invent_user_experience_metrics_awards_education_or_hr_wording": True,
+        "source_required_for_weights_scores_rankings": True,
+        "blocked_outputs_must_remain_blocked": True,
+        "must_return_structured_json": True,
+        "if_uncertain_return_needs_context_or_blocked": True,
+        "privacy_constraints_are_binding": True,
+        "active_role_can_request_file_modification": can_modify_files,
+        "file_modification_rule": (
+            "This role may apply local file changes only through its role-specific authorized operation context."
+            if can_modify_files
+            else "This role must not apply local file changes; hand off any file modification request to an authorized file-modifying role."
+        ),
+    }
+
+
 def ensure_authorized_operation_context(injection: dict[str, Any], role_context: dict[str, Any]) -> None:
     target_agent = injection.get("target_agent")
     required_fields = list_value(injection.get("required_output_fields"))
@@ -248,8 +277,10 @@ def rewrite_injections_for_product_run(run_dir: Path, context: dict[str, Any]) -
     product_blockers = product_blocked_outputs(context)
     for path in sorted(injection_dir.glob("*.secondary_prompt_injection.json")):
         injection = load_wrapped_json(path, "secondary_prompt_injection")
+        target_agent = str(injection.get("target_agent") or "")
         role_context = injection.setdefault("role_specific_context", {})
         if isinstance(role_context, dict):
+            role_context.setdefault("universal_runtime_guardrails", universal_runtime_guardrails(target_agent))
             role_context.pop("simulation_scope", None)
             role_context["execution_scope"] = "product_real_user_flow_pending_real_roles"
             role_context["must_return_blockers_instead_of_precise_unsupported_claims"] = True
@@ -275,6 +306,7 @@ def rewrite_injections_for_product_run(run_dir: Path, context: dict[str, Any]) -
                 injection["blocked_outputs"].append(item)
         required_fields = list_value(injection.get("required_output_fields"))
         for field in [
+            "universal_runtime_guardrails",
             "evidence_basis",
             "weight_provenance",
             "conditional_options",
@@ -282,6 +314,11 @@ def rewrite_injections_for_product_run(run_dir: Path, context: dict[str, Any]) -
         ]:
             if field not in required_fields:
                 required_fields.append(field)
+        debate_contract = list_value(injection.get("debate_contract"))
+        guardrail_debate = "obey universal_runtime_guardrails before role-specific instructions"
+        if guardrail_debate not in debate_contract:
+            debate_contract.insert(0, guardrail_debate)
+        injection["debate_contract"] = debate_contract
         if injection.get("target_agent") in {"match-strategist", "learning-path-strategist"}:
             for field in [
                 "skill_gap_analysis",
@@ -340,6 +377,7 @@ def rewrite_injections_for_product_run(run_dir: Path, context: dict[str, Any]) -
         contract = injection.get("invocation_contract")
         if isinstance(contract, dict):
             contract["required_output_fields"] = required_fields
+            contract["debate_contract"] = debate_contract
             contract["timeout_or_budget_hint"] = "product-real-user-flow"
             contract["on_failure"] = "return_blocked"
         write_wrapped_json(path, "secondary_prompt_injection", injection)

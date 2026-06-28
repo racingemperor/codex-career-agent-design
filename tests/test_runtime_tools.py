@@ -344,6 +344,58 @@ def test_resume_and_portfolio_injections_carry_authorized_operation_guidance(tmp
     ]
 
 
+def test_all_secondary_injections_include_universal_runtime_guardrails(tmp_path):
+    run_root = tmp_path / ".career-pipeline-runs"
+    simulate = run_python(
+        SIMULATOR,
+        "--task-type",
+        "job_search",
+        "--input-text",
+        "Computer science junior, Python, has a resume and GitHub profile, wants internship planning.",
+        "--run-root",
+        str(run_root),
+        "--route",
+        "product_job_search",
+    )
+    assert simulate.returncode == 0, simulate.stderr
+    run_id = json.loads(simulate.stdout)["runner_response"]["run_id"]
+    run_dir = run_root / run_id
+
+    injection_paths = sorted((run_dir / "injections").glob("*.secondary_prompt_injection.json"))
+    assert injection_paths
+    file_modifying_roles = {"resume-polisher", "portfolio-asset-builder"}
+
+    for path in injection_paths:
+        injection = json.loads(path.read_text(encoding="utf-8"))["secondary_prompt_injection"]
+        target_agent = injection["target_agent"]
+        role_context = injection["role_specific_context"]
+        guardrails = role_context["universal_runtime_guardrails"]
+
+        assert guardrails["must_follow_secondary_injection"] is True
+        assert guardrails["role_scope_boundary"] == "perform_assigned_role_only"
+        assert guardrails["no_file_write_by_default"] is True
+        assert guardrails["tool_use_requires_explicit_permission"] is True
+        assert guardrails["do_not_modify_user_assets_without_authorized_operation_context"] is True
+        assert guardrails["do_not_publish_push_or_deploy_without_separate_user_authorization"] is True
+        assert guardrails["no_fabrication"] is True
+        assert guardrails["source_required_for_weights_scores_rankings"] is True
+        assert guardrails["blocked_outputs_must_remain_blocked"] is True
+        assert guardrails["handoff_instead_of_overreach"] is True
+        assert guardrails["must_return_structured_json"] is True
+        assert guardrails["if_uncertain_return_needs_context_or_blocked"] is True
+        assert "universal_runtime_guardrails" in injection["required_output_fields"]
+        assert "obey universal_runtime_guardrails before role-specific instructions" in injection[
+            "debate_contract"
+        ]
+
+        serialized = json.dumps(role_context, ensure_ascii=False)
+        if target_agent not in file_modifying_roles:
+            assert "apply_tool_ref" not in serialized
+            assert "apply_authorized_local_changes" not in serialized
+            assert "authorized_resume_editing" not in serialized
+            assert "authorized_asset_editing" not in serialized
+
+
 def test_role_prompts_and_protocols_document_secondary_injected_file_operations():
     resume_prompt = (ROOT / ".codex" / "agents" / "resume-polisher.toml").read_text(encoding="utf-8")
     portfolio_prompt = (ROOT / ".codex" / "agents" / "portfolio-asset-builder.toml").read_text(
@@ -396,6 +448,35 @@ def test_role_prompts_and_protocols_document_secondary_injected_file_operations(
 
     assert "apply_resume_polish.py" in skill_text
     assert "apply_portfolio_asset_changes.py" in skill_text
+
+
+def test_protocols_document_universal_runtime_guardrails():
+    injection_protocol = (
+        ROOT
+        / ".agents"
+        / "skills"
+        / "career-pipeline"
+        / "references"
+        / "runtime-subagent-injection-protocol.md"
+    ).read_text(encoding="utf-8")
+    invocation_contract = (
+        ROOT
+        / ".agents"
+        / "skills"
+        / "career-pipeline"
+        / "references"
+        / "subagent-invocation-contract.md"
+    ).read_text(encoding="utf-8")
+    skill_text = SKILL_MD.read_text(encoding="utf-8")
+
+    for text in [injection_protocol, invocation_contract, skill_text]:
+        assert "universal_runtime_guardrails" in text
+        assert "no_file_write_by_default" in text
+        assert "tool_use_requires_explicit_permission" in text
+        assert "blocked_outputs_must_remain_blocked" in text
+        assert "handoff_instead_of_overreach" in text
+        assert "must_return_structured_json" in text
+        assert "automatically injected" in text
 
 
 def test_skill_md_links_runtime_network_and_adapter_setup():

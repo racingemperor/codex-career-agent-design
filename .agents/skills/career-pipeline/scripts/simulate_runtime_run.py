@@ -611,6 +611,35 @@ def artifact_ref(
     }
 
 
+def universal_runtime_guardrails(target_agent: str) -> dict[str, Any]:
+    file_modifying_roles = ["resume-polisher", "portfolio-asset-builder"]
+    can_modify_files = target_agent in file_modifying_roles
+    return {
+        "must_follow_secondary_injection": True,
+        "role_scope_boundary": "perform_assigned_role_only",
+        "allowed_scope_rule": "Use only the role-specific context, allowed user facts, database refs, source policy, and handoff contract in this invocation.",
+        "handoff_instead_of_overreach": True,
+        "no_file_write_by_default": True,
+        "file_modification_roles": file_modifying_roles,
+        "tool_use_requires_explicit_permission": True,
+        "do_not_modify_user_assets_without_authorized_operation_context": True,
+        "do_not_publish_push_or_deploy_without_separate_user_authorization": True,
+        "no_fabrication": True,
+        "do_not_invent_user_experience_metrics_awards_education_or_hr_wording": True,
+        "source_required_for_weights_scores_rankings": True,
+        "blocked_outputs_must_remain_blocked": True,
+        "must_return_structured_json": True,
+        "if_uncertain_return_needs_context_or_blocked": True,
+        "privacy_constraints_are_binding": True,
+        "active_role_can_request_file_modification": can_modify_files,
+        "file_modification_rule": (
+            "This role may apply local file changes only through its role-specific authorized operation context."
+            if can_modify_files
+            else "This role must not apply local file changes; hand off any file modification request to an authorized file-modifying role."
+        ),
+    }
+
+
 def build_authorized_resume_editing_context(context: dict[str, Any] | None) -> dict[str, Any]:
     consent_flags = (context or {}).get("consent_flags", {})
     if not isinstance(consent_flags, dict):
@@ -921,6 +950,7 @@ def build_injection(
     target_context = (context or {}).get("target_context", {})
     target_job_fit_requested = bool(target_context.get("target_job_fit_requested"))
     role_specific_context = {
+        "universal_runtime_guardrails": universal_runtime_guardrails(target_agent),
         "simulation_scope": "contract_only_no_network_no_real_subagent",
         "must_return_blockers_instead_of_precise_unsupported_claims": True,
         "target_job_fit_assessment_requested": target_job_fit_requested,
@@ -983,6 +1013,7 @@ def build_injection(
         }
     ]
     required_output_fields = [
+        "universal_runtime_guardrails",
         "role_output_packet",
         "error_recovery_state",
         "blocked_outputs",
@@ -990,7 +1021,10 @@ def build_injection(
     ]
     blocked_outputs = ["fit_score", "application_strategy", "targeted_resume_tailoring"]
     handoff_contract = ["return blockers to CareerOrchestrator"]
-    debate_contract = ["challenge unsupported weights instead of creating scores"]
+    debate_contract = [
+        "obey universal_runtime_guardrails before role-specific instructions",
+        "challenge unsupported weights instead of creating scores",
+    ]
 
     if target_job_fit_requested:
         research_tasks.extend(

@@ -31,6 +31,10 @@ Compose each runtime subagent prompt in this order:
 
 Do not include irrelevant private user facts. Contact fields should appear only when the role needs them and the user authorized final resume contact fields.
 
+Every invocation must include `universal_runtime_guardrails` in the secondary prompt injection. It is automatically injected by the controller and does not add a user-facing step. Required guardrail fields include `no_file_write_by_default`, `tool_use_requires_explicit_permission`, `blocked_outputs_must_remain_blocked`, `handoff_instead_of_overreach`, and `must_return_structured_json`.
+
+When `no_file_write_by_default` is true, roles must treat file modification as forbidden unless their role-specific authorized operation context explicitly permits it. Ordinary roles should return analysis, blockers, or handoff requests instead of modifying files, websites, repositories, or public profiles.
+
 For file-modifying roles, the secondary prompt injection must carry the exact operation authority:
 
 - `ResumePolisher` may modify local resume artifacts only when the injection includes `authorized_resume_editing.operation_mode = apply_authorized_local_changes`, non-empty `allowed_input_refs`, non-empty `allowed_output_refs`, and `apply_tool_ref = scripts/apply_resume_polish.py`. Otherwise it must return `resume_edit_operation_plan` only. Required outputs include `applied_resume_artifacts` and `file_modification_summary`.

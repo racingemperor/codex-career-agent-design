@@ -152,6 +152,7 @@ The packet should be compact enough to pass to every user-side subagent, but spe
 
 Each injected prompt must include:
 
+- `universal_runtime_guardrails`, automatically injected for every specialist role. This does not add a user-facing step; it is an internal controller guardrail that stabilizes subagent behavior.
 - the user's first-round profile, goal, and known facts relevant to that role.
 - the role's exact scope and prohibitions from its static prompt.
 - the smallest static database subset needed by that role.
@@ -161,6 +162,32 @@ Each injected prompt must include:
 - hard-data weight requirements and `weight_provenance` expectations.
 - handoff fields for downstream roles.
 - debate fields for challenging weak evidence.
+
+## Universal Runtime Guardrails
+
+Every secondary prompt injection must include `role_specific_context.universal_runtime_guardrails`. The controller injects it automatically before any role-specific instructions.
+
+```json
+{
+  "universal_runtime_guardrails": {
+    "must_follow_secondary_injection": true,
+    "role_scope_boundary": "perform_assigned_role_only",
+    "handoff_instead_of_overreach": true,
+    "no_file_write_by_default": true,
+    "tool_use_requires_explicit_permission": true,
+    "do_not_modify_user_assets_without_authorized_operation_context": true,
+    "do_not_publish_push_or_deploy_without_separate_user_authorization": true,
+    "no_fabrication": true,
+    "source_required_for_weights_scores_rankings": true,
+    "blocked_outputs_must_remain_blocked": true,
+    "must_return_structured_json": true,
+    "if_uncertain_return_needs_context_or_blocked": true,
+    "privacy_constraints_are_binding": true
+  }
+}
+```
+
+The guardrails apply to all roles. Ordinary roles must not modify files, publish pages, push repositories, or bypass blocked outputs. They should hand off file or asset modification requests to `resume-polisher` or `portfolio-asset-builder`, and those roles still need their authorized operation context before writing.
 
 ## Secondary-Injected File Operations
 
@@ -214,6 +241,7 @@ Before a specialist subagent runs, the orchestrator should verify:
 - `runtime_context_packet_ref` is present.
 - role-specific context is non-empty.
 - source policy and privacy boundaries are included.
+- `universal_runtime_guardrails` is present in `role_specific_context`.
 - hard-data weight tasks are explicit when the role may set weights, priorities, rankings, scores, thresholds, or confidence.
 - `invocation_contract` can be deterministically transformed into the canonical `subagent_invocation`: it has `invocation_id`, `input_packet_ref`, `allowed_user_facts_ref`, `output_artifact_target`, `privacy_constraints`, `expected_artifact_types`, required log events, retry policy, and `on_failure`.
 - blocked outputs are listed when user-owned facts or public evidence are missing.
