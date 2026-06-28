@@ -1032,6 +1032,10 @@ def build_injection(
             "required_delivery_formats": resume_context.get("required_delivery_formats", ["docx", "pdf", "image"]),
             "delivery_artifact_policy": resume_context.get("delivery_artifact_policy", ""),
             "omit_missing_sections_without_placeholders": True,
+            "growth_resume_preview_policy": (
+                "When learning or project recommendations exist, return growth_resume_preview as a clearly "
+                "conditional after-learning preview. It must not be used as completed current experience."
+            ),
         }
         required_output_fields.extend(
             [
@@ -1042,6 +1046,7 @@ def build_injection(
                 "format_quality_after_generation",
                 "resume_artifact",
                 "final_resume_draft",
+                "growth_resume_preview",
                 "resume_delivery_artifacts",
             ]
         )
@@ -1054,7 +1059,7 @@ def build_injection(
         handoff_contract.extend(
             [
                 "produce a broad campus/internship resume draft when no concrete target exists",
-                "handoff final_resume_draft and delivery artifacts to FactualReviewer and HRSupervisor",
+                "handoff final_resume_draft, growth_resume_preview, and delivery artifacts to FactualReviewer and HRSupervisor",
             ]
         )
         debate_contract.extend(

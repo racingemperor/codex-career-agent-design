@@ -282,6 +282,7 @@ def build_prompt_bundle(run_dir: Path, invocation_ref: str, invocation: dict[str
                         "application_readiness_decision",
                         "learning_plan_before_application",
                         "targeted_resume_tailoring",
+                        "growth_resume_preview",
                     ],
                 },
                 "handoff_and_debate_contract": {

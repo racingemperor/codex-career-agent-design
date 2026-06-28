@@ -49,9 +49,10 @@ This is the standard product flow from the first user sentence to the final user
 6. `learning advice`: convert gaps into learnable skills, concrete project recommendations, proof artifacts, and resume-conversion conditions.
 7. `resume direction and generation gate`: run ResumeFormatGate after profile and learning evidence are available. This includes the `resume generation gate` for drafting. If no target exists, select the broad campus/internship version instead of blocking resume generation only for lack of a target.
 8. `general or targeted resume draft`: when no target exists, ResumeArchitect generates a general campus/internship draft from verified facts. When a target JD or role family exists, it generates one-role-one-resume only when evidence allows. Missing facts are omitted or requested; they are never fabricated.
-9. `resume delivery artifacts`: after factual and HR review, export or request renderer export for Word DOCX, PDF, and one-page image. If files are not produced in the role run, mark them pending renderer after factual review rather than claiming they exist.
-10. `company-bound HR question check`: if a target or recommended company exists, search official/verified HR public sources for real screening wording; candidate experience and social media weak signals are preparation only.
-11. `final user-facing report`: render a concise Chinese report with current positioning, recommended directions or job pool, reasons, gaps, learning/project plan, concrete project suggestions, resume writing direction or draft, resume artifacts, company-bound HR/面试可能追问, public URLs, HR confirmation items, and next three actions.
+9. `growth_resume_preview`: when learning or project recommendations exist, ResumeArchitect may also produce a clearly labeled second resume version showing how the resume could look after the recommended skills and projects are completed. It must list completion conditions and cannot be presented as current factual experience.
+10. `resume delivery artifacts`: after factual and HR review, export or request renderer export for Word DOCX, PDF, and one-page image. If files are not produced in the role run, mark them pending renderer after factual review rather than claiming they exist.
+11. `company-bound HR question check`: if a target or recommended company exists, search official/verified HR public sources for real screening wording; candidate experience and social media weak signals are preparation only.
+12. `final user-facing report`: render a concise Chinese report with current positioning, recommended directions or job pool, reasons, gaps, learning/project plan, concrete project suggestions, current factual resume draft, after-learning resume preview, resume artifacts, company-bound HR/面试可能追问, public URLs, HR confirmation items, and next three actions.
 
 For incomplete first-round users, do not stall the flow. Give safe direction clusters, learning path, and resume packaging advice from available facts, but avoid concrete job recommendations without public URLs and avoid company-specific tailoring without evidence.
 
@@ -149,6 +150,7 @@ Use this stable shape:
     "likely_interview_questions": [],
     "resume_reverse_design": "",
     "resume_draft": {},
+    "growth_resume_preview": {},
     "resume_delivery_artifacts": [],
     "ask_hr_about": [],
     "currently_unavailable": [],
@@ -166,6 +168,7 @@ Write it in concise Chinese, like a professional career and resume tool:
 - include 具体项目建议 when the user lacks project experience or the target role needs stronger proof artifacts.
 - show HR/面试可能追问 only when tied to target or recommended company public HR/recruiting sources; do not generate HR wording yourself.
 - explain what can be written into the resume now and what can be written only after proof artifacts exist.
+- if `growth_resume_preview` is shown, label it as an after-learning preview and repeat that recommended skills/projects cannot be used as completed resume facts until proof artifacts exist.
 - put missing operational JD details into `ask_hr_about`, not repeated user questions.
 - include exactly three next actions when possible.
 

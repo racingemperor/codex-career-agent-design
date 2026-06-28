@@ -355,6 +355,38 @@ def collect_resume_draft(role_outputs: list[dict[str, Any]]) -> dict[str, Any]:
     return {}
 
 
+def collect_growth_resume_preview(role_outputs: list[dict[str, Any]]) -> dict[str, Any]:
+    for payload in role_outputs:
+        preview = payload.get("growth_resume_preview")
+        if not isinstance(preview, dict):
+            continue
+        draft = str(preview.get("final_resume_draft") or "").strip()
+        if not draft:
+            continue
+        delivery_artifacts = preview.get("resume_delivery_artifacts")
+        return {
+            "resume_version": str(preview.get("resume_version") or payload.get("resume_version") or "").strip(),
+            "preview_type": str(preview.get("preview_type") or "after_recommended_learning_and_projects").strip(),
+            "truthfulness_notice": str(preview.get("truthfulness_notice") or "").strip(),
+            "completion_conditions": [
+                str(item).strip() for item in preview.get("completion_conditions") or [] if str(item).strip()
+            ],
+            "recommended_skills_to_show_after_completion": [
+                str(item).strip()
+                for item in preview.get("recommended_skills_to_show_after_completion") or []
+                if str(item).strip()
+            ],
+            "recommended_projects_to_show_after_completion": [
+                str(item).strip()
+                for item in preview.get("recommended_projects_to_show_after_completion") or []
+                if str(item).strip()
+            ],
+            "final_resume_draft": draft,
+            "resume_delivery_artifacts": delivery_artifacts if isinstance(delivery_artifacts, list) else [],
+        }
+    return {}
+
+
 def normalize_company_name(value: str) -> str:
     return (
         value.strip()
@@ -550,6 +582,7 @@ def build_user_facing_package(
     gaps = collect_learning_gaps(role_outputs)
     project_recommendations = collect_project_recommendations(role_outputs)
     resume_draft = collect_resume_draft(role_outputs)
+    growth_resume_preview = collect_growth_resume_preview(role_outputs)
     hr_real_questions, likely_interview_questions = collect_hr_real_questions(role_outputs, allowed_hr_companies)
     ask_hr = collect_ask_hr_about(role_outputs)
     if not ask_hr:
@@ -590,6 +623,7 @@ def build_user_facing_package(
             "没有明确目标时，先生成覆盖面更广的校招/实习版简历。"
         ),
         "resume_draft": resume_draft,
+        "growth_resume_preview": growth_resume_preview,
         "project_recommendations": project_recommendations
         or [
             {
@@ -736,6 +770,25 @@ def render_resume_draft(resume_draft: dict[str, Any]) -> str:
     return header + "\n\n" + draft
 
 
+def render_growth_resume_preview(growth_preview: dict[str, Any]) -> str:
+    if not growth_preview:
+        return "- 当前没有生成完成推荐学习/项目后的简历预览。"
+    draft = str(growth_preview.get("final_resume_draft") or "").strip()
+    version = str(growth_preview.get("resume_version") or "after_learning_project_preview").strip()
+    notice = str(growth_preview.get("truthfulness_notice") or "").strip()
+    conditions = [
+        str(item).strip()
+        for item in growth_preview.get("completion_conditions") or []
+        if str(item).strip()
+    ]
+    header = f"- 版本：{version}"
+    if notice:
+        header += f"\n- 真实性说明：{notice}"
+    if conditions:
+        header += "\n- 写入正式简历前需要完成：\n" + "\n".join(f"  - {item}" for item in conditions[:5])
+    return header + ("\n\n" + draft if draft else "")
+
+
 def render_resume_delivery_artifacts(resume_draft: dict[str, Any]) -> str:
     artifacts = resume_draft.get("resume_delivery_artifacts") if isinstance(resume_draft, dict) else []
     if not isinstance(artifacts, list) or not artifacts:
@@ -765,6 +818,7 @@ def build_user_facing_report_zh(user_facing_package: dict[str, Any]) -> str:
     unavailable = user_facing_package.get("currently_unavailable") or []
     next_actions = user_facing_package.get("next_three_actions") or []
     resume_draft = user_facing_package.get("resume_draft") or {}
+    growth_resume_preview = user_facing_package.get("growth_resume_preview") or {}
     return "\n\n".join(
         [
             "## 当前定位\n"
@@ -786,6 +840,7 @@ def build_user_facing_report_zh(user_facing_package: dict[str, Any]) -> str:
                 or "没有明确目标岗位时先做通用校招/实习版；有 JD 后按一岗一简历反向设计。"
             ),
             "## 通用简历草稿\n" + render_resume_draft(resume_draft),
+            "## 完成推荐学习/项目后的简历预览\n" + render_growth_resume_preview(growth_resume_preview),
             "## 简历交付物\n" + render_resume_delivery_artifacts(resume_draft),
             "## HR/面试可能追问\n" + render_hr_real_questions(hr_questions),
             "## 推荐查看的公开 URL\n" + render_public_urls(source_index),

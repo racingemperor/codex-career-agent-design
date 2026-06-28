@@ -72,6 +72,7 @@ FINAL_DECISION_FIELDS = {
     "positioning_verdict",
     "pass_to_next_stage",
     "final_resume_draft",
+    "growth_resume_preview",
     "resume_draft",
     "tailored_resume",
     "hr_pass_status",

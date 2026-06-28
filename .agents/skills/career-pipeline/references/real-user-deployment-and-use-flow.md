@@ -450,6 +450,7 @@ The final package should keep internal traceability in `decision_package`, but t
 - learning plan, proof artifacts, and resume-conversion conditions.
 - resume reverse-design note: one role, one resume; broad campus version when no target exists.
 - general or targeted resume draft when the resume gate passes. No concrete target should produce the broad campus/internship version, while concrete JD evidence enables one-role-one-resume.
+- after-learning/project resume preview when learning or project recommendations exist. It must be labeled as a conditional preview and must not turn planned work into completed experience.
 - resume delivery artifacts: Word DOCX, PDF, and one-page image, or truthful pending-renderer status after factual review.
 - `ask_hr_about` for missing HR-operational details.
 - what is currently unavailable because stronger evidence is missing.

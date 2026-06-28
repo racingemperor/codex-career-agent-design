@@ -88,6 +88,7 @@ def build_orders(run_dir: Path, plan_ref: str, output_ref: str) -> dict[str, Any
                         "application_priority",
                         "application_strategy",
                         "final_resume_draft",
+                        "growth_resume_preview",
                     ],
                 },
             }

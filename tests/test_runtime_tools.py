@@ -2613,6 +2613,7 @@ def test_product_flow_without_target_includes_general_resume_generation_gate(tmp
     )["secondary_prompt_injection"]
     assert "resume_generation_context" in gate_injection["role_specific_context"]
     assert "final_resume_draft" in architect_injection["required_output_fields"]
+    assert "growth_resume_preview" in architect_injection["required_output_fields"]
     assert "resume_delivery_artifacts" in architect_injection["required_output_fields"]
     assert "general_resume_draft" not in architect_injection["blocked_outputs"]
 
@@ -4099,6 +4100,10 @@ def test_resume_prompts_require_general_resume_and_delivery_artifacts_without_ta
     assert "general_resume_draft_allowed_without_target" in gate_prompt
     assert "campus_general_cn_one_page" in architect_prompt
     assert "resume_delivery_artifacts" in architect_prompt
+    assert "growth_resume_preview" in architect_prompt
+    assert "after recommended learning and project work" in architect_prompt
+    assert "must not be used as completed current experience" in architect_prompt
+    assert "growth_resume_preview" in interaction_flow
     for text in [architect_prompt, factual_prompt, hr_prompt, interaction_flow]:
         assert "DOCX" in text or "docx" in text
         assert "PDF" in text or "pdf" in text
@@ -4209,6 +4214,77 @@ def test_resume_renderer_extracts_resume_from_decision_package(tmp_path):
     assert all(path.is_file() for path in artifact_refs.values())
 
 
+def test_resume_renderer_exports_all_resume_versions_from_decision_package(tmp_path):
+    decision_package_path = tmp_path / "decision_package.json"
+    decision_package_path.write_text(
+        json.dumps(
+            {
+                "decision_package": {
+                    "user_facing_package": {
+                        "resume_draft": {
+                            "resume_version": "campus_general_cn_one_page",
+                            "final_resume_draft": "\n".join(
+                                [
+                                    "# Current Factual Resume",
+                                    "",
+                                    "## Skills",
+                                    "- Python: basic scripting and coursework.",
+                                ]
+                            ),
+                        },
+                        "growth_resume_preview": {
+                            "resume_version": "after_learning_project_preview",
+                            "preview_type": "after_recommended_learning_and_projects",
+                            "truthfulness_notice": (
+                                "Preview only. Do not use these learning or project items as completed "
+                                "resume claims until proof artifacts exist."
+                            ),
+                            "final_resume_draft": "\n".join(
+                                [
+                                    "# After-Learning Resume Preview",
+                                    "",
+                                    "## Skills",
+                                    "- Python, Git/GitHub, SQL: shown only after completion evidence exists.",
+                                    "",
+                                    "## Projects",
+                                    "- Python internship smoke-test project: shown only after demo and README exist.",
+                                ]
+                            ),
+                        },
+                    }
+                }
+            },
+            ensure_ascii=False,
+        ),
+        encoding="utf-8",
+    )
+    out_dir = tmp_path / "rendered"
+
+    result = run_python(
+        RESUME_RENDERER,
+        "--decision-package",
+        str(decision_package_path),
+        "--out-dir",
+        str(out_dir),
+        "--basename",
+        "general_resume",
+        "--all-resume-versions",
+    )
+
+    assert result.returncode == 0, result.stderr
+    response = json.loads(result.stdout)["resume_render_response"]
+    version_artifacts = {
+        item["version_key"]: item for item in response["resume_version_artifacts"]
+    }
+    assert set(version_artifacts) == {"resume_draft", "growth_resume_preview"}
+    assert (out_dir / "resume_draft.md").read_text(encoding="utf-8").startswith("# Current")
+    assert (out_dir / "growth_resume_preview.md").read_text(encoding="utf-8").startswith("# After-Learning")
+    for item in version_artifacts.values():
+        refs = {artifact["format"]: Path(artifact["artifact_ref"]) for artifact in item["resume_delivery_artifacts"]}
+        assert set(refs) == {"docx", "pdf", "image"}
+        assert all(path.is_file() and path.stat().st_size > 100 for path in refs.values())
+
+
 def test_incomplete_user_product_flow_reaches_general_resume_artifacts(tmp_path):
     run_root = tmp_path / ".career-pipeline-runs"
     product = run_python(
@@ -4299,6 +4375,11 @@ def test_incomplete_user_product_flow_reaches_general_resume_artifacts(tmp_path)
     user_package = package["user_facing_package"]
     assert user_package["resume_draft"]["resume_version"] == "campus_general_cn_one_page"
     assert user_package["resume_draft"]["incomplete_resume"] is True
+    growth_preview = user_package["growth_resume_preview"]
+    assert growth_preview["preview_type"] == "after_recommended_learning_and_projects"
+    assert "Do not use" in growth_preview["truthfulness_notice"]
+    assert "Git/GitHub" in growth_preview["final_resume_draft"]
+    assert "Python internship smoke-test project" in growth_preview["final_resume_draft"]
     assert user_package["recommended_targets"]
     assert all(target["public_urls"] for target in user_package["recommended_targets"])
     assert "fit_score" in package["blocked_outputs"]
@@ -4311,6 +4392,7 @@ def test_incomplete_user_product_flow_reaches_general_resume_artifacts(tmp_path)
         str(run_dir / "final" / "resume_artifacts"),
         "--basename",
         "general_resume",
+        "--all-resume-versions",
     )
     assert rendered.returncode == 0, rendered.stderr
     render_response = json.loads(rendered.stdout)["resume_render_response"]
@@ -4320,6 +4402,11 @@ def test_incomplete_user_product_flow_reaches_general_resume_artifacts(tmp_path)
     assert set(artifact_refs) == {"docx", "pdf", "image"}
     assert all(path.is_file() and path.stat().st_size > 100 for path in artifact_refs.values())
     assert (run_dir / "final" / "resume_artifacts" / "resume_draft.md").is_file()
+    assert (run_dir / "final" / "resume_artifacts" / "growth_resume_preview.md").is_file()
+    version_artifacts = {
+        item["version_key"]: item for item in render_response["resume_version_artifacts"]
+    }
+    assert set(version_artifacts) == {"resume_draft", "growth_resume_preview"}
 
 
 def test_simulator_supports_target_job_fit_route_with_target_context(tmp_path):

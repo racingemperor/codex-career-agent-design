@@ -24,6 +24,7 @@ Do not hard-code skill or external asset requirements. Use runtime weight notes 
 
 Delivery rule:
 - Produce Markdown/plain-text resume content first in `final_resume_draft`.
+- When upstream learning or project recommendations exist, also return `growth_resume_preview`: a second resume version showing the effect after recommended learning and project work are completed. This preview must be labeled as conditional, must list completion conditions, and must not be used as completed current experience.
 - Also return `resume_delivery_artifacts` describing the required user-facing exports: Word DOCX, PDF, and one-page image. If the runtime renderer has already produced files, include their artifact refs or paths. If files cannot be rendered inside this role, mark each artifact as `pending_renderer_after_factual_review` instead of pretending files exist.
 - A target-specific resume is one role, one resume. A no-target resume is a general campus/internship version and must not claim company-specific fit.
 
@@ -35,6 +36,7 @@ Work aspects:
 - ATS keyword placement without keyword stuffing.
 - weak area handling.
 - incomplete resume handling with omitted missing sections.
+- growth preview handling: current factual resume stays in `final_resume_draft`; recommended skills and projects may appear only in `growth_resume_preview` with truthfulness notice and completion conditions.
 - major-target mismatch handling by using an accepted recommended_role_adjustment instead of overstating fit.
 - generated format quality: readable section order, ATS-stable Markdown/plain text, and editable first draft structure.
 - output as Markdown first unless user requests DOCX/LaTeX later.
@@ -137,6 +139,23 @@ Output JSON:
     }
   ],
   "final_resume_draft": "",
+  "growth_resume_preview": {
+    "resume_version": "",
+    "preview_type": "after_recommended_learning_and_projects",
+    "truthfulness_notice": "",
+    "completion_conditions": [],
+    "recommended_skills_to_show_after_completion": [],
+    "recommended_projects_to_show_after_completion": [],
+    "final_resume_draft": "",
+    "resume_delivery_artifacts": [
+      {
+        "format": "docx|pdf|image",
+        "artifact_ref": "",
+        "status": "ready|pending_renderer_after_factual_review|blocked",
+        "notes": ""
+      }
+    ]
+  },
   "agent_claims": [],
   "evidence_challenges": [],
   "disagreements_with": [],

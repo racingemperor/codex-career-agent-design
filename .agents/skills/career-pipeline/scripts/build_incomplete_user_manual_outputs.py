@@ -359,6 +359,57 @@ def add_role_specific_fields(payload: dict[str, Any], context: dict[str, Any], s
             {"format": "pdf", "artifact_ref": "", "status": "pending_renderer_after_factual_review"},
             {"format": "image", "artifact_ref": "", "status": "pending_renderer_after_factual_review"},
         ]
+        payload["growth_resume_preview"] = {
+            "resume_version": "campus_general_after_learning_project_preview",
+            "preview_type": "after_recommended_learning_and_projects",
+            "truthfulness_notice": (
+                "Preview only. Do not use recommended learning or project items as completed resume "
+                "claims until the user finishes the proof artifacts and can explain personal contribution."
+            ),
+            "completion_conditions": [
+                "Finish a role-family smoke-test project that can run locally or be demonstrated.",
+                "Create a GitHub/Gitee repository with README, setup steps, screenshot, and personal contribution notes.",
+                "Complete basic Git/GitHub workflow, Python project structure, SQL basics, and one role-specific tool.",
+            ],
+            "recommended_skills_to_show_after_completion": [
+                "Git/GitHub workflow",
+                "Python project structure",
+                "SQL basics",
+                "one role-family-specific framework or tool",
+            ],
+            "recommended_projects_to_show_after_completion": [
+                "Python internship smoke-test project"
+            ],
+            "final_resume_draft": "\n".join(
+                [
+                    "# Computer-Related Junior - After-Learning Preview",
+                    "",
+                    "This preview shows how the resume could look after the recommended learning and project work is finished. Do not use it as a factual resume before completion.",
+                    "",
+                    "## School Information",
+                    "- Major direction: computer-related major",
+                    "- Grade: junior",
+                    "- Application stage: internship exploration",
+                    "",
+                    "## Skills",
+                    "- Python: able to structure a small runnable project with clear input, output, and error handling.",
+                    "- Git/GitHub: able to manage project versions and present a repository with README and screenshots.",
+                    "- SQL: able to complete basic query and data-processing practice for internship tasks.",
+                    "- Role-specific tool: complete one backend, data, testing, or AI-application tool after choosing the target role family.",
+                    "",
+                    "## Project And Competition Experience",
+                    "- Python internship smoke-test project: complete an end-to-end use case, README, screenshot, setup steps, personal contribution notes, and a short review of limitations.",
+                    "",
+                    "## Personality And Potential",
+                    "- Shows learning momentum by turning a Python foundation into visible project evidence and interview-defensible proof artifacts.",
+                ]
+            ),
+            "resume_delivery_artifacts": [
+                {"format": "docx", "artifact_ref": "", "status": "pending_renderer_after_factual_review"},
+                {"format": "pdf", "artifact_ref": "", "status": "pending_renderer_after_factual_review"},
+                {"format": "image", "artifact_ref": "", "status": "pending_renderer_after_factual_review"},
+            ],
+        }
         payload["format_gate_status"] = "pass"
         payload["format_status"] = "accepted"
         payload["factual_review_status"] = "pass"

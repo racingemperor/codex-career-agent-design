@@ -258,6 +258,7 @@ def rewrite_injections_for_product_run(run_dir: Path, context: dict[str, Any]) -
                 "format_quality_after_generation",
                 "resume_artifact",
                 "final_resume_draft",
+                "growth_resume_preview",
                 "resume_delivery_artifacts",
             ]:
                 if field not in required_fields:

@@ -323,6 +323,8 @@ Use this shape:
     "hr_real_questions": [],
     "likely_interview_questions": [],
     "resume_reverse_design": "",
+    "resume_draft": {},
+    "growth_resume_preview": {},
     "ask_hr_about": [],
     "currently_unavailable": [],
     "next_three_actions": []
@@ -337,6 +339,7 @@ Rules:
 - do not include run directories, execution logs, raw role packets, or schema names.
 - keep `next_three_actions` to exactly three items when possible.
 - planned learning can appear as a gap or proof-artifact task, but not as a completed resume claim.
+- `resume_draft` is the current factual resume version. `growth_resume_preview` is optional and must be labeled as an after-learning/project preview; its recommended skills or projects cannot be treated as completed resume facts until proof artifacts exist.
 - if no target job exists, use exploration targets, role families, learning gaps, and broad campus resume guidance instead of fake precision.
 
 The final rendered natural-language result should also be available as `user_facing_report_zh`. It must use these exact headings:

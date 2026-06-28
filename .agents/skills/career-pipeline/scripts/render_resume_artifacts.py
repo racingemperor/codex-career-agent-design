@@ -56,13 +56,18 @@ def sanitize_basename(value: str) -> str:
     return cleaned.strip("._") or "resume"
 
 
-def extract_resume_markdown_from_decision_package(payload: dict[str, Any]) -> str:
+def user_facing_package_from_decision_package(payload: dict[str, Any]) -> dict[str, Any]:
     decision_package = payload.get("decision_package")
     if not isinstance(decision_package, dict):
         raise ResumeRenderError("decision package JSON must contain decision_package")
     user_facing_package = decision_package.get("user_facing_package")
     if not isinstance(user_facing_package, dict):
         raise ResumeRenderError("decision_package.user_facing_package is missing")
+    return user_facing_package
+
+
+def extract_resume_markdown_from_decision_package(payload: dict[str, Any]) -> str:
+    user_facing_package = user_facing_package_from_decision_package(payload)
     resume_draft = user_facing_package.get("resume_draft")
     if not isinstance(resume_draft, dict):
         raise ResumeRenderError("decision_package.user_facing_package.resume_draft is missing")
@@ -70,6 +75,38 @@ def extract_resume_markdown_from_decision_package(payload: dict[str, Any]) -> st
     if not draft:
         raise ResumeRenderError("resume_draft.final_resume_draft is empty")
     return draft
+
+
+def extract_resume_versions_from_decision_package(payload: dict[str, Any], include_all: bool) -> list[dict[str, str]]:
+    user_facing_package = user_facing_package_from_decision_package(payload)
+    resume_draft = user_facing_package.get("resume_draft")
+    if not isinstance(resume_draft, dict):
+        raise ResumeRenderError("decision_package.user_facing_package.resume_draft is missing")
+    current_draft = str(resume_draft.get("final_resume_draft") or "").strip()
+    if not current_draft:
+        raise ResumeRenderError("resume_draft.final_resume_draft is empty")
+    versions = [
+        {
+            "version_key": "resume_draft",
+            "markdown_filename": "resume_draft.md",
+            "basename": "resume_draft",
+            "markdown": current_draft,
+        }
+    ]
+    if include_all:
+        growth_preview = user_facing_package.get("growth_resume_preview")
+        if isinstance(growth_preview, dict):
+            preview_draft = str(growth_preview.get("final_resume_draft") or "").strip()
+            if preview_draft:
+                versions.append(
+                    {
+                        "version_key": "growth_resume_preview",
+                        "markdown_filename": "growth_resume_preview.md",
+                        "basename": "growth_resume_preview",
+                        "markdown": preview_draft,
+                    }
+                )
+    return versions
 
 
 def resolve_draft_source(args: argparse.Namespace) -> tuple[Path, str | None]:
@@ -237,15 +274,12 @@ def write_pdf_and_png(blocks: list[dict[str, str]], pdf_path: Path, image_path: 
     return page_count
 
 
-def render(args: argparse.Namespace) -> dict[str, Any]:
-    draft_path, source_decision_package_ref = resolve_draft_source(args)
+def render_one_resume(draft_path: Path, basename: str, out_dir: Path) -> tuple[list[dict[str, str]], int]:
     blocks = parse_markdown(read_text(draft_path))
-    basename = sanitize_basename(args.basename)
-    out_dir = args.out_dir
-    out_dir.mkdir(parents=True, exist_ok=True)
-    docx_path = out_dir / f"{basename}.docx"
-    pdf_path = out_dir / f"{basename}.pdf"
-    image_path = out_dir / f"{basename}.png"
+    safe_basename = sanitize_basename(basename)
+    docx_path = out_dir / f"{safe_basename}.docx"
+    pdf_path = out_dir / f"{safe_basename}.pdf"
+    image_path = out_dir / f"{safe_basename}.png"
     write_docx(blocks, docx_path)
     page_count = write_pdf_and_png(blocks, pdf_path, image_path)
     artifacts = [
@@ -253,6 +287,54 @@ def render(args: argparse.Namespace) -> dict[str, Any]:
         {"format": "pdf", "artifact_ref": str(pdf_path), "status": "ready", "notes": "Printable PDF."},
         {"format": "image", "artifact_ref": str(image_path), "status": "ready", "notes": "First-page PNG preview."},
     ]
+    return artifacts, page_count
+
+
+def render_all_resume_versions(args: argparse.Namespace) -> dict[str, Any]:
+    if not args.decision_package:
+        raise ResumeRenderError("--all-resume-versions requires --decision-package")
+    out_dir = args.out_dir
+    out_dir.mkdir(parents=True, exist_ok=True)
+    versions = extract_resume_versions_from_decision_package(load_json(args.decision_package), include_all=True)
+    rendered_versions: list[dict[str, Any]] = []
+    page_count = 0
+    for index, version in enumerate(versions):
+        draft_path = out_dir / version["markdown_filename"]
+        draft_path.write_text(version["markdown"].rstrip() + "\n", encoding="utf-8")
+        basename = args.basename if version["version_key"] == "resume_draft" else version["basename"]
+        artifacts, version_page_count = render_one_resume(draft_path, basename, out_dir)
+        if index == 0:
+            page_count = version_page_count
+        rendered_versions.append(
+            {
+                "version_key": version["version_key"],
+                "source_draft_ref": str(draft_path),
+                "resume_delivery_artifacts": artifacts,
+                "page_count": version_page_count,
+            }
+        )
+    primary = rendered_versions[0]
+    return {
+        "resume_render_response": {
+            "exit_status": "success",
+            "source_draft_ref": primary["source_draft_ref"],
+            "source_decision_package_ref": str(args.decision_package),
+            "out_dir_ref": str(out_dir),
+            "resume_delivery_artifacts": primary["resume_delivery_artifacts"],
+            "resume_version_artifacts": rendered_versions,
+            "page_count": page_count,
+        }
+    }
+
+
+def render(args: argparse.Namespace) -> dict[str, Any]:
+    if args.all_resume_versions:
+        return render_all_resume_versions(args)
+    draft_path, source_decision_package_ref = resolve_draft_source(args)
+    basename = sanitize_basename(args.basename)
+    out_dir = args.out_dir
+    out_dir.mkdir(parents=True, exist_ok=True)
+    artifacts, page_count = render_one_resume(draft_path, basename, out_dir)
     return {
         "resume_render_response": {
             "exit_status": "success",
@@ -271,6 +353,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--decision-package", type=Path)
     parser.add_argument("--out-dir", required=True, type=Path)
     parser.add_argument("--basename", default="resume")
+    parser.add_argument("--all-resume-versions", action="store_true")
     args = parser.parse_args(argv)
     try:
         write_json_stdout(render(args))
