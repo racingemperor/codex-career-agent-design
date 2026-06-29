@@ -1,13 +1,32 @@
 ---
 name: career-pipeline
-description: Use when Codex needs to analyze Chinese majors or discipline domains, career direction, target companies, job descriptions, learning gaps, personal branding, or resumes for campus recruitment and early-career job search.
+description: Use when a user wants direct career planning, internship or job search, target-job fit, learning gaps, project recommendations, resume generation or polishing, HR screening preparation, or personal branding/portfolio/GitHub/website packaging from natural chat or supplied resume/link/files.
 ---
 
 # Career Pipeline
 
-This skill is the main entrypoint for the Codex-native career and resume agent design.
+This skill is the direct user-facing entrypoint for RoleFit Pipeline.
 
-Use it to route user requests across specialized subagents, read the bundled static databases, and return a source-aware decision package. Do not deploy anything from this repository automatically; this repository is the design and prompt source of truth.
+Use it when the user wants career positioning, job or internship search, target-job fit, learning gaps, project recommendations, resume generation or polishing, HR-style review, or portfolio/GitHub/website improvement. Do not ask ordinary users to read repository files, understand the pipeline, write JSON, choose subagents, or run scripts.
+
+## Direct User Invocation
+
+When the user invokes `$career-pipeline` or naturally asks for career planning, job search, resume help, target-job fit, learning advice, project recommendations, HR screening preparation, or portfolio/GitHub/website packaging, start the user-facing flow immediately.
+
+Do this by default:
+
+1. Give one short professional introduction first. Explain that RoleFit Pipeline analyzes the user's background, target roles, public job evidence, learning gaps, projects, personal branding, and role-specific resume design.
+2. Ask for one compact batch of information. Request major, school/year if available, degree/grade, skills, projects/competitions/research, internships, target role/company/location if any, existing resume/link/files, and constraints. Make clear that incomplete input is acceptable.
+3. If the user already gave enough information, do not re-ask everything. Summarize known facts, name missing high-value facts, and continue with a conservative first pass.
+4. Select the route internally: job search, target-job fit, resume generation, resume polish, personal branding, or learning plan.
+5. Run the pipeline internally through runtime context, secondary prompt injection, public-source policy, batched subagents, HR supervision, factual review, and final user-facing synthesis.
+6. Return a concise professional report: current positioning, recommended direction or target-job fit, why it fits, gaps, learning/project plan, resume strategy, public URLs when available, HR questions to confirm, and next 3 actions.
+
+Do not ask the user to read SKILL.md. Do not ask the user to run scripts. Do not expose pipeline, runner, JSON, adapter, or subagent internals unless the user explicitly asks to debug or develop the skill.
+
+The first response must introduce the skill and ask for one compact batch of information. For incomplete users, provide useful direction from known facts and ask only for the missing facts that materially improve the result.
+
+Use scripts and references as internal implementation aids only. If real source search, real subagent execution, resume artifact rendering, or authorized file modification is needed, perform or coordinate it behind the scenes and present only user-relevant results and consent requests.
 
 ## Required References
 

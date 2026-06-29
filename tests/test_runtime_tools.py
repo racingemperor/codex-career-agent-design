@@ -92,6 +92,13 @@ def run_python(script: Path, *args: str, cwd: Path | None = None) -> subprocess.
 def test_skill_md_names_skill_relative_script_commands():
     text = SKILL_MD.read_text(encoding="utf-8")
 
+    assert "Direct User Invocation" in text
+    assert "$career-pipeline" in text
+    assert "Do not ask the user to read SKILL.md" in text
+    assert "Do not ask the user to run scripts" in text
+    assert "Do not expose pipeline, runner, JSON, adapter, or subagent internals" in text
+    assert "first response must introduce the skill" in text
+    assert "one compact batch of information" in text
     assert "cd .agents/skills/career-pipeline" in text
     assert "python scripts/run_product_flow.py" in text
     assert "python scripts/collect_public_source_results.py" in text
@@ -100,6 +107,16 @@ def test_skill_md_names_skill_relative_script_commands():
     assert "python scripts/simulate_runtime_run.py" in text
     assert "python scripts/discover_public_sources.py" in text
     assert "Do not run these commands from the repository root as `scripts/*.py`" in text
+
+
+def test_skill_has_ui_metadata_for_direct_invocation():
+    metadata_path = ROOT / ".agents" / "skills" / "career-pipeline" / "agents" / "openai.yaml"
+    assert metadata_path.is_file()
+    text = metadata_path.read_text(encoding="utf-8")
+
+    assert 'display_name: "RoleFit Pipeline"' in text
+    assert 'default_prompt: "Use $career-pipeline' in text
+    assert "allow_implicit_invocation: true" in text
 
 
 def test_resume_polisher_and_portfolio_asset_builder_roles_are_documented():
