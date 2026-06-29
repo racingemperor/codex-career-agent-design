@@ -565,6 +565,10 @@ def test_real_user_flow_prefers_codex_desktop_adapter_when_available():
     assert "finalize_runtime_run.py --execution-mode manual-controller" in flow_text
     assert "暂未封装为 MCP 服务" in readme_text
     assert "不是可以在任意 Agent 中自动调用的通用插件" in readme_text
+    assert "$career-pipeline" in readme_text
+    assert "不需要要求 AI 读取 `SKILL.md`" in readme_text
+    assert "请读取 .agents/skills/career-pipeline/SKILL.md" not in readme_text
+    assert "使用时需要让目标 Agent 读取" not in readme_text
     assert "mock-blocked" in readme_text
 
 

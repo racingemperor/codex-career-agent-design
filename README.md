@@ -2,7 +2,7 @@
 
 `rolefit-pipeline` 是一个面向中国早期求职者的职业规划与简历反推工作流，用来做职业方向判断、岗位探索、能力提升规划、已有简历打磨和简历设计。
 
-当前状态：本仓库是**工作流、提示词、数据结构和本地脚本的设计资产**，暂未封装为 MCP 服务，也不是可以在任意 Agent 中自动调用的通用插件。使用时需要让目标 Agent 读取仓库中的流程说明和提示词，或通过本地脚本运行。
+当前状态：本仓库已经提供**可直接调用的本地 Skill 工作流**，暂未封装为 MCP 服务，也不是可以在任意 Agent 中自动调用的通用插件。在支持本地 Skills 的环境中安装后，直接用 `$career-pipeline` 开始自然聊天即可。普通用户不需要要求 AI 读取 `SKILL.md`，也不需要手写 JSON 或运行脚本。
 
 它围绕一个核心思路设计：
 
@@ -39,18 +39,26 @@
 
 ## 部署
 
-克隆本仓库，并在支持本地文件读取和命令执行的 Agent 工作区中打开仓库根目录：
+克隆本仓库，并在支持本地 Skills 的 Agent 工作区中打开仓库根目录：
 
 ```bash
 git clone https://github.com/racingemperor/rolefit-pipeline.git
 cd rolefit-pipeline
 ```
 
-主流程入口是：
+把 Skill 目录安装到你的本地 Skills 目录。以 Windows PowerShell 为例：
+
+```powershell
+New-Item -ItemType Junction -Path "$env:USERPROFILE\.codex\skills\career-pipeline" -Target "$PWD\.agents\skills\career-pipeline"
+```
+
+如果你的 Agent 使用不同的 Skills 目录，把下面这个 Skill 目录复制或链接到对应位置即可：
 
 ```text
-.agents/skills/career-pipeline/SKILL.md
+.agents/skills/career-pipeline
 ```
+
+安装完成后，重启或刷新你的 Agent 会话，使它重新发现本地 Skill。
 
 常用本地检查命令：
 
@@ -61,19 +69,19 @@ python -m pytest tests/test_runtime_tools.py -q
 
 ## 使用方式
 
-在支持读取仓库文件的 Agent 对话中，可以这样开始：
+安装完成后，用户可以直接用 `$career-pipeline` 加自然语言开始，不需要让 AI 手动读取仓库文件。
+
+如果暂时没有明确目标岗位，可以这样开始：
 
 ```text
-请读取 .agents/skills/career-pipeline/SKILL.md，并按 career-pipeline 流程执行。
-我是计算机相关专业大三，本科，会一点 Python，想找实习但不知道投什么。
+$career-pipeline 我是计算机相关专业大三，本科，会一点 Python，想找实习但不知道投什么。
 请帮我判断方向、规划技能和项目，并设计简历。
 ```
 
 如果用户已经有目标岗位，可以这样输入：
 
 ```text
-请读取 .agents/skills/career-pipeline/SKILL.md，并按 career-pipeline 流程执行。
-我是自动化方向研究生，会 C++、ROS、Python，有机器人竞赛经历。
+$career-pipeline 我是自动化方向研究生，会 C++、ROS、Python，有机器人竞赛经历。
 目标：DJI 机器人/控制算法实习。
 请判断我现在是否适合投递；如果暂时不适合，请给我先准备再投递的计划，以及更贴合该岗位的简历方向。
 ```
@@ -81,18 +89,18 @@ python -m pytest tests/test_runtime_tools.py -q
 如果用户已经有简历，可以直接要求保留原格式打磨：
 
 ```text
-请读取 .agents/skills/career-pipeline/SKILL.md，并按 career-pipeline 流程执行。
-我会提供一份现有简历。请以我的原格式为准，帮我打磨表达和内容；如果你的模板里有更有说服力的板块，请在原简历结构里补进去。
+$career-pipeline 我会提供一份现有简历。请以我的原格式为准，帮我打磨表达和内容；如果你的模板里有更有说服力的板块，请在原简历结构里补进去。
 ```
 
 如果用户希望完善个人展示链接，需要先明确授权范围：
 
 ```text
-请读取 .agents/skills/career-pipeline/SKILL.md，并按 career-pipeline 流程执行。
-我授权你在我提供的本地个人网站/GitHub 项目目录里提出并修改展示内容，目标是让 HR 更快理解我的项目能力。不要发布到线上，先生成修改方案和本地改动。
+$career-pipeline 我授权你在我提供的本地个人网站/GitHub 项目目录里提出并修改展示内容，目标是让 HR 更快理解我的项目能力。不要发布到线上，先生成修改方案和本地改动。
 ```
 
-如果需要做确定性的本地合约冒烟运行：
+Skill 启动后会先用简短的话说明它能做什么，然后一次性收集少量关键资料。预期产品流程是自然聊天：用户不需要理解 subagent、JSON、runner 或 adapter，系统会完成公开来源搜索、方向或岗位匹配判断、学习和项目规划、简历设计以及文件导出。
+
+如果需要做确定性的本地合约冒烟运行，可以使用开发者命令：
 
 ```bash
 cd .agents/skills/career-pipeline
@@ -100,27 +108,6 @@ python scripts/career_pipeline_run.py --task-type target_job_fit --route target_
 ```
 
 `seed` 和 `mock-blocked` 只是本地冒烟测试模式，不会浏览实时招聘网站，也不能证明真实子智能体已经执行。
-
-## 典型使用方式
-
-用户可以直接用自然语言输入自己的情况：
-
-```text
-请读取 .agents/skills/career-pipeline/SKILL.md，并按 career-pipeline 流程执行。
-我是计算机相关专业大三，本科，会一点 Python，想找实习但不知道投什么。
-请帮我判断方向、规划技能和项目，并设计简历。
-```
-
-如果用户有明确岗位，可以直接给出岗位：
-
-```text
-请读取 .agents/skills/career-pipeline/SKILL.md，并按 career-pipeline 流程执行。
-我是自动化方向研究生，会 C++、ROS、Python，有机器人竞赛经历。
-目标：DJI 机器人/控制算法实习。
-请判断我现在是否适合投递；如果暂时不适合，请给我先准备再投递的计划，以及更贴合该岗位的简历方向。
-```
-
-预期产品流程是自然聊天。用户不需要理解 subagent、JSON、runner 或 adapter：系统会用一轮紧凑的信息收集完成公开来源搜索、方向或岗位匹配判断、学习和项目规划、简历设计以及文件导出。
 
 ## 简历输出
 
@@ -150,13 +137,13 @@ python scripts/render_resume_artifacts.py --decision-package ../../../.career-pi
 
 - 2026-06-28：项目公开名更新为 `rolefit-pipeline`。
 - 2026-06-28：新增已有简历保格式打磨能力，以及用户授权后的个人网站/GitHub/Gitee/作品集等公开展示资产建设能力。
-- 2026-06-28：明确当前交付形态是仓库级工作流和提示词资产，暂未封装为 MCP 服务或通用插件。
+- 2026-06-28：明确当前交付形态是可直接调用的仓库级 Skill 工作流，暂未封装为 MCP 服务或通用插件。
 - 2026-06-28：新增 MIT 许可证，并将仓库设为公开。
 - 2026-06-28：简化 README 的公开展示内容，详细旧版已归档到 `docs/archive/`。
 - 2026-06-28：新增两版简历输出：当前真实简历和完成学习/项目后的预览版。
 - 2026-06-28：新增 DOCX、PDF、PNG、`resume_draft.md` 和 `growth_resume_preview.md` 导出支持。
 - 2026-06-28：当前可用范围是工科专业和工科交叉背景，非工科方向后续补齐。
-- 包装状态：当前仍是仓库级工作流与提示词资产，还不是 MCP 服务，也不是通用插件包。
+- 包装状态：当前是可直接调用的仓库级 Skill 工作流；还不是 MCP 服务，也不是通用插件包。
 
 ## 关键文件
 
